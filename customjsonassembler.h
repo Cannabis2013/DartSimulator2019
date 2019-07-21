@@ -3,6 +3,8 @@
 
 #include <seasonentity.h>
 #include <tournamententity.h>
+#include <roundentity.h>
+#include <pointentity.h>
 #include <QList>
 #include <QPair>
 #include <QJsonObject>
@@ -23,6 +25,8 @@ private:
 
     static void assembleSeasonJson(SeasonEntity * const entity, QJsonObject &obj);
     static void assembleTournamentJson(TournamentEntity * const entity, QJsonObject &obj);
+    static void assembleRoundJson(RoundEntity *const entity,QJsonObject &obj);
+    static void assemblePointJson(PointEntity *const entity,QJsonObject &obj);
 };
 
 #endif // CUSTOMJSONASSEMBLER_H

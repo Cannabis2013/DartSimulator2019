@@ -14,8 +14,16 @@ QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
 
     QJsonObject object(list);
 
-    if(model->_type == ModelEntity::SeasonModel)
+    if(model->type() == ModelEntity::SeasonModel)
         assembleSeasonJson(dynamic_cast<SeasonEntity*>(model),object);
+    else if(model->type() == ModelEntity::TournamentModel)
+        assembleTournamentJson(dynamic_cast<TournamentEntity*>(model),object);
+    else if(model->type() == ModelEntity::RoundModel)
+        assembleRoundJson(dynamic_cast<RoundEntity*>(model),object);
+    else if(model->type() == ModelEntity::PointModel)
+        assemblePointJson(dynamic_cast<PointEntity*>(model),object);
+    else
+        throw invalid_argument("Illegal type");
 
     QJsonArray arr;
     QList<QUuid> subIdentities = model->allIdentifiers();
@@ -29,14 +37,25 @@ QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
 
 void CustomJsonAssembler::assembleSeasonJson(SeasonEntity* const entity, QJsonObject &obj)
 {
-    obj["Name"] = QJsonValue(entity->name());
+    obj["Name"] = entity->name();
     obj["DateFinished"] = entity->dateFinished().toString(dateFormat);
 }
 
 void CustomJsonAssembler::assembleTournamentJson(TournamentEntity * const entity, QJsonObject &obj)
 {
-    obj["Name"] = QJsonValue(entity->name());
-    obj["Number of rounds"] = QJsonValue(entity->numberOfRounds());
-    obj["Max users allowed"] = QJsonValue(entity->maxUsersAllowed());
-    obj["Date finished"] = QJsonValue(entity->dateFinished().toString(dateFormat));
+    obj["Name"] = entity->name();
+    obj["Number of rounds"] = entity->numberOfRounds();
+    obj["Max users allowed"] = entity->maxUsersAllowed();
+    obj["Date finished"] = entity->dateFinished().toString(dateFormat);
+}
+
+void CustomJsonAssembler::assembleRoundJson(RoundEntity * const entity, QJsonObject &obj)
+{
+    obj["Round number"] = entity->roundNumber();
+}
+
+void CustomJsonAssembler::assemblePointJson(PointEntity * const entity, QJsonObject &obj)
+{
+    obj["Point Value"] = entity->point();
+    obj["User id"] = entity->userId().toString();
 }
