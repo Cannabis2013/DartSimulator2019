@@ -6,7 +6,7 @@
 class TournamentEntity : public ModelEntity
 {
 public:
-    TournamentEntity();
+    TournamentEntity(const QUuid &id = QUuid());
 
 
     void toJSON();
@@ -24,6 +24,7 @@ public:
     void setMaxUsersAllowed(int maxUsersAllowed);
 
     QList<QUuid> allRoundIdentities();
+    void addRoundIdentities(const QList<QUuid> &identities);
 
 private:
     QString _name;

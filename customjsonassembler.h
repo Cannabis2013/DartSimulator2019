@@ -20,7 +20,9 @@
 typedef QPair<QString,QJsonValue> _pair;
 
 #define dateFormat "dd.MM.yyyy"
-
+#define TournamentMaxRoundsKey "Number of rounds"
+#define TournamentMaxUsersKey "Max users allowed"
+#define DateFinishedKey "Date finished"
 class CustomJsonAssembler
 {
 public:

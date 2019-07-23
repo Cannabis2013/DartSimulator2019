@@ -1,7 +1,7 @@
 #include "tournamententity.h"
 
-TournamentEntity::TournamentEntity():
-    ModelEntity (ModelType::TournamentModel)
+TournamentEntity::TournamentEntity(const QUuid &id):
+    ModelEntity (ModelType::TournamentModel,id)
 {
 }
 
@@ -54,4 +54,9 @@ void TournamentEntity::setMaxUsersAllowed(int maxUsersAllowed)
 QList<QUuid> TournamentEntity::allRoundIdentities()
 {
     return allIdentifiers();
+}
+
+void TournamentEntity::addRoundIdentities(const QList<QUuid> &identities)
+{
+    appendIdentifiers(identities);
 }
