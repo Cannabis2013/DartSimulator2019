@@ -56,7 +56,17 @@ void ModelEntity::appendIdentifier(const QUuid id)
     _subEntities << id;
 }
 
+void ModelEntity::appendIdentifiers(const QList<QUuid> identities)
+{
+    _subEntities.append(identities);
+}
+
 bool ModelEntity::operator ==(ModelEntity *comp)
 {
     return comp->id() == this->id();
+}
+
+void ModelEntity::setDateCreated(const QDateTime &dateCreated)
+{
+    _dateCreated = dateCreated;
 }

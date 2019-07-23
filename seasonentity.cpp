@@ -1,7 +1,7 @@
 #include "seasonentity.h"
 
-SeasonEntity::SeasonEntity():
-    ModelEntity (ModelType::SeasonModel)
+SeasonEntity::SeasonEntity(const QUuid &id):
+    ModelEntity (ModelType::SeasonModel,id)
 {
 
 }
@@ -31,7 +31,7 @@ void SeasonEntity::addTournamentIdentity(const QUuid &entityIdentity)
     appendIdentifier(entityIdentity);
 }
 
-void SeasonEntity::toJSON()
+void SeasonEntity::addTournamentIdentities(const QList<QUuid> identities)
 {
-
+    appendIdentifiers(identities);
 }

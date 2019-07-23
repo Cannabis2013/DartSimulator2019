@@ -6,7 +6,7 @@
 class SeasonEntity : public ModelEntity
 {
 public:
-    SeasonEntity();
+    SeasonEntity(const QUuid &id = QUuid());
 
     QString name() const;
     void setName(const QString &value);
@@ -15,9 +15,9 @@ public:
     void setDateFinished(const QDateTime &value);
 
     void addTournamentIdentity(const QUuid &entityIdentity);
+    void addTournamentIdentities(const QList<QUuid> identities);
     QList<QUuid> allTournamentIdentities() const{return allIdentifiers();}
 
-    void toJSON();
 private:
     QString _name;
     QDateTime _dateFinished;

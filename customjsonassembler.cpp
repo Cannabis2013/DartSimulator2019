@@ -8,7 +8,7 @@ CustomJsonAssembler::CustomJsonAssembler()
 QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
 {
     ModelEntity* model = &entity;
-    initializer_list<_pair> list = {_pair("id",model->_id.toString()),
+    initializer_list<_pair> list = {_pair("Id",model->_id.toString()),
                 _pair("Parent id",model->_parentId.toString()),
                 _pair("Model type",model->_type),
                 _pair("Date created",model->dateCreated().toString(dateFormat))};
@@ -69,4 +69,47 @@ void CustomJsonAssembler::assemblePointJson(PointEntity * const entity, QJsonObj
 {
     obj["Point Value"] = entity->point();
     obj["User id"] = entity->userId().toString();
+}
+
+QList<QUuid> CustomJsonAssembler::extractArray(const QJsonArray &arr)
+{
+    QList<QUuid> allIdentitites;
+    for (QJsonValue val : arr)
+        allIdentitites << val.toVariant().toUuid();
+
+    return allIdentitites;
+}
+
+template<typename T>
+T CustomJsonAssembler::assembleEntityFromJson(const QJsonObject &json)
+{
+    /*
+     * TODO: Lookup the necessary 'key/value' property pairs needed for the specific model
+     */
+
+    QUuid modelId = json.value("Id").toVariant().toUuid();
+    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
+    int modelTypeValue = json.value("Model type").toVariant().toInt();
+    mType entityType = static_cast<mType>(modelTypeValue);
+    QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
+                                                   toVariant().toString(),dateFormat);
+    // TODO: Implement code defined by modeltype
+    if(entityType == mType::SeasonModel)
+    {
+        SeasonEntity* sEntity = new SeasonEntity(modelId);
+        sEntity->setParentId(parentModelId);
+        sEntity->setDateCreated(modelCreated);
+        QString entityName = json.value("Name").toString("Something went wrong");
+        sEntity->setName(entityName);
+        QString dateFinished = json.value("Date finished").toVariant().toString();
+        sEntity->setDateFinished(QDateTime::fromString(dateFinished,dateFormat));
+
+        if(json.value("Identities").isArray())
+        {
+            QJsonArray arr = json.value("Identities").toArray();
+            sEntity->addTournamentIdentities(extractArray(arr));
+        }
+
+        return sEntity;
+    }
 }

@@ -8,6 +8,15 @@
 #include <qjsondocument.h>
 #include <QJsonArray>
 
+/*
+ * The structure and list of 'key|value' property pairs for the basic'ModelEntity' class
+ *  - 'Id' : QUuid
+ *  - 'Parent id' : QUuid
+ *  - 'Model type' : enum
+ *  - 'Date created' : QString/{string value}
+ *  - 'Identities' : QJsonValue[]
+ */
+
 typedef QPair<QString,QJsonValue> _pair;
 
 #define dateFormat "dd.MM.yyyy"
@@ -22,7 +31,7 @@ public:
     static QString JsonToString(const QJsonObject &object);
 
     template<typename T>
-    static T assembleEntityFromJson(const QByteArray);
+    static T assembleEntityFromJson(const QJsonObject &json);
 
 private:
 
@@ -38,6 +47,12 @@ private:
     /*
      * Assemble objects from Json
      */
+
+    /*
+     * Helper methods
+     */
+
+    static QList<QUuid> extractArray(const QJsonArray &arr);
 };
 
 #endif // CUSTOMJSONASSEMBLER_H

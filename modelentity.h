@@ -44,19 +44,24 @@ public:
     bool operator ==(ModelEntity *comp);
 
 
+    void setDateCreated(const QDateTime &dateCreated);
+
 protected:
     QList<QUuid> allIdentifiers() const;
     void appendIdentifier(const QUuid id);
+    void appendIdentifiers(const QList<QUuid> identities);
 
 private:
 
     QUuid _id;
     QUuid _parentId = QUuid();
-    const QDateTime _dateCreated;
+    QDateTime _dateCreated;
     const ModelType _type;
     QList<QUuid> _subEntities;
 
     friend class CustomJsonAssembler;
 };
+
+typedef ModelEntity::ModelType mType;
 
 #endif // MODELENTITY_H
