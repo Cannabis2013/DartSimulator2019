@@ -2,6 +2,7 @@
 
 CustomJsonAssembler::CustomJsonAssembler()
 {
+
 }
 
 QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
@@ -25,14 +26,24 @@ QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
     else
         throw invalid_argument("Illegal type");
 
+    /*
+     * Setup child JSON array
+     */
+
     QJsonArray arr;
     QList<QUuid> subIdentities = model->allIdentifiers();
 
     for (int i = 0; i < subIdentities.count(); ++i)
         arr[i] = QJsonValue(subIdentities.at(i).toString());
 
-    delete model;
+    object["Identities"] = arr;
+    model = nullptr;
     return object;
+}
+
+QString CustomJsonAssembler::JsonToString(const QJsonObject &object)
+{
+    return QString::fromStdString(QJsonDocument(object).toJson().toStdString());
 }
 
 void CustomJsonAssembler::assembleSeasonJson(SeasonEntity* const entity, QJsonObject &obj)

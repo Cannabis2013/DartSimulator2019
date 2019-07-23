@@ -2,6 +2,7 @@
 #define MODELENTITY_H
 
 #include <QUuid>
+#include <qhash.h>
 #include <QString>
 #include <QDateTime>
 
@@ -25,26 +26,32 @@ public:
                     RoundModel = 0x0080,
                     PointModel = 0x0100};
 
-    ModelEntity(ModelType type);
+    ModelEntity(ModelType type, QUuid id = QUuid());
 
     virtual ~ModelEntity();
 
 
     QUuid id() const;
+    void setId(const QUuid &id);
 
     QDateTime dateCreated() const;
 
     ModelType type();
 
     QUuid parentId() const;
+    void setParentId(const QUuid &parentId);
+
+    bool operator ==(ModelEntity *comp);
+
+
+protected:
     QList<QUuid> allIdentifiers() const;
     void appendIdentifier(const QUuid id);
 
 private:
-    void setParentId(const QUuid &parentId);
 
-    const QUuid _id;
-    QUuid _parentId;
+    QUuid _id;
+    QUuid _parentId = QUuid();
     const QDateTime _dateCreated;
     const ModelType _type;
     QList<QUuid> _subEntities;

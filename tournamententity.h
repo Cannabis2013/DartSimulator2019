@@ -17,16 +17,18 @@ public:
     int numberOfRounds() const;
     void setNumberOfRounds(int numberOfRounds);
 
-    QDate dateFinished() const;
-    void setDateFinished(const QDate &dateFinished);
+    QDateTime dateFinished() const;
+    void setDateFinished(const QDateTime &dateFinished);
 
     int maxUsersAllowed() const;
     void setMaxUsersAllowed(int maxUsersAllowed);
 
+    QList<QUuid> allRoundIdentities();
+
 private:
     QString _name;
     int _numberOfRounds,_maxUsersAllowed;
-    QDate _dateFinished;
+    QDateTime _dateFinished;
 };
 
 #endif // TOURNAMENTENTITY_H

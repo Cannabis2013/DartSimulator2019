@@ -8,6 +8,8 @@ class RoundEntity : public ModelEntity
 public:
     RoundEntity(int number);
 
+    QList<QUuid> allPointIdentities();
+
     int roundNumber() const;
 
 private:

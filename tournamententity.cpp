@@ -31,12 +31,12 @@ void TournamentEntity::setNumberOfRounds(int numberOfRounds)
     _numberOfRounds = numberOfRounds;
 }
 
-QDate TournamentEntity::dateFinished() const
+QDateTime TournamentEntity::dateFinished() const
 {
     return _dateFinished;
 }
 
-void TournamentEntity::setDateFinished(const QDate &endDate)
+void TournamentEntity::setDateFinished(const QDateTime &endDate)
 {
     _dateFinished = endDate;
 }
@@ -49,4 +49,9 @@ int TournamentEntity::maxUsersAllowed() const
 void TournamentEntity::setMaxUsersAllowed(int maxUsersAllowed)
 {
     _maxUsersAllowed = maxUsersAllowed;
+}
+
+QList<QUuid> TournamentEntity::allRoundIdentities()
+{
+    return allIdentifiers();
 }

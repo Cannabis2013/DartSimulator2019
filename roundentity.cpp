@@ -6,6 +6,11 @@ RoundEntity::RoundEntity(int number):
 {
 }
 
+QList<QUuid> RoundEntity::allPointIdentities()
+{
+    return allIdentifiers();
+}
+
 int RoundEntity::roundNumber() const
 {
     return _roundNumber;

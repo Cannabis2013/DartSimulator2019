@@ -1,10 +1,13 @@
 #include "modelentity.h"
 
-ModelEntity::ModelEntity(ModelType type):
-    _id(QUuid::createUuid()),
+ModelEntity::ModelEntity(ModelType type,QUuid id):
     _dateCreated(QDateTime::currentDateTime()),
     _type(type)
 {
+    if(id == QUuid())
+        _id = QUuid::createUuid();
+    else
+        _id = id;
 }
 
 ModelEntity::~ModelEntity()
@@ -32,6 +35,11 @@ void ModelEntity::setParentId(const QUuid &parentId)
     _parentId = parentId;
 }
 
+void ModelEntity::setId(const QUuid &id)
+{
+    _id = id;
+}
+
 QUuid ModelEntity::parentId() const
 {
     return _parentId;
@@ -46,4 +54,9 @@ QList<QUuid> ModelEntity::allIdentifiers() const
 void ModelEntity::appendIdentifier(const QUuid id)
 {
     _subEntities << id;
+}
+
+bool ModelEntity::operator ==(ModelEntity *comp)
+{
+    return comp->id() == this->id();
 }
