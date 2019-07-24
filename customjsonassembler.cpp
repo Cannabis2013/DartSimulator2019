@@ -5,9 +5,9 @@ CustomJsonAssembler::CustomJsonAssembler()
 
 }
 
-QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
+QJsonObject CustomJsonAssembler::assembleJson(Model &entity)
 {
-    ModelEntity* model = &entity;
+    Model* model = &entity;
     initializer_list<_pair> list = {_pair("Id",model->_id.toString()),
                 _pair("Parent id",model->_parentId.toString()),
                 _pair("Model type",model->_type),
@@ -15,14 +15,14 @@ QJsonObject CustomJsonAssembler::assembleJson(ModelEntity &entity)
 
     QJsonObject object(list);
 
-    if(model->type() == ModelEntity::SeasonModel)
-        assembleSeasonJson(dynamic_cast<SeasonEntity*>(model),object);
-    else if(model->type() == ModelEntity::TournamentModel)
-        assembleTournamentJson(dynamic_cast<TournamentEntity*>(model),object);
-    else if(model->type() == ModelEntity::RoundModel)
-        assembleRoundJson(dynamic_cast<RoundEntity*>(model),object);
-    else if(model->type() == ModelEntity::PointModel)
-        assemblePointJson(dynamic_cast<PointEntity*>(model),object);
+    if(model->type() == Model::SeasonModel)
+        assembleSeasonJson(dynamic_cast<SeasonModel*>(model),object);
+    else if(model->type() == Model::TournamentModel)
+        assembleTournamentJson(dynamic_cast<TournamentModel*>(model),object);
+    else if(model->type() == Model::RoundModel)
+        assembleRoundJson(dynamic_cast<RoundModel*>(model),object);
+    else if(model->type() == Model::PointModel)
+        assemblePointJson(dynamic_cast<PointModel*>(model),object);
     else
         throw invalid_argument("Illegal type");
 
@@ -46,13 +46,13 @@ QString CustomJsonAssembler::JsonToString(const QJsonObject &object)
     return QString::fromStdString(QJsonDocument(object).toJson().toStdString());
 }
 
-void CustomJsonAssembler::assembleSeasonJson(SeasonEntity* const entity, QJsonObject &obj)
+void CustomJsonAssembler::assembleSeasonJson(SeasonModel* const entity, QJsonObject &obj)
 {
     obj["Name"] = entity->name();
     obj["DateFinished"] = entity->dateFinished().toString(dateFormat);
 }
 
-void CustomJsonAssembler::assembleTournamentJson(TournamentEntity * const entity, QJsonObject &obj)
+void CustomJsonAssembler::assembleTournamentJson(TournamentModel * const entity, QJsonObject &obj)
 {
     obj["Name"] = entity->name();
     obj[TournamentMaxRoundsKey] = entity->numberOfRounds();
@@ -60,15 +60,102 @@ void CustomJsonAssembler::assembleTournamentJson(TournamentEntity * const entity
     obj[DateFinishedKey] = entity->dateFinished().toString(dateFormat);
 }
 
-void CustomJsonAssembler::assembleRoundJson(RoundEntity * const entity, QJsonObject &obj)
+void CustomJsonAssembler::assembleRoundJson(RoundModel * const entity, QJsonObject &obj)
 {
-    obj["Round number"] = entity->roundNumber();
+    obj[RoundNumberKey] = entity->roundNumber();
 }
 
-void CustomJsonAssembler::assemblePointJson(PointEntity * const entity, QJsonObject &obj)
+void CustomJsonAssembler::assemblePointJson(PointModel * const entity, QJsonObject &obj)
 {
-    obj["Point Value"] = entity->point();
-    obj["User id"] = entity->userId().toString();
+    obj[PointValueKey] = entity->point();
+    obj[PointUserIdKey] = entity->userId().toString();
+}
+
+SeasonModel *CustomJsonAssembler::assembleSeasonModel(const QJsonObject &json)
+{
+    QUuid modelId = json.value("Id").toVariant().toUuid();
+    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
+    QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
+                                                   toVariant().toString(),dateFormat);
+
+
+    SeasonModel* sEntity = new SeasonModel(modelId);
+    sEntity->setParentId(parentModelId);
+    sEntity->setDateCreated(modelCreated);
+    QString entityName = json.value("Name").toString("Something went wrong");
+    sEntity->setName(entityName);
+    QString dateFinished = json.value(DateFinishedKey).toVariant().toString();
+    sEntity->setDateFinished(QDateTime::fromString(dateFinished,dateFormat));
+
+    if(json.value("Identities").isArray())
+    {
+        QJsonArray arr = json.value("Identities").toArray();
+        sEntity->addTournamentIdentities(extractArray(arr));
+    }
+
+    return sEntity;
+}
+
+TournamentModel *CustomJsonAssembler::assembleTournamentModel(const QJsonObject &json)
+{
+    QUuid modelId = json.value("Id").toVariant().toUuid();
+    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
+    QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
+                                                   toVariant().toString(),dateFormat);
+
+    TournamentModel* tournament = new TournamentModel(modelId);
+    tournament->setParentId(parentModelId);
+    tournament->setDateCreated(modelCreated);
+    QString entityName = json.value("Name").toString("Something went wrong");
+    tournament->setName(entityName);
+    int maxRounds = json.value(TournamentMaxRoundsKey).toVariant().toInt();
+    tournament->setNumberOfRounds(maxRounds);
+    int maxUsers = json.value(TournamentMaxUsersKey).toInt();
+    tournament->setMaxUsersAllowed(maxUsers);
+    QString dateFinished = json.value(DateFinishedKey).toVariant().toString();
+    tournament->setDateFinished(QDateTime::fromString(dateFinished,dateFormat));
+
+    if(json.value("Identities").isArray())
+    {
+        QJsonArray arr = json.value("Identities").toArray();
+        tournament->addRoundIdentities(extractArray(arr));
+    }
+
+    return tournament;
+}
+
+RoundModel *CustomJsonAssembler::assembleRoundModel(const QJsonObject &json)
+{
+    QUuid modelId = json.value("Id").toVariant().toUuid();
+    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
+    QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
+                                                   toVariant().toString(),dateFormat);
+    int roundNumber = json.value(RoundNumberKey).toInt();
+    RoundModel* round = new RoundModel(roundNumber,modelId);
+    round->setParentId(parentModelId);
+
+    if(json.value("Identities").isArray())
+    {
+        QJsonArray arr = json.value("Identities").toArray();
+        round->addPointIdentities(extractArray(arr));
+    }
+
+    return round;
+}
+
+PointModel *CustomJsonAssembler::assemblePointModel(const QJsonObject &json)
+{
+    QUuid modelId = json.value("Id").toVariant().toUuid();
+    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
+    QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
+                                                   toVariant().toString(),dateFormat);
+    QUuid pointUserId = json.value(PointUserIdKey).toVariant().toUuid();
+    int pointValue = json.value(PointValueKey).toInt();
+    PointModel* point = new PointModel(pointUserId,modelId);
+    point->setParentId(parentModelId);
+    point->setPoint(pointValue);
+
+    return point;
 }
 
 QList<QUuid> CustomJsonAssembler::extractArray(const QJsonArray &arr)
@@ -81,56 +168,21 @@ QList<QUuid> CustomJsonAssembler::extractArray(const QJsonArray &arr)
 }
 
 template<typename T>
-T CustomJsonAssembler::assembleEntityFromJson(const QJsonObject &json)
+T CustomJsonAssembler::assembleModelFromJson(const QJsonObject &json)
 {
-    /*
-     * TODO: Lookup the necessary 'key/value' property pairs needed for the specific model
-     */
-
-    QUuid modelId = json.value("Id").toVariant().toUuid();
-    QUuid parentModelId = json.value("Parent id").toVariant().toUuid();
-    int modelTypeValue = json.value("Model type").toVariant().toInt();
+    int modelTypeValue = json.value("Model type").toInt();
     mType entityType = static_cast<mType>(modelTypeValue);
     QDateTime modelCreated = QDateTime::fromString(json.value("Date created").
                                                    toVariant().toString(),dateFormat);
-    // TODO: Implement code defined by modeltype
+
     if(entityType == mType::SeasonModel)
-    {
-        SeasonEntity* sEntity = new SeasonEntity(modelId);
-        sEntity->setParentId(parentModelId);
-        sEntity->setDateCreated(modelCreated);
-        QString entityName = json.value("Name").toString("Something went wrong");
-        sEntity->setName(entityName);
-        QString dateFinished = json.value(DateFinishedKey).toVariant().toString();
-        sEntity->setDateFinished(QDateTime::fromString(dateFinished,dateFormat));
-
-        if(json.value("Identities").isArray())
-        {
-            QJsonArray arr = json.value("Identities").toArray();
-            sEntity->addTournamentIdentities(extractArray(arr));
-        }
-
-        return sEntity;
-    }
+        return assembleSeasonModel(json);
     else if(entityType == mType::TournamentModel)
-    {
-        TournamentEntity* tEntity = new TournamentEntity(modelId);
-        tEntity->setDateCreated(modelCreated);
-        QString entityName = json.value("Name").toString("Something went wrong");
-        tEntity->setName(entityName);
-        int maxRounds = json.value(TournamentMaxRoundsKey).toVariant().toInt();
-        tEntity->setNumberOfRounds(maxRounds);
-        int maxUsers = json.value(TournamentMaxUsersKey).toInt();
-        tEntity->setMaxUsersAllowed(maxUsers);
-        QString dateFinished = json.value(DateFinishedKey).toVariant().toString();
-        tEntity->setDateFinished(QDateTime::fromString(dateFinished,dateFormat));
-
-        if(json.value("Identities").isArray())
-        {
-            QJsonArray arr = json.value("Identities").toArray();
-            tEntity->addRoundIdentities(extractArray(arr));
-        }
-
-        return tEntity;
-    }
+        return assembleTournamentModel(json);
+    else if(entityType == mType::RoundModel)
+        return assembleRoundModel(json);
+    else if(entityType == mType::PointModel)
+        return assemblePointModel(json);
+    else
+        throw invalid_argument("Invalid Json parsed");
 }

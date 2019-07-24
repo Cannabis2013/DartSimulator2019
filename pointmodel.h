@@ -1,12 +1,12 @@
 #ifndef POINTENTITY_H
 #define POINTENTITY_H
 
-#include <modelentity.h>
+#include <model.h>
 
-class PointEntity : public ModelEntity
+class PointModel : public Model
 {
 public:
-    PointEntity(QUuid uId);
+    PointModel(const QUuid &userId, const QUuid &id);
 
     int point() const;
     void setPoint(const int &point);

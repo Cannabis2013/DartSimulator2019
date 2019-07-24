@@ -11,49 +11,50 @@ namespace DBContext {
 
 class EntityDB
 {
-    QList<ModelEntity *> const entities();
-    void setEntities(const QList<ModelEntity *> &entities);
-    void addEntity(ModelEntity* entity);
-    void removeEntity(const QUuid &id);
+public:
+    QList<Model *> const models();
+    void setModels(const QList<Model *> &entities);
+    void addModel(Model* model);
+    void removeModel(const QUuid &id);
 
-    template<typename T>
-    T model(QUuid id)
+    template<typename T> const
+    T* model(QUuid id)
     {
-        for (ModelEntity* entity : _entities)
+        for (Model* model : _models)
         {
-            if(entity->id() == id)
-                return static_cast<T>(entity);
+            if(model->id() == id)
+                return static_cast<T*>(model);
         }
         return nullptr;
     }
 
     template<typename T>
-    QList<T> models(QList<QUuid> identities)
+    const QList<const T*> *models(QList<QUuid> identities)
     {
-        QList<T> result;
-        for (ModelEntity* entity : _entities)
+        QList<const T*> *result = new QList<const T*>();
+        for (Model* entity : _models)
         {
             if(identities.contains(entity->id()))
-                result << static_cast<T>(entity);
+                result->append(static_cast<T*>(entity));
         }
         return result;
     }
 
     template<typename T>
-    QList<T> models(ModelEntity::ModelType type)
+    QList<const T*> *models(Model::ModelType type)
     {
-        QList<T> result;
-        for (ModelEntity* entity : _entities)
+        QList<const T*> *result = new QList<const T*>();
+        for (Model* entity : _models)
         {
             if(entity->type() == type)
-                result << static_cast<T>(entity);
+                result->append(static_cast<T*>(entity));
         }
         return result;
     }
 
-    QList<ModelEntity*> _entities;
+private:
 
-    friend class DBManager;
+    QList<Model*> _models;
 };
 
 class DBManager
@@ -61,17 +62,17 @@ class DBManager
 public:
     DBManager();
 
-    QList<SeasonEntity*> seasons() const;
+    const QList<const SeasonModel*> *seasons();
 
-    QList<TournamentEntity*> tournaments() const;
-    QList<TournamentEntity*> tournaments(const QUuid &seasonId) const;
+    const QList<const TournamentModel*> *tournaments();
+    const QList<const TournamentModel*> *tournaments(const QUuid &seasonId);
 
-    QList<RoundEntity*> rounds() const;
-    QList<RoundEntity*> rounds(const QUuid &tournamentId) const;
+    const QList<const RoundModel*> *rounds();
+    const QList<const RoundModel*> *rounds(const QUuid &tournamentId);
 
-    QList<PointEntity*> points() const;
-    QList<PointEntity*> points(const QUuid &userId) const;
-    QList<PointEntity*> points(const QUuid &tournamentId,const QUuid &userId = QUuid()) const;
+    const QList<const PointModel*> *points();
+    const QList<const PointModel*> *points(const QUuid &userId);
+    const QList<const PointModel*> *points(const QUuid &tournamentId,const QUuid &userId = QUuid());
 
 private:
     EntityDB *db;

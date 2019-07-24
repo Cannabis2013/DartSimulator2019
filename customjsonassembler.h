@@ -23,17 +23,21 @@ typedef QPair<QString,QJsonValue> _pair;
 #define TournamentMaxRoundsKey "Number of rounds"
 #define TournamentMaxUsersKey "Max users allowed"
 #define DateFinishedKey "Date finished"
+#define RoundNumberKey "Round number"
+#define PointValueKey "Point Value"
+#define PointUserIdKey "User id"
+
 class CustomJsonAssembler
 {
 public:
     CustomJsonAssembler();
 
-    static QJsonObject assembleJson(ModelEntity &entity);
+    static QJsonObject assembleJson(Model &entity);
 
     static QString JsonToString(const QJsonObject &object);
 
     template<typename T>
-    static T assembleEntityFromJson(const QJsonObject &json);
+    static T assembleModelFromJson(const QJsonObject &json);
 
 private:
 
@@ -41,15 +45,18 @@ private:
      * Assemble Json from objects
      */
 
-    static void assembleSeasonJson(SeasonEntity * const entity, QJsonObject &obj);
-    static void assembleTournamentJson(TournamentEntity * const entity, QJsonObject &obj);
-    static void assembleRoundJson(RoundEntity *const entity,QJsonObject &obj);
-    static void assemblePointJson(PointEntity *const entity,QJsonObject &obj);
+    static void assembleSeasonJson(SeasonModel * const entity, QJsonObject &obj);
+    static void assembleTournamentJson(TournamentModel * const entity, QJsonObject &obj);
+    static void assembleRoundJson(RoundModel *const entity,QJsonObject &obj);
+    static void assemblePointJson(PointModel *const entity,QJsonObject &obj);
 
     /*
      * Assemble objects from Json
      */
-
+    static SeasonModel* assembleSeasonModel(const QJsonObject &json);
+    static TournamentModel* assembleTournamentModel(const QJsonObject &json);
+    static RoundModel* assembleRoundModel(const QJsonObject &json);
+    static PointModel* assemblePointModel(const QJsonObject &json);
     /*
      * Helper methods
      */

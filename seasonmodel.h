@@ -1,12 +1,12 @@
 #ifndef SEASONENTITY_H
 #define SEASONENTITY_H
 
-#include "modelentity.h"
+#include "model.h"
 
-class SeasonEntity : public ModelEntity
+class SeasonModel : public Model
 {
 public:
-    SeasonEntity(const QUuid &id = QUuid());
+    SeasonModel(const QUuid &id = QUuid());
 
     QString name() const;
     void setName(const QString &value);

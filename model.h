@@ -13,11 +13,11 @@ using namespace std;
  * ModelEntity contains the following properties:
  *  - Identification
  *  - Parent identification
- *  - Information regard its type
- *  - Information regard its time of its incarceration
+ *  - Information of its type
+ *  - Information of its time of incarceration
  */
 
-class ModelEntity
+class Model
 {
 public:
     enum ModelType {UserModel = 0x0020,
@@ -26,9 +26,9 @@ public:
                     RoundModel = 0x0080,
                     PointModel = 0x0100};
 
-    ModelEntity(ModelType type, QUuid id = QUuid());
+    Model(ModelType type, QUuid id = QUuid());
 
-    virtual ~ModelEntity();
+    virtual ~Model();
 
 
     QUuid id() const;
@@ -36,12 +36,12 @@ public:
 
     QDateTime dateCreated() const;
 
-    ModelType type();
+    ModelType type() const;
 
     QUuid parentId() const;
     void setParentId(const QUuid &parentId);
 
-    bool operator ==(ModelEntity *comp);
+    bool operator ==(Model *comp);
 
 
     void setDateCreated(const QDateTime &dateCreated);
@@ -62,6 +62,6 @@ private:
     friend class CustomJsonAssembler;
 };
 
-typedef ModelEntity::ModelType mType;
+typedef Model::ModelType mType;
 
 #endif // MODELENTITY_H

@@ -1,12 +1,12 @@
 #ifndef TOURNAMENTENTITY_H
 #define TOURNAMENTENTITY_H
 
-#include "modelentity.h"
+#include "model.h"
 
-class TournamentEntity : public ModelEntity
+class TournamentModel : public Model
 {
 public:
-    TournamentEntity(const QUuid &id = QUuid());
+    TournamentModel(const QUuid &id = QUuid());
 
 
     void toJSON();
@@ -23,7 +23,7 @@ public:
     int maxUsersAllowed() const;
     void setMaxUsersAllowed(int maxUsersAllowed);
 
-    QList<QUuid> allRoundIdentities();
+    QList<QUuid> allRoundIdentities() const;
     void addRoundIdentities(const QList<QUuid> &identities);
 
 private:

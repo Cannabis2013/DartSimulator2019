@@ -1,12 +1,12 @@
 #ifndef USERENTITY_H
 #define USERENTITY_H
 
-#include "modelentity.h"
+#include "model.h"
 
-class UserEntity : public ModelEntity
+class UserModel : public Model
 {
 public:
-    UserEntity();
+    UserModel();
 
     enum UserRole{Super, regular};
 

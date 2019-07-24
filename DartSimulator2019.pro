@@ -31,12 +31,12 @@ SOURCES += \
         main.cpp \
         mainapplication.cpp \
         mainwindow.cpp \
-        modelentity.cpp \
-        pointentity.cpp \
-        roundentity.cpp \
-        seasonentity.cpp \
-        tournamententity.cpp \
-        userentity.cpp
+        model.cpp \
+        pointmodel.cpp \
+        roundmodel.cpp \
+        seasonmodel.cpp \
+        tournamentmodel.cpp \
+        usermodel.cpp
 
 HEADERS += \
         AllEntities.h \
@@ -45,13 +45,13 @@ HEADERS += \
         dbmanager.h \
         mainapplication.h \
         mainwindow.h \
-        modelentity.h \
+        model.h \
         outputmanager.h \
-        pointentity.h \
-        roundentity.h \
-        seasonentity.h \
-        tournamententity.h \
-        userentity.h
+        pointmodel.h \
+        roundmodel.h \
+        seasonmodel.h \
+        tournamentmodel.h \
+        usermodel.h
 
 FORMS += \
         mainwindow.ui

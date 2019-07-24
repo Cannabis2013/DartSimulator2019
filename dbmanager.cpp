@@ -5,91 +5,91 @@ DBManager::DBManager()
     db = new EntityDB();
 }
 
-QList<SeasonEntity *> DBManager::seasons() const
+const QList<const SeasonModel *> *DBManager::seasons()
 {
-    return db->models<SeasonEntity*>(ModelEntity::SeasonModel);
+    return db->models<SeasonModel>(Model::SeasonModel);
 }
 
-QList<TournamentEntity *> DBManager::tournaments() const
+const QList<const TournamentModel *> *DBManager::tournaments()
 {
-    return db->models<TournamentEntity*>(ModelEntity::TournamentModel);
+    return db->models<TournamentModel>(Model::TournamentModel);
 }
 
-QList<TournamentEntity *> DBManager::tournaments(const QUuid &seasonId) const
+const QList<const TournamentModel*> *DBManager::tournaments(const QUuid &seasonId)
 {
-    SeasonEntity* season = db->model<SeasonEntity*>(seasonId);
-    return db->models<TournamentEntity*>(season->allTournamentIdentities());
+    const SeasonModel* season = db->model<SeasonModel>(seasonId);
+    return db->models<TournamentModel>(season->allTournamentIdentities());
 }
 
-QList<RoundEntity *> DBManager::rounds() const
+const QList<const RoundModel*> *DBManager::rounds()
 {
-    return db->models<RoundEntity*>(ModelEntity::RoundModel);
+    return db->models<RoundModel>(Model::RoundModel);
 }
 
-QList<RoundEntity *> DBManager::rounds(const QUuid &tournamentId) const
+const QList<const RoundModel*> *DBManager::rounds(const QUuid &tournamentId)
 {
-    TournamentEntity* tournament = db->model<TournamentEntity*>(tournamentId);
-    return db->models<RoundEntity*>(tournament->allRoundIdentities());
+    const TournamentModel* tournament = db->model<TournamentModel>(tournamentId);
+    return db->models<RoundModel>(tournament->allRoundIdentities());
 }
 
-QList<PointEntity *> DBManager::points() const
+const QList<const PointModel*> *DBManager::points()
 {
-    return db->models<PointEntity*>(ModelEntity::PointModel);
+    return db->models<PointModel>(Model::PointModel);
 }
 
-QList<PointEntity *> DBManager::points(const QUuid &userId) const
+const QList<const PointModel *> *DBManager::points(const QUuid &userId)
 {
-    QList<PointEntity*> allPoints = db->models<PointEntity*>(ModelEntity::PointModel);
-    QList<PointEntity*> userPoints;
-    for (PointEntity* point : allPoints)
+    QList<const PointModel*> *allPoints = db->models<PointModel>(Model::PointModel);
+    QList<const PointModel*> *userPoints = new QList<const PointModel*>();
+    for (const PointModel* point : *allPoints)
     {
         if(point->userId() == userId)
-            allPoints << point;
+            userPoints->append(point);
     }
-    return allPoints;
+    return userPoints;
 }
 
-QList<PointEntity *> DBManager::points(const QUuid &tournamentId, const QUuid &userId) const
+const QList<const PointModel *> *DBManager::points(const QUuid &tournamentId, const QUuid &userId)
 {
-    TournamentEntity* tEntity = db->model<TournamentEntity*>(tournamentId);
-    QList<RoundEntity*> rounds = db->models<RoundEntity*>(tEntity->allRoundIdentities());
+    const TournamentModel* tEntity = db->model<TournamentModel>(tournamentId);
+    const QList<const RoundModel*> *rounds = db->models<RoundModel>(tEntity->allRoundIdentities());
 
-    QList<PointEntity*> allPoints;
+    QList<const PointModel*> *selectedPoints = new QList<const PointModel*>;
 
-    for (RoundEntity* round : rounds)
+    for (const RoundModel* round : *rounds)
     {
-        QList<PointEntity*> points = db->models<PointEntity*>(round->allPointIdentities());
-        for (PointEntity* point : points)
+        const QList<const PointModel*> *points = db->models<PointModel>(round->allPointIdentities());
+        for (const PointModel* point : *points)
         {
             if(userId == QUuid() || point->userId() == userId)
-                allPoints << point;
+                selectedPoints->append(point);
         }
     }
 
-    return allPoints;
+    return selectedPoints;
 }
 
-QList<ModelEntity *> const EntityDB::entities()
+QList<Model *> const EntityDB::models()
 {
-    return _entities;
+    return _models;
 }
 
-void EntityDB::setEntities(const QList<ModelEntity *> &entities)
+void EntityDB::setModels(const QList<Model *> &entities)
 {
-    _entities = entities;
+    _models = entities;
 }
 
-void EntityDB::addEntity(ModelEntity *entity)
+void EntityDB::addModel(Model *model)
 {
-    _entities << entity;
+    _models << model;
 }
 
-void EntityDB::removeEntity(const QUuid &id)
+void EntityDB::removeModel(const QUuid &id)
 {
-    for (ModelEntity* entity : _entities) {
+    for (Model* entity : _models) {
         if(entity->id() == id)
         {
-            _entities.removeOne(entity);
+            _models.removeOne(entity);
             return;
         }
     }
