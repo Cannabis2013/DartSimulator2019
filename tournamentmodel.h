@@ -8,7 +8,6 @@ class TournamentModel : public Model
 public:
     TournamentModel(const QUuid &id = QUuid());
 
-
     void toJSON();
 
     QString name() const;
@@ -25,6 +24,7 @@ public:
 
     QList<QUuid> allRoundIdentities() const;
     void addRoundIdentities(const QList<QUuid> &identities);
+    void addRoundIdentity(const QUuid &identity);
 
 private:
     QString _name;

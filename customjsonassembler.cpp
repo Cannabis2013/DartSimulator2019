@@ -8,9 +8,9 @@ CustomJsonAssembler::CustomJsonAssembler()
 QJsonObject CustomJsonAssembler::assembleJson(Model &entity)
 {
     Model* model = &entity;
-    initializer_list<_pair> list = {_pair("Id",model->_id.toString()),
-                _pair("Parent id",model->_parentId.toString()),
-                _pair("Model type",model->_type),
+    initializer_list<_pair> list = {_pair("Id",model->id().toString()),
+                _pair("Parent id",model->parentId().toString()),
+                _pair("Model type",model->type()),
                 _pair("Date created",model->dateCreated().toString(dateFormat))};
 
     QJsonObject object(list);

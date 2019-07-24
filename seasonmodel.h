@@ -16,7 +16,7 @@ public:
 
     void addTournamentIdentity(const QUuid &entityIdentity);
     void addTournamentIdentities(const QList<QUuid> identities);
-    QList<QUuid> allTournamentIdentities() const{return allIdentifiers();}
+    QList<QUuid> allTournamentIdentities() const {return allIdentifiers();}
 
 private:
     QString _name;

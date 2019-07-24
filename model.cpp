@@ -47,18 +47,23 @@ QUuid Model::parentId() const
 
 QList<QUuid> Model::allIdentifiers() const
 {
-    return _subEntities;
+    return _subModels;
 }
 
 
 void Model::appendIdentifier(const QUuid id)
 {
-    _subEntities << id;
+    _subModels << id;
 }
 
 void Model::appendIdentifiers(const QList<QUuid> identities)
 {
-    _subEntities.append(identities);
+    _subModels.append(identities);
+}
+
+void Model::removeIdentifier(const QUuid &id)
+{
+    _subModels.removeOne(id);
 }
 
 bool Model::operator ==(Model *comp)

@@ -2,7 +2,6 @@
 #define MODELENTITY_H
 
 #include <QUuid>
-#include <qhash.h>
 #include <QString>
 #include <QDateTime>
 
@@ -45,11 +44,14 @@ public:
 
 
     void setDateCreated(const QDateTime &dateCreated);
-
-protected:
     QList<QUuid> allIdentifiers() const;
+
     void appendIdentifier(const QUuid id);
     void appendIdentifiers(const QList<QUuid> identities);
+
+    void removeIdentifier(const QUuid &id);
+
+protected:
 
 private:
 
@@ -57,9 +59,7 @@ private:
     QUuid _parentId = QUuid();
     QDateTime _dateCreated;
     const ModelType _type;
-    QList<QUuid> _subEntities;
-
-    friend class CustomJsonAssembler;
+    QList<QUuid> _subModels;
 };
 
 typedef Model::ModelType mType;

@@ -4,63 +4,51 @@
 #include <qlist.h>
 #include <AllEntities.h>
 
-namespace DBContext {
-    class EntityDB;
-    class DBManager;
-}
+/*
+ * Model database provides the basic operation needed for manipulation of the state of the database
+ * These operations is:
+ *  - Add/remove models
+ *  - Model lookup
+ *  - Add/remove submodels
+ */
 
-class EntityDB
+class ModelDatabase
 {
 public:
-    QList<Model *> const models();
-    void setModels(const QList<Model *> &entities);
-    void addModel(Model* model);
-    void removeModel(const QUuid &id);
+    void setItems(const QList<Model *> &entities);
+    void addItem(Model* model);
+    void removeItem(const QUuid &id);
 
     template<typename T> const
-    T* model(QUuid id)
-    {
-        for (Model* model : _models)
-        {
-            if(model->id() == id)
-                return static_cast<T*>(model);
-        }
-        return nullptr;
-    }
+    T* item(QUuid id);
+
+    QList<Model *> const items();
+    template<typename T>
+    const QList<const T*> *items(QList<QUuid> identities);
 
     template<typename T>
-    const QList<const T*> *models(QList<QUuid> identities)
-    {
-        QList<const T*> *result = new QList<const T*>();
-        for (Model* entity : _models)
-        {
-            if(identities.contains(entity->id()))
-                result->append(static_cast<T*>(entity));
-        }
-        return result;
-    }
+    QList<const T*> *items(Model::ModelType type);
 
-    template<typename T>
-    QList<const T*> *models(Model::ModelType type)
-    {
-        QList<const T*> *result = new QList<const T*>();
-        for (Model* entity : _models)
-        {
-            if(entity->type() == type)
-                result->append(static_cast<T*>(entity));
-        }
-        return result;
-    }
+    void replaceItem(const QUuid &id,Model *model);
+
+    void appendChild(const QUuid &id, const QUuid &parentId);
+    void appendChildren(const QList<QUuid> &children,const QUuid &parentId);
 
 private:
 
-    QList<Model*> _models;
+    Model *_itemAt(const QUuid &id);
+
+    QList<Model*> _items;
 };
 
 class DBManager
 {
 public:
     DBManager();
+
+    /*
+     * Get model methods based on parameters
+     */
 
     const QList<const SeasonModel*> *seasons();
 
@@ -74,8 +62,19 @@ public:
     const QList<const PointModel*> *points(const QUuid &userId);
     const QList<const PointModel*> *points(const QUuid &tournamentId,const QUuid &userId = QUuid());
 
+    /*
+     * Alter state of DB methods
+     */
+
+    void addModel(Model *model);
+    void removeModel(const QUuid &id);
+    void replaceModel(const QUuid &id, Model*& model);
+
+    bool addSubModel(const QUuid &subModel, const QUuid &parentModel);
+    bool addSubModels(const QList<QUuid> &subModels,const QUuid &parentModel);
+
 private:
-    EntityDB *db;
+    ModelDatabase *db;
 };
 
 #endif // DBMANAGER_H

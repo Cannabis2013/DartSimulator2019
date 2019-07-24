@@ -60,3 +60,8 @@ void TournamentModel::addRoundIdentities(const QList<QUuid> &identities)
 {
     appendIdentifiers(identities);
 }
+
+void TournamentModel::addRoundIdentity(const QUuid &identity)
+{
+
+}

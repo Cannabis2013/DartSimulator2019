@@ -9,6 +9,7 @@ public:
     RoundModel(int roundNumber, const QUuid &id = QUuid());
 
     QList<QUuid> allPointIdentities() const;
+    void addPointIdentity(const QUuid &point);
     void addPointIdentities(const QList<QUuid> &pointIdentities);
 
     int roundNumber() const;
