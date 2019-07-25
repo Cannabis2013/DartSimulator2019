@@ -30,7 +30,6 @@ SOURCES += \
         dbmanager.cpp \
         main.cpp \
         mainapplication.cpp \
-        mainwindow.cpp \
         model.cpp \
         pointmodel.cpp \
         roundmodel.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
         customjsonassembler.h \
         dbmanager.h \
         mainapplication.h \
-        mainwindow.h \
         model.h \
         outputmanager.h \
         pointmodel.h \
