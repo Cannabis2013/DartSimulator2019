@@ -123,6 +123,11 @@ void DBManager::replaceModel(const QUuid &id, Model *&model)
     db->replaceItem(id,model);
 }
 
+void DBManager::resetModel(const QUuid &id)
+{
+    db->resetChildState(id);
+}
+
 QList<Model *> const ModelDatabase::items()
 {
     return _items;

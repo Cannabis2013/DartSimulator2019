@@ -2,7 +2,6 @@
 
 CustomJsonAssembler::CustomJsonAssembler()
 {
-
 }
 
 QJsonObject CustomJsonAssembler::assembleJson(Model &entity)

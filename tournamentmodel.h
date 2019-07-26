@@ -8,8 +8,6 @@ class TournamentModel : public Model
 public:
     TournamentModel(const QUuid &id = QUuid());
 
-    void toJSON();
-
     QString name() const;
     void setName(const QString &name);
 

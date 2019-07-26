@@ -3,9 +3,11 @@
 
 #include <allmodels.h>
 #include <dbmanager.h>
+#include <qobject.h>
 
-class GameManager
+class GameManager : public QObject
 {
+    Q_OBJECT
 public:
     GameManager(const QUuid &season,const QUuid &tournament);
 
@@ -15,19 +17,25 @@ public:
     QUuid currentTournament() const;
     void setCurrentTournament(const QUuid &currentTournament);
 
-    QUuid currentRound() const;
     void setCurrentRound(const QUuid &currentRound);
-    void appendRound();
     const QList<QUuid>* allRounds();
 
-    const QUuid *currentRound();
+    const QUuid *currentRoundAtHead();
     
-    void addPoint(PointModel* point);
+    void resetTournament();
+    void resetRound();
 
+
+public slots:
     void assignUser(const QUuid &user);
     void unAssignUser(const QUuid &user);
 
+    void nextRound();
+
 private:
+    void appendNextRound();
+
+    void addPoint(PointModel* point);
 
     int head() const;
     bool isDetached();

@@ -30,17 +30,12 @@ void GameManager::setCurrentTournament(const QUuid &currentTournament)
     _currentTournament = currentTournament;
 }
 
-QUuid GameManager::currentRound() const
-{
-    return _currentRound;
-}
-
 void GameManager::setCurrentRound(const QUuid &currentRound)
 {
     _currentRound = currentRound;
 }
 
-void GameManager::appendRound()
+void GameManager::appendNextRound()
 {
     RoundModel* round = new RoundModel(_rounds.count());
     dbMng->addModel(round,currentTournament());
@@ -51,7 +46,7 @@ const QList<QUuid> *GameManager::allRounds()
     return &_rounds;
 }
 
-const QUuid *GameManager::currentRound()
+const QUuid *GameManager::currentRoundAtHead()
 {
     return &_rounds.at(_indexHead);
 }
@@ -59,7 +54,17 @@ const QUuid *GameManager::currentRound()
 void GameManager::addPoint(PointModel *point)
 {
     if(!isDetached())
-        dbMng->addModel(point,*currentRound());
+        dbMng->addModel(point,*currentRoundAtHead());
+}
+
+void GameManager::resetTournament()
+{
+    dbMng->resetModel(currentTournament());
+}
+
+void GameManager::resetRound()
+{
+    dbMng->resetModel(*currentRoundAtHead());
 }
 
 void GameManager::assignUser(const QUuid &user)
@@ -71,6 +76,11 @@ void GameManager::unAssignUser(const QUuid &user)
 {
     if(dbMng->modelType(user) == mType::UserModel)
         dbMng->removeChildIdentity(user,currentTournament());
+}
+
+void GameManager::nextRound()
+{
+    appendNextRound();
 }
 
 int GameManager::head() const

@@ -5,12 +5,6 @@ TournamentModel::TournamentModel(const QUuid &id):
 {
 }
 
-
-void TournamentModel::toJSON()
-{
-
-}
-
 QString TournamentModel::name() const
 {
     return _name;

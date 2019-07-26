@@ -77,6 +77,7 @@ public:
     void addModel(Model *model, const QUuid &parentId = QUuid());
     bool removeModel(const QUuid &id);
     void replaceModel(const QUuid &id, Model*& model);
+    void resetModel(const QUuid &id);
 
     bool addSubIdentity(const QUuid &subModel, const QUuid &parentModel);
     bool addSubIdentities(const QList<QUuid> &subIdentities, const QUuid &parentIdentity);
