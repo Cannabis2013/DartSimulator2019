@@ -50,18 +50,3 @@ void TournamentModel::setMaxUsersAllowed(int maxUsersAllowed)
 {
     _maxUsersAllowed = maxUsersAllowed;
 }
-
-QList<QUuid> TournamentModel::allRoundIdentities() const
-{
-    return allIdentifiers();
-}
-
-void TournamentModel::addRoundIdentities(const QList<QUuid> &identities)
-{
-    appendIdentifiers(identities);
-}
-
-void TournamentModel::addRoundIdentity(const QUuid &identity)
-{
-
-}

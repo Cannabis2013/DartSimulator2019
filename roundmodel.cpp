@@ -6,21 +6,6 @@ RoundModel::RoundModel(int roundNumber, const QUuid &id):
 {
 }
 
-QList<QUuid> RoundModel::allPointIdentities() const
-{
-    return allIdentifiers();
-}
-
-void RoundModel::addPointIdentity(const QUuid &point)
-{
-    appendIdentifier(point);
-}
-
-void RoundModel::addPointIdentities(const QList<QUuid> &pointIdentities)
-{
-    appendIdentifiers(pointIdentities);
-}
-
 int RoundModel::roundNumber() const
 {
     return _roundNumber;

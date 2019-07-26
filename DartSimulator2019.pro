@@ -28,6 +28,7 @@ SOURCES += \
         abstractcomparable.cpp \
         customjsonassembler.cpp \
         dbmanager.cpp \
+        gamemanager.cpp \
         main.cpp \
         mainapplication.cpp \
         model.cpp \
@@ -38,10 +39,11 @@ SOURCES += \
         usermodel.cpp
 
 HEADERS += \
-        AllEntities.h \
         abstractcomparable.h \
+        allmodels.h \
         customjsonassembler.h \
         dbmanager.h \
+        gamemanager.h \
         mainapplication.h \
         model.h \
         outputmanager.h \

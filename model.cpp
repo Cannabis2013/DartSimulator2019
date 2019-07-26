@@ -45,9 +45,9 @@ QUuid Model::parentId() const
     return _parentId;
 }
 
-QList<QUuid> Model::allIdentifiers() const
+const QList<QUuid> *Model::allIdentifiers() const
 {
-    return _subModels;
+    return &_subModels;
 }
 
 

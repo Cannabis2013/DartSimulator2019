@@ -22,10 +22,6 @@ public:
     int maxUsersAllowed() const;
     void setMaxUsersAllowed(int maxUsersAllowed);
 
-    QList<QUuid> allRoundIdentities() const;
-    void addRoundIdentities(const QList<QUuid> &identities);
-    void addRoundIdentity(const QUuid &identity);
-
 private:
     QString _name;
     int _numberOfRounds,_maxUsersAllowed;

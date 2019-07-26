@@ -31,7 +31,7 @@ QJsonObject CustomJsonAssembler::assembleJson(Model &entity)
      */
 
     QJsonArray arr;
-    QList<QUuid> subIdentities = model->allIdentifiers();
+    QList<QUuid> subIdentities = *model->allIdentifiers();
 
     for (int i = 0; i < subIdentities.count(); ++i)
         arr[i] = QJsonValue(subIdentities.at(i).toString());
@@ -90,7 +90,7 @@ SeasonModel *CustomJsonAssembler::assembleSeasonModel(const QJsonObject &json)
     if(json.value("Identities").isArray())
     {
         QJsonArray arr = json.value("Identities").toArray();
-        sEntity->addTournamentIdentities(extractArray(arr));
+        sEntity->appendIdentifiers(extractArray(arr));
     }
 
     return sEntity;
@@ -118,7 +118,7 @@ TournamentModel *CustomJsonAssembler::assembleTournamentModel(const QJsonObject 
     if(json.value("Identities").isArray())
     {
         QJsonArray arr = json.value("Identities").toArray();
-        tournament->addRoundIdentities(extractArray(arr));
+        tournament->appendIdentifiers(extractArray(arr));
     }
 
     return tournament;
@@ -137,7 +137,7 @@ RoundModel *CustomJsonAssembler::assembleRoundModel(const QJsonObject &json)
     if(json.value("Identities").isArray())
     {
         QJsonArray arr = json.value("Identities").toArray();
-        round->addPointIdentities(extractArray(arr));
+        round->appendIdentifiers(extractArray(arr));
     }
 
     return round;

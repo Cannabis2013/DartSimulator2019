@@ -44,7 +44,7 @@ public:
 
 
     void setDateCreated(const QDateTime &dateCreated);
-    QList<QUuid> allIdentifiers() const;
+    const QList<QUuid> *allIdentifiers() const;
 
     void appendIdentifier(const QUuid id);
     void appendIdentifiers(const QList<QUuid> identities);

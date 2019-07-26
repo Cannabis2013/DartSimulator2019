@@ -18,7 +18,7 @@ const QList<const TournamentModel *> *DBManager::tournaments()
 const QList<const TournamentModel*> *DBManager::tournaments(const QUuid &seasonId)
 {
     const SeasonModel* season = db->item<SeasonModel>(seasonId);
-    return db->items<TournamentModel>(season->allTournamentIdentities());
+    return db->items<TournamentModel>(*season->allIdentifiers(),Model::TournamentModel);
 }
 
 const QList<const RoundModel*> *DBManager::rounds()
@@ -29,7 +29,7 @@ const QList<const RoundModel*> *DBManager::rounds()
 const QList<const RoundModel*> *DBManager::rounds(const QUuid &tournamentId)
 {
     const TournamentModel* tournament = db->item<TournamentModel>(tournamentId);
-    return db->items<RoundModel>(tournament->allRoundIdentities());
+    return db->items<RoundModel>(*tournament->allIdentifiers(),Model::RoundModel);
 }
 
 const QList<const PointModel*> *DBManager::points()
@@ -52,13 +52,13 @@ const QList<const PointModel *> *DBManager::points(const QUuid &userId)
 const QList<const PointModel *> *DBManager::points(const QUuid &tournamentId, const QUuid &userId)
 {
     const TournamentModel* tEntity = db->item<TournamentModel>(tournamentId);
-    const QList<const RoundModel*> *rounds = db->items<RoundModel>(tEntity->allRoundIdentities());
+    const QList<const RoundModel*> *rounds = db->items<RoundModel>(*tEntity->allIdentifiers(),Model::RoundModel);
 
     QList<const PointModel*> *selectedPoints = new QList<const PointModel*>;
 
     for (const RoundModel* round : *rounds)
     {
-        const QList<const PointModel*> *points = db->items<PointModel>(round->allPointIdentities());
+        const QList<const PointModel*> *points = db->items<PointModel>(*round->allIdentifiers(),Model::PointModel);
         for (const PointModel* point : *points)
         {
             if(userId == QUuid() || point->userId() == userId)
@@ -69,34 +69,48 @@ const QList<const PointModel *> *DBManager::points(const QUuid &tournamentId, co
     return selectedPoints;
 }
 
-bool DBManager::addSubModel(const QUuid &subModel, const QUuid &parentModel)
+bool DBManager::addSubIdentity(const QUuid &subModel, const QUuid &parentModel)
 {
     try {
-        db->appendChild(subModel,parentModel);
+        db->appendChildIdentity(subModel,parentModel);
         return true;
     } catch (invalid_argument e) {
         return false;
     }
 }
 
-bool DBManager::addSubModels(const QList<QUuid> &subModels, const QUuid &parentModel)
+bool DBManager::addSubIdentities(const QList<QUuid> &subIdentities, const QUuid &parentIdentity)
 {
     try {
-        db->appendChildren(subModels,parentModel);
+        db->appendChildIdentities(subIdentities,parentIdentity);
         return true;
     } catch (invalid_argument e) {
         return false;
     }
 }
 
-void DBManager::addModel(Model *model)
+void DBManager::removeChildIdentity(const QUuid &subModel, const QUuid &parentModel)
+{
+    db->removeChildIdentity(subModel,parentModel);
+}
+
+void DBManager::addModel(Model *model, const QUuid &parentId)
 {
     db->addItem(model);
+    if(parentId != QUuid())
+        addSubIdentity(model->id(),parentId);
 }
 
-void DBManager::removeModel(const QUuid &id)
+bool DBManager::removeModel(const QUuid &id)
 {
-    db->removeItem(id);
+    try {
+        db->removeItem(id);
+        return true;
+    } catch (out_of_range e) {
+        return false;
+    } catch (exception e){
+        return false;
+    }
 }
 
 void DBManager::replaceModel(const QUuid &id, Model *&model)
@@ -121,16 +135,32 @@ void ModelDatabase::addItem(Model *model)
 
 void ModelDatabase::removeItem(const QUuid &id)
 {
-    for (Model* entity : _items) {
-        if(entity->id() == id)
-        {
-            if(entity->parentId() != QUuid())
-                _itemAt(entity->parentId())->removeIdentifier(entity->id());
+    Model* model;
+    try {
+        model = _itemAt(id);
+    } catch (out_of_range e) {
+        throw e;
+    }
+    if(model->parentId() != QUuid())
+        _itemAt(model->parentId())->removeIdentifier(model->id());
 
-            _items.removeOne(entity);
-            return;
+    for (QUuid id : *model->allIdentifiers())
+    {
+        Model* m = _itemAt(id);
+        if(m->type() != Model::UserModel)
+        {
+            m->setParentId(QUuid());
+            try {
+                removeItem(id);
+            } catch (out_of_range e) {
+                throw exception();
+            } catch(exception e1){
+                throw exception();
+            }
         }
     }
+    if(!_items.removeOne(model))
+        throw exception();
 }
 
 void ModelDatabase::replaceItem(const QUuid &id, Model *model)
@@ -146,7 +176,7 @@ void ModelDatabase::replaceItem(const QUuid &id, Model *model)
     }
 }
 
-void ModelDatabase::appendChild(const QUuid &id, const QUuid &parentId)
+void ModelDatabase::appendChildIdentity(const QUuid &id, const QUuid &parentId)
 {
     Model* childCandidate = _itemAt(id);
     Model* parentCandidate = _itemAt(parentId);
@@ -157,7 +187,7 @@ void ModelDatabase::appendChild(const QUuid &id, const QUuid &parentId)
     childCandidate->setParentId(parentCandidate->id());
 }
 
-void ModelDatabase::appendChildren(const QList<QUuid> &children, const QUuid &parentId)
+void ModelDatabase::appendChildIdentities(const QList<QUuid> &children, const QUuid &parentId)
 {
     Model* parentCandidate = _itemAt(parentId);
     if(parentCandidate->type() == Model::PointModel)
@@ -171,6 +201,17 @@ void ModelDatabase::appendChildren(const QList<QUuid> &children, const QUuid &pa
         parentCandidate->appendIdentifier(id);
         childCandidate->setParentId(parentId);
     }
+}
+
+void ModelDatabase::removeChildIdentity(const QUuid &child, const QUuid &parent)
+{
+    /*
+     * Please note, this operation doesn't alter the state of the database,
+     * which means that no object other than the objects internally stored UUID is removed.
+     */
+
+    Model* m = _itemAt(parent);
+    m->removeIdentifier(child);
 }
 
 Model *ModelDatabase::_itemAt(const QUuid &id)
@@ -195,13 +236,13 @@ const T *ModelDatabase::item(QUuid id)
 }
 
 template<typename T>
-const QList<const T *> *ModelDatabase::items(QList<QUuid> identities)
+const QList<const T *> *ModelDatabase::items(QList<QUuid> identities, Model::ModelType type)
 {
     QList<const T*> *result = new QList<const T*>();
-    for (Model* entity : _items)
+    for (Model* model : _items)
     {
-        if(identities.contains(entity->id()))
-            result->append(static_cast<T*>(entity));
+        if(identities.contains(model->id()) && model->type() == type)
+            result->append(static_cast<T*>(model));
     }
     return result;
 }

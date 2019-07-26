@@ -25,13 +25,3 @@ void SeasonModel::setDateFinished(const QDateTime &value)
 {
     _dateFinished = value;
 }
-
-void SeasonModel::addTournamentIdentity(const QUuid &entityIdentity)
-{
-    appendIdentifier(entityIdentity);
-}
-
-void SeasonModel::addTournamentIdentities(const QList<QUuid> identities)
-{
-    appendIdentifiers(identities);
-}

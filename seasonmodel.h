@@ -14,10 +14,6 @@ public:
     QDateTime dateFinished() const;
     void setDateFinished(const QDateTime &value);
 
-    void addTournamentIdentity(const QUuid &entityIdentity);
-    void addTournamentIdentities(const QList<QUuid> identities);
-    QList<QUuid> allTournamentIdentities() const {return allIdentifiers();}
-
 private:
     QString _name;
     QDateTime _dateFinished;
