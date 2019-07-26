@@ -35,6 +35,8 @@ public:
     void appendChildIdentities(const QList<QUuid> &children,const QUuid &parentId);
     void removeChildIdentity(const QUuid &child,const QUuid &parent);
 
+    void resetChildState(const QUuid &model);
+
 private:
 
     Model *_itemAt(const QUuid &id);

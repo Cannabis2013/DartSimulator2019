@@ -213,6 +213,14 @@ void ModelDatabase::removeChildIdentity(const QUuid &child, const QUuid &parent)
     m->removeIdentifier(child);
 }
 
+void ModelDatabase::resetChildState(const QUuid &model)
+{
+    Model* m = _itemAt(model);
+
+    for (const QUuid &id : *m->allIdentifiers())
+        removeItem(id);
+}
+
 Model *ModelDatabase::_itemAt(const QUuid &id)
 {
     for (Model* model : _items)
