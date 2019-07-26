@@ -27,7 +27,6 @@ public:
     void assignUser(const QUuid &user);
     void unAssignUser(const QUuid &user);
 
-
 private:
 
     int head() const;

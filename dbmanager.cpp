@@ -170,15 +170,9 @@ void ModelDatabase::removeItem(const QUuid &id)
 
 void ModelDatabase::replaceItem(const QUuid &id, Model *model)
 {
-    for (int i = 0; i < _items.count(); ++i)
-    {
-        Model *m = _items.at(i);
-        if(m->id() == id)
-        {
-            _items.replace(i,model);
-            return;
-        }
-    }
+    Model *m = _itemAt(id);
+    int index = _items.indexOf(m);
+    _items.replace(index,model);
 }
 
 void ModelDatabase::appendChildIdentity(const QUuid &id, const QUuid &parentId)
