@@ -47,6 +47,8 @@ class DBManager
 public:
     DBManager();
 
+    Model::ModelType modelType(const QUuid &id);
+
     /*
      * Get model methods based on parameters
      */

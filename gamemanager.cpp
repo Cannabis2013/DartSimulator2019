@@ -69,7 +69,8 @@ void GameManager::assignUser(const QUuid &user)
 
 void GameManager::unAssignUser(const QUuid &user)
 {
-    dbMng->removeChildIdentity(user,currentTournament());
+    if(dbMng->modelType(user) == mType::UserModel)
+        dbMng->removeChildIdentity(user,currentTournament());
 }
 
 int GameManager::head() const

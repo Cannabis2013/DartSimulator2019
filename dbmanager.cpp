@@ -5,6 +5,11 @@ DBManager::DBManager()
     db = new ModelDatabase();
 }
 
+Model::ModelType DBManager::modelType(const QUuid &id)
+{
+    return db->item<Model>(id)->type();
+}
+
 const QList<const SeasonModel *> *DBManager::seasons()
 {
     return db->items<SeasonModel>(Model::SeasonModel);
