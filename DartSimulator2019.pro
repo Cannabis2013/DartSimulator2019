@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         abstractmodelinterface.cpp \
         customjsonassembler.cpp \
+        gamemanager.cpp \
         main.cpp \
         mainapplication.cpp \
         model.cpp \
@@ -40,6 +41,7 @@ SOURCES += \
 HEADERS += \
         abstractmodelinterface.h \
         customjsonassembler.h \
+        gamemanager.h \
         mainapplication.h \
         model.h \
         modeldb.h \

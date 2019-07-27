@@ -21,7 +21,8 @@ public:
     const Model *model(const QUuid &id);
     void addModel(Model* m, const QUuid &parent = QUuid());
     void replaceModel(Model* m, const QUuid &id);
-    const QList<const Model *> *models();
+    const QList<const Model *> *topLevelModels();
+    const QList<const Model *> *children_of(const QUuid &parent);
 
 private:
     /*topLevelModel(id):
@@ -29,10 +30,11 @@ private:
      *    as it doesn't search the entire tree of childs.
      */
 
-    Season *topLevelModel(const QUuid &id);
-    Model* M(const QUuid &id);
-    int index_of(const QUuid &id);
-    Model *child(Model *m, const QUuid &id);
+    Tournament *_topLevelModel(const QUuid &id);
+    Model* _model(const QUuid &id);
+    int _index_of(const QUuid &id);
+    Model *_child(Model *m, const QUuid &id);
+
     QList<Model*> _models;
 };
 

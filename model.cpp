@@ -67,3 +67,13 @@ void Model::setParent(Model *parent)
 {
     _parent = parent;
 }
+
+const QList<const Model *> *Model::childs() const
+{
+    QList<const Model*> *result = new QList<const Model*>;
+
+    for (const Model* child : children())
+        *result << child;
+
+    return result;
+}

@@ -37,6 +37,8 @@ public:
     Model* parent() const;
     void setParent(Model *parent);
 
+    const QList<const Model*> *childs() const;
+
 protected:
     void addChild(Model* child);
     void replaceChild(const int &index, Model* child);
