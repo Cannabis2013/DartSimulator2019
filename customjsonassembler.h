@@ -1,8 +1,8 @@
 #ifndef CUSTOMJSONASSEMBLER_H
 #define CUSTOMJSONASSEMBLER_H
 
-#include <seasonentity.h>
-#include <tournamententity.h>
+#include <season.h>
+#include <tournament.h>
 #include <QList>
 #include <QPair>
 #include <QJsonObject>
@@ -17,12 +17,12 @@ class CustomJsonAssembler
 public:
     CustomJsonAssembler();
 
-    static QJsonObject assembleJson(ModelEntity &entity);
+    static QJsonObject assembleJson(Model &entity);
 
 private:
 
-    static void assembleSeasonJson(SeasonEntity * const entity, QJsonObject &obj);
-    static void assembleTournamentJson(TournamentEntity * const entity, QJsonObject &obj);
+    static void assembleSeasonJson(Season * const entity, QJsonObject &obj);
+    static void assembleTournamentJson(Tournament * const entity, QJsonObject &obj);
 };
 
 #endif // CUSTOMJSONASSEMBLER_H

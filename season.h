@@ -1,12 +1,13 @@
 #ifndef SEASONENTITY_H
 #define SEASONENTITY_H
 
-#include "modelentity.h"
+#include "model.h"
+#include "tournament.h"
 
-class SeasonEntity : public ModelEntity
+class Season : public Model
 {
 public:
-    SeasonEntity();
+    Season();
 
     QString name() const;
     void setName(const QString &value);
@@ -14,10 +15,10 @@ public:
     QDateTime dateFinished() const;
     void setDateFinished(const QDateTime &value);
 
-    void addTournamentIdentity(const QUuid &entityIdentity);
-    QList<QUuid> allTournamentIdentities() const{return allIdentifiers();}
+    void addTournament(Tournament* tournament);
+    const QList<const Tournament*> *tournaments();
+    void removeTournament(Tournament* tournament);
 
-    void toJSON();
 private:
     QString _name;
     QDateTime _dateFinished;

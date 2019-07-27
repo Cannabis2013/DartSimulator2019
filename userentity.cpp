@@ -1,7 +1,7 @@
 #include "userentity.h"
 
 UserEntity::UserEntity():
-    ModelEntity(ModelType::UserModel)
+    Model(ModelType::UserModel)
 {
 }
 

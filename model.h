@@ -5,7 +5,6 @@
 #include <QString>
 #include <QDateTime>
 
-
 using namespace std;
 
 /*
@@ -16,7 +15,7 @@ using namespace std;
  *  - Information regard its time of its incarceration
  */
 
-class ModelEntity
+class Model
 {
 public:
     enum ModelType {UserModel = 0x0020,
@@ -25,31 +24,37 @@ public:
                     RoundModel = 0x0080,
                     PointModel = 0x0100};
 
-    ModelEntity(ModelType type);
+    Model(ModelType type);
 
-    virtual ~ModelEntity();
-
+    virtual ~Model();
 
     QUuid id() const;
 
     QDateTime dateCreated() const;
 
-    ModelType type();
+    ModelType type() const;
 
-    QUuid parentId() const;
-    QList<QUuid> allIdentifiers() const;
-    void appendIdentifier(const QUuid id);
+    Model* parent() const;
+    void setParent(Model *parent);
+
+protected:
+    void addChild(Model* child);
+    void replaceChild(const int &index, Model* child);
+    QList<Model *> children() const;
+    int numberOfChilds() const;
+    void removeChild(Model* child);
+
+    bool isRoot() const;
 
 private:
-    void setParentId(const QUuid &parentId);
-
     const QUuid _id;
-    QUuid _parentId;
+    Model* _parent;
     const QDateTime _dateCreated;
     const ModelType _type;
-    QList<QUuid> _subEntities;
+    QList<Model*> _children;
 
     friend class CustomJsonAssembler;
+    friend class ModelDB;
 };
 
 #endif // MODELENTITY_H

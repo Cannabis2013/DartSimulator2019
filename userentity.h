@@ -1,9 +1,9 @@
 #ifndef USERENTITY_H
 #define USERENTITY_H
 
-#include "modelentity.h"
+#include "model.h"
 
-class UserEntity : public ModelEntity
+class UserEntity : public Model
 {
 public:
     UserEntity();

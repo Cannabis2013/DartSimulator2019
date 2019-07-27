@@ -25,26 +25,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        abstractmodelinterface.cpp \
         customjsonassembler.cpp \
         main.cpp \
         mainapplication.cpp \
-        mainwindow.cpp \
-        modelentity.cpp \
-        pointentity.cpp \
-        roundentity.cpp \
-        seasonentity.cpp \
-        tournamententity.cpp \
+        model.cpp \
+        modeldb.cpp \
+        point.cpp \
+        round.cpp \
+        season.cpp \
+        tournament.cpp \
         userentity.cpp
 
 HEADERS += \
+        abstractmodelinterface.h \
         customjsonassembler.h \
         mainapplication.h \
-        mainwindow.h \
-        modelentity.h \
-        pointentity.h \
-        roundentity.h \
-        seasonentity.h \
-        tournamententity.h \
+        model.h \
+        modeldb.h \
+        point.h \
+        round.h \
+        season.h \
+        tournament.h \
         userentity.h
 
 FORMS += \
