@@ -28,13 +28,13 @@ void Season::setDateFinished(const QDateTime &value)
 
 void Season::addTournament(Tournament *tournament)
 {
-    addChild(tournament);
+    _addChild(tournament);
 }
 
 const QList<const Tournament *> *Season::tournaments()
 {
     QList<const Tournament*> *result = new QList<const Tournament*>();
-    for (Model* child : children())
+    for (Model* child : _childs())
         *result << dynamic_cast<const Tournament*>(child);
 
     return result;
@@ -42,5 +42,5 @@ const QList<const Tournament *> *Season::tournaments()
 
 void Season::removeTournament(Tournament *tournament)
 {
-    removeChild(tournament);
+    _removeChild(tournament);
 }

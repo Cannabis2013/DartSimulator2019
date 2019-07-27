@@ -27,7 +27,7 @@ void ModelDB::addModel(Model *m, const QUuid &parent)
     if(_model(parent)->type() == Model::PointModel)
         throw "Adding children to this type of model not allowed!";
 
-    _model(parent)->addChild(m);
+    _model(parent)->_addChild(m);
 }
 
 void ModelDB::replaceModel(Model *m, const QUuid &id)
@@ -38,11 +38,11 @@ void ModelDB::replaceModel(Model *m, const QUuid &id)
         throw  "No object to replace";
     if(replaceable->parent() != nullptr)
     {
-        QList<Model*> children = replaceable->parent()->children();
+        QList<Model*> children = replaceable->parent()->_childs();
         for (int i = 0; i < children.count(); ++i) {
             if(children.at(i)->id() == id)
             {
-                replaceable->replaceChild(i,m);
+                replaceable->_replaceChild(i,m);
                 return;
             }
         }
@@ -110,7 +110,7 @@ Model *ModelDB::_child(Model *m, const QUuid &id)
     if(m->id() == id)
         return m;
 
-    for (Model* c : m->children()) {
+    for (Model* c : m->_childs()) {
         Model* C = _child(c,id);
         if(C != nullptr)
             return C;

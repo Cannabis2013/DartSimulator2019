@@ -40,11 +40,11 @@ public:
     const QList<const Model*> *childs() const;
 
 protected:
-    void addChild(Model* child);
-    void replaceChild(const int &index, Model* child);
-    QList<Model *> children() const;
-    int numberOfChilds() const;
-    void removeChild(Model* child);
+    void _addChild(Model* child);
+    void _replaceChild(const int &index, Model* child);
+    QList<Model *> _childs() const;
+    int _numberOfChilds() const;
+    void _removeChild(Model* child);
 
     bool isRoot() const;
 

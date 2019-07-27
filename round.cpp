@@ -13,10 +13,10 @@ int Round::roundNumber() const
 
 void Round::addPoint(Point *point)
 {
-    addChild(point);
+    _addChild(point);
 }
 
 void Round::removePoint(Point *point)
 {
-    removeChild(point);
+    _removeChild(point);
 }

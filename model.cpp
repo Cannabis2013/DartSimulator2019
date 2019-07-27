@@ -31,28 +31,28 @@ Model *Model::parent() const
     return _parent;
 }
 
-void Model::addChild(Model *child)
+void Model::_addChild(Model *child)
 {
     _children << child;
     child->setParent(this);
 }
 
-void Model::replaceChild(const int &index,Model *child)
+void Model::_replaceChild(const int &index,Model *child)
 {
     _children.replace(index,child);
 }
 
-QList<Model *> Model::children() const
+QList<Model *> Model::_childs() const
 {
     return _children;
 }
 
-int Model::numberOfChilds() const
+int Model::_numberOfChilds() const
 {
     return _children.count();
 }
 
-void Model::removeChild(Model *child)
+void Model::_removeChild(Model *child)
 {
     _children.removeOne(child);
 }
@@ -72,7 +72,7 @@ const QList<const Model *> *Model::childs() const
 {
     QList<const Model*> *result = new QList<const Model*>;
 
-    for (const Model* child : children())
+    for (const Model* child : _childs())
         *result << child;
 
     return result;
