@@ -20,6 +20,8 @@ public:
     int maxUsersAllowed() const;
     void setMaxUsersAllowed(int maxUsersAllowed);
 
+    int numberOfUsersAssigned() const;
+
     QList<QUuid> users() const;
     void setUsers(const QList<QUuid> &users);
 

@@ -44,8 +44,3 @@ void UserEntity::setRole(const UserRole &role)
 {
     _role = role;
 }
-
-
-void UserEntity::toJSON()
-{
-}

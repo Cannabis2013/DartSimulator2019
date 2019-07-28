@@ -5,6 +5,8 @@
 #include <QString>
 #include <QDateTime>
 
+#define DATEFORMAT "dd-MM-yyyy"
+
 using namespace std;
 
 /*
@@ -22,7 +24,8 @@ public:
                     SeasonModel = 0x0040,
                     TournamentModel = 0x0060,
                     RoundModel = 0x0080,
-                    PointModel = 0x0100};
+                    PointModel = 0x0100,
+                    DefaultModel = 0x0120};
 
     Model(ModelType type);
 
@@ -37,7 +40,7 @@ public:
     Model* parent() const;
     void setParent(Model *parent);
 
-    const QList<const Model*> *childs() const;
+    QList<const Model*> childs() const;
 
 protected:
     void _addChild(Model* child);
@@ -47,6 +50,7 @@ protected:
     void _removeChild(Model* child);
 
     bool isRoot() const;
+    bool isLeaf() const;
 
 private:
     const QUuid _id;

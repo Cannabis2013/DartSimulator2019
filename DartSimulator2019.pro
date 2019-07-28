@@ -25,9 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        abstractmodelinterface.cpp \
         customjsonassembler.cpp \
         gamemanager.cpp \
+        idatabasemanager.cpp \
+        imodelizer.cpp \
         main.cpp \
         mainapplication.cpp \
         model.cpp \
@@ -39,9 +40,11 @@ SOURCES += \
         userentity.cpp
 
 HEADERS += \
-        abstractmodelinterface.h \
         customjsonassembler.h \
         gamemanager.h \
+        idartsimulator.h \
+        idatabasemanager.h \
+        imodelizer.h \
         mainapplication.h \
         model.h \
         modeldb.h \

@@ -62,18 +62,22 @@ bool Model::isRoot() const
     return parent() == nullptr;
 }
 
+bool Model::isLeaf() const
+{
+    return _children.count() == 0;
+}
 
 void Model::setParent(Model *parent)
 {
     _parent = parent;
 }
 
-const QList<const Model *> *Model::childs() const
+QList<const Model *> Model::childs() const
 {
-    QList<const Model*> *result = new QList<const Model*>;
+    QList<const Model*> result;
 
     for (const Model* child : _childs())
-        *result << child;
+        result << child;
 
     return result;
 }

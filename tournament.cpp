@@ -45,6 +45,11 @@ void Tournament::setMaxUsersAllowed(int maxUsersAllowed)
     _maxUsersAllowed = maxUsersAllowed;
 }
 
+int Tournament::numberOfUsersAssigned() const
+{
+    return _users.count();
+}
+
 QList<QUuid> Tournament::users() const
 {
     return _users;

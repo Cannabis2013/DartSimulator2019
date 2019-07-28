@@ -9,21 +9,30 @@ class GameManager : public QObject
 {
     Q_OBJECT
 public:
-    GameManager(mInterface* database);
+    GameManager(IDatabaseManager<Model,Model::ModelType>* database);
 
     QUuid currentTournament() const;
     void setCurrentTournament(const QUuid &value);
 
     QUuid currentRound() const;
 
+    int totalPoints(const QUuid &user = QUuid());
+
 public slots:
-    void addPoint(Point* p);
+
+    void initiateNext();
+    void addPoint(Point *p);
 
 private:
+    const QList<const Point *> points();
+
+    bool isDetached();
+
     QUuid appendNextRound();
 
+    int _HEAD = -1;
     QUuid _currentTournament;
-    mInterface* db;
+    IDatabaseManager<Model,Model::ModelType>* db;
 };
 
 #endif // GAMEMANAGER_H

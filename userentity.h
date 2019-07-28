@@ -22,7 +22,6 @@ public:
     UserRole getRole() const;
     void setRole(const UserRole &role);
 
-    void toJSON();
 private:
     QString _forName, _surName, _eMail;
     UserRole _role;
