@@ -25,16 +25,6 @@ void Tournament::setNumberOfRounds(int numberOfRounds)
     _numberOfRounds = numberOfRounds;
 }
 
-QDate Tournament::dateFinished() const
-{
-    return _dateFinished;
-}
-
-void Tournament::setDateFinished(const QDate &endDate)
-{
-    _dateFinished = endDate;
-}
-
 int Tournament::maxUsersAllowed() const
 {
     return _maxUsersAllowed;

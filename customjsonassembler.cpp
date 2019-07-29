@@ -20,5 +20,4 @@ void CustomJsonAssembler::assembleTournamentJson(Tournament * const entity, QJso
     obj["Name"] = QJsonValue(entity->name());
     obj["Number of rounds"] = QJsonValue(entity->numberOfRounds());
     obj["Max users allowed"] = QJsonValue(entity->maxUsersAllowed());
-    obj["Date finished"] = QJsonValue(entity->dateFinished().toString(dateFormat));
 }

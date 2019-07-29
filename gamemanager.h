@@ -18,10 +18,9 @@ public:
 
     int totalPoints(const QUuid &user = QUuid());
 
-public slots:
-
     void initiateNext();
-    void addPoint(Point *p);
+
+    void addPoint(const int point, const QUuid &user);
 
 private:
     const QList<const Point *> points();

@@ -4,13 +4,11 @@
 #include <qlist.h>
 #include <quuid.h>
 
-template<typename K,typename V,typename R = int>
-class IModelizer
+template<typename K,typename V>
+struct IModelizer
 {
-public:
-
-    virtual const K* createModel(V* item)=0;
-    virtual QList<K*> toModels(const R &parameter, const QUuid &parent = QUuid()) const=0;
+    virtual K* createModel(V* item) const=0;
+    virtual QList<K*> toModels(const QUuid &parent = QUuid()) const=0;
 };
 
 #endif // IMODELIZER_H

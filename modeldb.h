@@ -12,7 +12,7 @@
  */
 
 class ModelDB : public IDatabaseManager<Model,Model::ModelType>,
-        public IModelizer<QTreeWidgetItem,Model,Model::ModelType>
+        public IModelizer<QTreeWidgetItem,Model>
 {
 public:
     ModelDB();
@@ -25,21 +25,21 @@ public:
     const Model *model(const QUuid &id);
     void addTopLevelModel(Model *m);
     void addSubModel(Model* m, const QUuid &parent = QUuid());
-    void replaceModel(Model* m, const QUuid &id);
+    void replaceModel(Model* newModel, const QUuid &id);
     const QList<const Model*> topLevelModels();
     const QList<const Model*> all_Children_Of(const QUuid &ancestor,const Model::ModelType &type = Model::DefaultModel);
 
-    QList<QTreeWidgetItem*> toModels(const Model::ModelType &type,const QUuid &parent = QUuid()) const;
+    QList<QTreeWidgetItem*> toModels(const QUuid &parent = QUuid()) const;
 private:
-    const QTreeWidgetItem* createModel(Model* m);
+    QTreeWidgetItem* createModel(Model* m) const;
     /*topLevelModel(id):
      *  - Get toplevel object from UUID. This method is faster than template 'Model'
      *    as it doesn't search the entire tree of childs.
      */
 
-    Model* _model(const QUuid &id);
+    Model* _model(const QUuid &id) const;
     int _index_of(const QUuid &id);
-    Model *_child(Model *m, const QUuid &id);
+    Model *_child(Model *parent, const QUuid &id) const;
 
     QList<Model*> _models;
 };

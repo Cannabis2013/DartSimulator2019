@@ -42,9 +42,11 @@ public:
 
     QList<const Model*> childs() const;
 
+
 protected:
     void _addChild(Model* child);
     void _replaceChild(const int &index, Model* child);
+    void setChildren(const QList<Model *> &children);
     QList<Model *> _childs() const;
     int _numberOfChilds() const;
     void _removeChild(Model* child);

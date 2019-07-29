@@ -12,7 +12,8 @@ ModelDB::~ModelDB()
 
 const Model *ModelDB::model(const QUuid &id)
 {
-    for (Model* s : _models) {
+    for (auto s : _models) {
+
         const Model* m = _child(s,id);
         if(m != nullptr)
             return m;
@@ -40,9 +41,8 @@ void ModelDB::addSubModel(Model *m, const QUuid &parent)
     _model(parent)->_addChild(m);
 }
 
-void ModelDB::replaceModel(Model *m, const QUuid &id)
+void ModelDB::replaceModel(Model *newModel, const QUuid &id)
 {
-
     auto replaceable = _model(id);
     if(replaceable == nullptr)
         throw  "No object to replace";
@@ -53,7 +53,9 @@ void ModelDB::replaceModel(Model *m, const QUuid &id)
         for (int i = 0; i < children.count(); ++i) {
             if(children.at(i)->id() == id)
             {
-                parent->_replaceChild(i,m);
+                newModel->setParent(parent);
+                newModel->setChildren(parent->_childs());
+                parent->_replaceChild(i,newModel);
                 return;
             }
         }
@@ -63,7 +65,7 @@ void ModelDB::replaceModel(Model *m, const QUuid &id)
         int index = _index_of(id);
         if(index != -1)
         {
-            _models.replace(index,m);
+            _models.replace(index,newModel);
             return;
         }
     }
@@ -100,12 +102,27 @@ const QList<const Model *> ModelDB::all_Children_Of(const QUuid &ancestor, const
     return result;
 }
 
-QList<QTreeWidgetItem *> ModelDB::toModels(const Model::ModelType &type, const QUuid &parent) const
+QList<QTreeWidgetItem *> ModelDB::toModels(const QUuid &parent) const
 {
+    auto result = *new QList<QTreeWidgetItem*>;
+    auto models = *new QList<Model*>;
 
+    if(_model(parent)->type() == Model::PointModel ||
+            _model(parent) == nullptr)
+        return QList<QTreeWidgetItem*>();
+
+    if(parent != QUuid())
+        models = _model(parent)->_childs();
+    else
+        models = _models;
+
+    for (auto m : models)
+        result << createModel(m);
+
+    return result;
 }
 
-const QTreeWidgetItem *ModelDB::createModel(Model *m)
+QTreeWidgetItem *ModelDB::createModel(Model *m) const
 {
     QStringList data;
 
@@ -130,7 +147,6 @@ const QTreeWidgetItem *ModelDB::createModel(Model *m)
                 QString::number(M->maxUsersAllowed()) <<
                 QString::number(M->numberOfUsersAssigned()) <<
                 M->dateCreated().toString(DATEFORMAT) <<
-                M->dateFinished().toString(DATEFORMAT) <<
                 stringFromType(M->type()) <<
                 M->id().toString(QUuid::WithoutBraces);
 
@@ -160,10 +176,13 @@ const QTreeWidgetItem *ModelDB::createModel(Model *m)
         return nullptr;
 }
 
-Model *ModelDB::_model(const QUuid &id)
+Model *ModelDB::_model(const QUuid &id) const
 {
     for (auto* s : _models) {
-        auto* m = _child(s,id);
+        if(s->id() == id)
+            return s;
+
+        auto m = _child(s,id);
         if(m != nullptr)
             return m;
     }
@@ -182,15 +201,12 @@ int ModelDB::_index_of(const QUuid &id)
     return -1;
 }
 
-Model *ModelDB::_child(Model *m, const QUuid &id)
+Model *ModelDB::_child(Model *parent, const QUuid &id) const
 {
-    if(m->id() == id)
-        return m;
-
-    for (auto* c : m->_childs()) {
-        auto* C = _child(c,id);
-        if(C != nullptr)
-            return C;
+    for (auto c : parent->_childs()) {
+        auto child = _child(c,id);
+        if(child != nullptr)
+            return child;
     }
     return nullptr;
 }
@@ -199,6 +215,9 @@ template<typename T>
 const T *ModelDB::model(const QUuid &id, Model::ModelType type)
 {
     for (auto s : _models) {
+        if(s->id() == id && s->type() == type)
+            return s;
+
         auto m = _child(s,id);
         if(m != nullptr && m->type() == type)
             return static_cast<T*>(m);

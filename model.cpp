@@ -39,6 +39,9 @@ void Model::_addChild(Model *child)
 
 void Model::_replaceChild(const int &index,Model *child)
 {
+    if(index >= _children.count() || index < 0)
+        throw out_of_range("Index out of range!");
+
     _children.replace(index,child);
 }
 
@@ -65,6 +68,11 @@ bool Model::isRoot() const
 bool Model::isLeaf() const
 {
     return _children.count() == 0;
+}
+
+void Model::setChildren(const QList<Model *> &children)
+{
+    _children = children;
 }
 
 void Model::setParent(Model *parent)

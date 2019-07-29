@@ -5,9 +5,8 @@
 #include <allmodels.h>
 
 template<typename K,typename V = int>
-class IDatabaseManager
+struct IDatabaseManager
 {
-public:
     virtual const K* model(const QUuid &id) = 0;
     virtual void addTopLevelModel(K* m)=0;
     virtual void addSubModel(K* m, const QUuid &parent)=0;

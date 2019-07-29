@@ -55,9 +55,9 @@ void GameManager::initiateNext()
     Q_UNUSED(round);
 }
 
-void GameManager::addPoint(Point *p)
+void GameManager::addPoint(const int point, const QUuid &user)
 {
-    db->addSubModel(p,currentRound());
+    db->addSubModel(new Point(user,point),currentRound());
 }
 
 QUuid GameManager::appendNextRound()
