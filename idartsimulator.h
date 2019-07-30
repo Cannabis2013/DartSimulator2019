@@ -3,10 +3,10 @@
 
 #include <QTreeWidgetItem>
 
-struct IDartSimulator
+class IDartSimulator
 {
-    virtual ~IDartSimulator()=0;
-
+public:
+    virtual ~IDartSimulator();
     // Model/view related..
     virtual const QList<QTreeWidgetItem*> tournaments()=0;
     virtual const QList<QTreeWidgetItem*> rounds(const QUuid &tournament)=0;

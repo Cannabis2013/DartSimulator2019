@@ -3,10 +3,10 @@
 
 #include "model.h"
 
-class UserEntity : public Model
+class User : public Model
 {
 public:
-    UserEntity();
+    User();
 
     enum UserRole{Super, regular};
 

@@ -45,7 +45,7 @@ void Model::_replaceChild(const int &index,Model *child)
     _children.replace(index,child);
 }
 
-QList<Model *> Model::_childs() const
+QList<Model *> Model::_childs()
 {
     return _children;
 }
@@ -58,16 +58,6 @@ int Model::_numberOfChilds() const
 void Model::_removeChild(Model *child)
 {
     _children.removeOne(child);
-}
-
-bool Model::isRoot() const
-{
-    return parent() == nullptr;
-}
-
-bool Model::isLeaf() const
-{
-    return _children.count() == 0;
 }
 
 void Model::setChildren(const QList<Model *> &children)
@@ -84,7 +74,7 @@ QList<const Model *> Model::childs() const
 {
     QList<const Model*> result;
 
-    for (const Model* child : _childs())
+    for (const Model* child : _children)
         result << child;
 
     return result;

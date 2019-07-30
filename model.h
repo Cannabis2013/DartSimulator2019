@@ -42,17 +42,12 @@ public:
 
     QList<const Model*> childs() const;
 
-
-protected:
     void _addChild(Model* child);
     void _replaceChild(const int &index, Model* child);
     void setChildren(const QList<Model *> &children);
-    QList<Model *> _childs() const;
+    QList<Model *> _childs();
     int _numberOfChilds() const;
     void _removeChild(Model* child);
-
-    bool isRoot() const;
-    bool isLeaf() const;
 
 private:
     const QUuid _id;
@@ -60,9 +55,6 @@ private:
     const QDateTime _dateCreated;
     const ModelType _type;
     QList<Model*> _children;
-
-    friend class CustomJsonAssembler;
-    friend class ModelDB;
 };
 
 #endif // MODELENTITY_H

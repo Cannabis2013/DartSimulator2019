@@ -5,6 +5,8 @@
 #include <modeldb.h>
 #include <QObject>
 
+
+
 class GameManager : public QObject
 {
     Q_OBJECT
@@ -25,7 +27,7 @@ public:
 private:
     const QList<const Point *> points();
 
-    bool isDetached();
+    bool isDetached() const;
 
     QUuid appendNextRound();
 

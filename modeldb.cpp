@@ -10,7 +10,7 @@ ModelDB::~ModelDB()
 
 }
 
-const Model *ModelDB::model(const QUuid &id)
+const Model *ModelDB::model(const QUuid &id) const
 {
     for (auto s : _models) {
 
@@ -72,7 +72,7 @@ void ModelDB::replaceModel(Model *newModel, const QUuid &id)
     throw "Model not found!";
 }
 
-const QList<const Model*> ModelDB::topLevelModels()
+QList<const Model *> ModelDB::topLevelModels() const
 {
     QList<const Model*> result;
     for (auto m : _models)
@@ -81,12 +81,12 @@ const QList<const Model*> ModelDB::topLevelModels()
     return result;
 }
 
-const QList<const Model *> ModelDB::all_Children_Of(const QUuid &ancestor, const Model::ModelType &type)
+QList<const Model *> ModelDB::all_Children_Of(const QUuid &ancestor, const Model::ModelType &type) const
 {
     QList<const Model*> result;
     Model* m = _model(ancestor);
 
-    if(m == nullptr || m->isLeaf())
+    if(m == nullptr || isLeaf(m))
         throw "Is either null or leaf";
 
     QList<const Model*> children = m->childs();
@@ -174,6 +174,11 @@ QTreeWidgetItem *ModelDB::createModel(Model *m) const
     }
     else
         return nullptr;
+}
+
+bool ModelDB::isLeaf(Model *m) const
+{
+    return m->parent() == nullptr;
 }
 
 Model *ModelDB::_model(const QUuid &id) const

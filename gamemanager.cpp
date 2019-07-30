@@ -44,9 +44,12 @@ const QList<const Point *> GameManager::points()
     return result;
 }
 
-bool GameManager::isDetached()
+bool GameManager::isDetached() const
 {
-    return _HEAD != db->model(currentTournament())->childs().count() - 1;
+    const Model* m = db->model(currentTournament());
+    int indexOfLastElement = m->childs().count() -1;
+
+    return _HEAD != indexOfLastElement;
 }
 
 void GameManager::initiateNext()

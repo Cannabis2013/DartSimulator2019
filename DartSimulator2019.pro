@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,21 +26,24 @@ CONFIG += c++11
 
 SOURCES += \
         customjsonassembler.cpp \
+        dbmanager.cpp \
         gamemanager.cpp \
-        idatabasemanager.cpp \
-        imodelizer.cpp \
         main.cpp \
         mainapplication.cpp \
+        idartsimulator.cpp \
         model.cpp \
         modeldb.cpp \
         point.cpp \
         round.cpp \
-        season.cpp \
         tournament.cpp \
-        userentity.cpp
+        user.cpp \
+        httpreplyobject.cpp \
+        myobject.cpp \
+        localhttpclientapi.cpp
 
 HEADERS += \
         customjsonassembler.h \
+        dbmanager.h \
         gamemanager.h \
         idartsimulator.h \
         idatabasemanager.h \
@@ -50,12 +53,11 @@ HEADERS += \
         modeldb.h \
         point.h \
         round.h \
-        season.h \
         tournament.h \
-        userentity.h
-
-FORMS += \
-        mainwindow.ui
+        user.h \
+        httpreplyobject.h \
+        myobject.h \
+        localhttpclientapi.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
