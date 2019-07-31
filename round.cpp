@@ -1,8 +1,9 @@
 #include "round.h"
 
-Round::Round(int number):
+Round::Round(int number, const QString &tournament):
     Model (ModelType::RoundModel),
-    _roundNumber(number)
+    _roundNumber(number),
+    _tournamentId(tournament)
 {
 }
 
@@ -11,12 +12,8 @@ int Round::roundNumber() const
     return _roundNumber;
 }
 
-void Round::addPoint(Point *point)
+QString Round::tournamentId() const
 {
-    _addChild(point);
+    return _tournamentId;
 }
 
-void Round::removePoint(Point *point)
-{
-    _removeChild(point);
-}

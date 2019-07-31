@@ -2,17 +2,18 @@
 #define IDARTSIMULATOR_H
 
 #include <QTreeWidgetItem>
+#include "myobject.h"
 
-class IDartSimulator
+class IDartSimulator : public MyObject
 {
+    Q_OBJECT
 public:
     virtual ~IDartSimulator();
-    // Model/view related..
-    virtual const QList<QTreeWidgetItem*> tournaments()=0;
-    virtual const QList<QTreeWidgetItem*> rounds(const QUuid &tournament)=0;
-    virtual const QList<QTreeWidgetItem*> points(const QUuid &round)=0;
 
-    virtual const QTreeWidgetItem* model(const QUuid &model)=0;
+    virtual void requestAllTournaments()=0;
+    virtual void requestTournament(const QUuid &tournament)=0;
+
+    virtual void requestAllRounds(const QUuid &tournament)=0;
 
 
     // Tournament related..
@@ -23,10 +24,18 @@ public:
 
 
     // Game control related..
-    virtual void newRound()=0;
-    virtual QUuid detachHead(const int &round_Index)=0;
+    virtual void appendNewRound()=0;
     virtual void submitPoint(const int &p, const QUuid &user)=0;
-    virtual void submitPoints(const QList<int> &points, const QList<QUuid> &users)=0;
+
+signals:
+    void sendTournament(QTreeWidgetItem* model);
+    void sendTournaments(QList<QTreeWidgetItem*> models);
+
+    void sendRound(QTreeWidgetItem* model);
+    void sendRounds(QList<QTreeWidgetItem*> models);
+
+    void sendPoint(QTreeWidgetItem* model);
+    void sendPoints(QList<QTreeWidgetItem*> models);
 };
 
 #endif // IDARTSIMULATOR_H

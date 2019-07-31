@@ -1,18 +1,17 @@
-#include "localhttpclientapi.h"
+#include "remotedatabasecontext.h"
 
-LocalHTTPClientAPI::LocalHTTPClientAPI(const QString &serverHostUrl, const QString &code):
+RemoteDatabaseContext::RemoteDatabaseContext(const QString &serverHostUrl, const QString &code):
     _rootDomain(serverHostUrl),_userCode(code)
 {
     _netMng = new QNetworkAccessManager();
-    connect(_netMng,&QNetworkAccessManager::sslErrors,this,&LocalHTTPClientAPI::handleSslErrors);
+    connect(_netMng,&QNetworkAccessManager::sslErrors,this,&RemoteDatabaseContext::handleSslErrors);
 
     qRegisterMetaType<HTTPReplyObject>("HTTPObject");
-
 }
 
-void LocalHTTPClientAPI::sendGetRequest(const QString &method,
+void RemoteDatabaseContext::sendGetRequest(const QString &method,
                                         const QString &urlParameter,
-                                        void(LocalHTTPClientAPI::* slot)())
+                                        void(RemoteDatabaseContext::* slot)())
 {
     if(!_isBusy)
         _isBusy = true;
@@ -38,9 +37,9 @@ void LocalHTTPClientAPI::sendGetRequest(const QString &method,
     connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
 }
 
-void LocalHTTPClientAPI::sendPostRequest(const QString &method,
-                                         const QJsonObject &JSON,
-                                         void(LocalHTTPClientAPI::*slot)())
+void RemoteDatabaseContext::sendPostRequest(const QString &method,
+                                         const QJsonObject &JSON, const QString &urlParameter,
+                                         void(RemoteDatabaseContext::*slot)())
 {
     if(!_isBusy)
         _isBusy = true;
@@ -52,7 +51,7 @@ void LocalHTTPClientAPI::sendPostRequest(const QString &method,
 
     QString fullServerUrl;
     try {
-        assembleBasicUrl(fullServerUrl,method);
+        processAndAssembleUrl(fullServerUrl,method);
     } catch (invalid_argument e) {
         return;
     }
@@ -70,9 +69,9 @@ void LocalHTTPClientAPI::sendPostRequest(const QString &method,
 }
 
 
-void LocalHTTPClientAPI::sendDeleteRequest(const QString &method,
+void RemoteDatabaseContext::sendDeleteRequest(const QString &method,
                                            const QString &urlParameter,
-                                           void(LocalHTTPClientAPI::*slot)())
+                                           void(RemoteDatabaseContext::*slot)())
 {
     if(!_isBusy)
         _isBusy = true;
@@ -98,7 +97,7 @@ void LocalHTTPClientAPI::sendDeleteRequest(const QString &method,
     connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
 }
 
-void LocalHTTPClientAPI::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
+void RemoteDatabaseContext::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
 {
     Q_UNUSED(reply);
     Q_UNUSED(errors);
@@ -106,30 +105,20 @@ void LocalHTTPClientAPI::handleSslErrors(QNetworkReply *reply, const QList<QSslE
     // TODO: Handle Ssl errors when its time for that
 }
 
-void LocalHTTPClientAPI::handleRedirection(const QUrl &url)
+void RemoteDatabaseContext::handleRedirection(const QUrl &url)
 {
     Q_UNUSED(url);
     // TODO: Don't think this will be necessary, so I might delete this method until otherwise.
 }
 
-void LocalHTTPClientAPI::assembleBasicUrl(QString &hostUrl, QString method)
+
+void RemoteDatabaseContext::processAndAssembleUrl(QString &hostUrl, QString method, QString urlParameter)
 {
     /*
-     * Primarily used for post requests
+     * Template: {baseUrl}/{Method}/{urlParameter}?code={userCode}
+     * Example: www.testapi.dk/api/DeleteTournament/ad4a22ee-4c5c-4911-a01f-d9578edb387c?code={{code}}
      */
-    if(_rootDomain != QString())
-        hostUrl += _rootDomain;
-    else
-        throw invalid_argument("Host url not valid or not set");;
 
-    if(hostUrl.at(hostUrl.length() - 1) != '/')
-        hostUrl.append('/');
-
-    hostUrl += method + "?code=" + _userCode;
-}
-
-void LocalHTTPClientAPI::processAndAssembleUrl(QString &hostUrl, QString methodName, QString urlParameter)
-{
     if(_rootDomain != QString())
         hostUrl = _rootDomain;
     else
@@ -138,61 +127,72 @@ void LocalHTTPClientAPI::processAndAssembleUrl(QString &hostUrl, QString methodN
     if(hostUrl.at(hostUrl.length() - 1) != '/')
         hostUrl.append('/');
 
-    if(methodName.at(methodName.length() - 1) != '/')
-        methodName.append('/');
+    if(urlParameter != QString())
+    {
+        if(method.at(method.length() - 1) != '/')
+            method.append('/');
 
-    methodName += urlParameter;
-
-    hostUrl += methodName;
+        hostUrl += method + urlParameter;
+    }
 
     if(_userCode != QString())
         hostUrl += "?code=" + _userCode;
 }
 
-QStringList LocalHTTPClientAPI::remoteMethods() const
+QStringList RemoteDatabaseContext::remoteMethods() const
 {
     return _remoteMethods;
 }
 
-void LocalHTTPClientAPI::requestTournaments()
+void RemoteDatabaseContext::requestTournaments()
 {
-    sendGetRequest("GetTournaments",QString(),&LocalHTTPClientAPI::handleRequestetTournaments);
+    sendGetRequest("GetTournaments",QString(),&RemoteDatabaseContext::handleRequestetTournaments);
 }
 
-void LocalHTTPClientAPI::requestTournament(const QUuid &id)
+void RemoteDatabaseContext::requestTournament(const QUuid &id)
 {
     const QString uuid = id.toString(QUuid::WithoutBraces);
-    sendGetRequest("GetTournament",uuid,&LocalHTTPClientAPI::handleRequestetTournament);
+    sendGetRequest("GetTournament",uuid,&RemoteDatabaseContext::handleRequestetTournament);
 }
 
-void LocalHTTPClientAPI::handleRequestetTournaments()
+void RemoteDatabaseContext::requestRounds(const QUuid &tournament)
+{
+    // TODO: Endpoints for this call is not yet ready
+}
+
+void RemoteDatabaseContext::requestOrderedTable(const QUuid &tournament)
+{
+    // TODO: Endpoints for this call is not yet ready
+}
+
+void RemoteDatabaseContext::handleRequestetTournaments()
 {
     const QByteArray data = tempReply->readAll();
     emit sendAllTournamentsData(data);
 }
 
-void LocalHTTPClientAPI::handleRequestetTournament()
+void RemoteDatabaseContext::handleRequestetTournament()
 {
     const QByteArray data = tempReply->readAll();
     emit sendTournamentData(data);
 }
 
-bool LocalHTTPClientAPI::isBusy() const
+bool RemoteDatabaseContext::isBusy() const
 {
     return _isBusy;
 }
 
-QString LocalHTTPClientAPI::getUserCode() const
+QString RemoteDatabaseContext::getUserCode() const
 {
     return _userCode;
 }
 
-void LocalHTTPClientAPI::setUserCode(const QString &value)
+void RemoteDatabaseContext::setUserCode(const QString &value)
 {
     _userCode = value;
 }
 
-QString LocalHTTPClientAPI::getRootDomain() const
+QString RemoteDatabaseContext::getRootDomain() const
 {
     return _rootDomain;
 }

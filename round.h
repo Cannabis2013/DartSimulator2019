@@ -7,14 +7,15 @@
 class Round : public Model
 {
 public:
-    Round(int number);
+    Round(int number, const QString &tournament);
 
     int roundNumber() const;
 
-    void addPoint(Point* point);
-    void removePoint(Point* point);
+
+    QString tournamentId() const;
 
 private:
+    const QString _tournamentId;
     const int _roundNumber;
 };
 

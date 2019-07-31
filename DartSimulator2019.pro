@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,36 +28,35 @@ SOURCES += \
         customjsonassembler.cpp \
         dbmanager.cpp \
         gamemanager.cpp \
+        localdatabasecontext.cpp \
         main.cpp \
         mainapplication.cpp \
         idartsimulator.cpp \
         model.cpp \
-        modeldb.cpp \
         point.cpp \
+        remotedatabasecontext.cpp \
         round.cpp \
         tournament.cpp \
         user.cpp \
         httpreplyobject.cpp \
-        myobject.cpp \
-        localhttpclientapi.cpp
+        myobject.cpp
 
 HEADERS += \
         customjsonassembler.h \
         dbmanager.h \
         gamemanager.h \
         idartsimulator.h \
-        idatabasemanager.h \
         imodelizer.h \
+        localdatabasecontext.h \
         mainapplication.h \
         model.h \
-        modeldb.h \
         point.h \
+        remotedatabasecontext.h \
         round.h \
         tournament.h \
         user.h \
         httpreplyobject.h \
-        myobject.h \
-        localhttpclientapi.h
+        myobject.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

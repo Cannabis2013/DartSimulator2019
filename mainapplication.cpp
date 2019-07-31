@@ -2,53 +2,45 @@
 
 MainApplication::MainApplication()
 {
-    networkManager = new LocalHTTPClientAPI(HOSTURL,USERCODE);
-    dbMng = new ModelDB();
-    gameMng = new GameManager(dbMng);
-}
+    _lDb = new LocalDatabaseContext();
+    _rDb = new RemoteDatabaseContext(HOSTURL,USERCODE);
+    _gMng = new GameManager();
 
+    connect(_rDb,&RemoteDatabaseContext::sendTournamentData,_lDb,&LocalDatabaseContext::createTournament);
+    connect(_rDb,&RemoteDatabaseContext::sendAllTournamentsData,_lDb,&LocalDatabaseContext::createTournaments);
 
-const QList<QTreeWidgetItem *> MainApplication::tournaments()
-{
-}
-
-const QList<QTreeWidgetItem *> MainApplication::rounds(const QUuid &tournament)
-{
-}
-
-const QList<QTreeWidgetItem *> MainApplication::points(const QUuid &round)
-{
-}
-
-const QTreeWidgetItem *MainApplication::model(const QUuid &model)
-{
+    connect(_lDb,&LocalDatabaseContext::sendTournament,this,&MainApplication::sendTournament);
+    connect(_lDb,&LocalDatabaseContext::sendTournaments,this,&MainApplication::sendTournaments);
 }
 
 void MainApplication::createTournament(const QString &name, const int &maxUsers, const int &maxRounds)
 {
+
 }
 
 void MainApplication::deleteTournament(const QUuid &tournament)
 {
 }
 
-void MainApplication::newRound()
+void MainApplication::appendNewRound()
 {
-}
 
-QUuid MainApplication::detachHead(const int &round_Index)
-{
 }
 
 void MainApplication::submitPoint(const int &p, const QUuid &user)
 {
 }
 
-void MainApplication::submitPoints(const QList<int> &points, const QList<QUuid> &users)
+
+
+void MainApplication::requestAllTournaments()
 {
 }
 
-void MainApplication::testSlot(const HTTPReplyObject *reply)
+void MainApplication::requestTournament(const QUuid &tournament)
 {
-    print(QString::fromLocal8Bit(reply->getRawData()));
+}
+
+void MainApplication::requestAllRounds(const QUuid &tournament)
+{
 }

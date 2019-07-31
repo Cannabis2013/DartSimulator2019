@@ -3,7 +3,7 @@
 
 
 DBManager::DBManager(const QString &serverUrl, const QString &key):
-    LocalHTTPClientAPI (serverUrl,key)
+    RemoteDatabaseContext (serverUrl,key)
 {
 
 }

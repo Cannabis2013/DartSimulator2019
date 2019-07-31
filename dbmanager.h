@@ -1,10 +1,10 @@
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
-#include "localhttpclientapi.h"
+#include "remotedatabasecontext.h"
 #include <QFunctionPointer>
 
-class DBManager : public LocalHTTPClientAPI
+class DBManager : public RemoteDatabaseContext
 {
 public:
     DBManager(const QString &serverUrl,const QString &key = QString());

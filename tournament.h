@@ -14,9 +14,6 @@ public:
     int numberOfRounds() const;
     void setNumberOfRounds(int numberOfRounds);
 
-    int maxUsersAllowed() const;
-    void setMaxUsersAllowed(int maxUsersAllowed);
-
     int numberOfUsersAssigned() const;
 
     QList<QUuid> users() const;
@@ -24,7 +21,7 @@ public:
 
 private:
     QString _name;
-    int _numberOfRounds,_maxUsersAllowed;
+    int _numberOfRounds;
 
     QList<QUuid> _users;
 };

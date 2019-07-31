@@ -37,24 +37,11 @@ public:
 
     ModelType type() const;
 
-    Model* parent() const;
-    void setParent(Model *parent);
-
-    QList<const Model*> childs() const;
-
-    void _addChild(Model* child);
-    void _replaceChild(const int &index, Model* child);
-    void setChildren(const QList<Model *> &children);
-    QList<Model *> _childs();
-    int _numberOfChilds() const;
-    void _removeChild(Model* child);
 
 private:
     const QUuid _id;
-    Model* _parent;
     const QDateTime _dateCreated;
     const ModelType _type;
-    QList<Model*> _children;
 };
 
 #endif // MODELENTITY_H

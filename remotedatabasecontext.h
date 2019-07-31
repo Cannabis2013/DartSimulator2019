@@ -18,11 +18,11 @@ using namespace std;
 #include "httpreplyobject.h"
 #include "myobject.h"
 
-class LocalHTTPClientAPI : public MyObject
+class RemoteDatabaseContext : public MyObject
 {
     Q_OBJECT
 public:
-    LocalHTTPClientAPI(const QString &serverHostUrl, const QString &code = QString());
+    RemoteDatabaseContext(const QString &serverHostUrl, const QString &code = QString());
 
     QString getRootDomain() const;
 
@@ -33,8 +33,15 @@ public:
 
     QStringList remoteMethods() const;
 
+
+public slots:
+
     void requestTournaments();
     void requestTournament(const QUuid &id);
+
+    void requestRounds(const QUuid &tournament);
+
+    void requestOrderedTable(const QUuid &tournament);
 
 signals:
     void sendAllTournamentsData(const QByteArray &data);
@@ -59,16 +66,15 @@ private:
 
     void sendGetRequest(const QString &method,
                         const QString &urlParameter = QString(),
-                        void(LocalHTTPClientAPI::* slot)()= nullptr);
+                        void(RemoteDatabaseContext::* slot)()= nullptr);
     void sendPostRequest(const QString &method,
-                          const QJsonObject &JSON,
-                         void(LocalHTTPClientAPI::* slot)()= nullptr);
+                          const QJsonObject &JSON,const QString &urlParameter = QString(),
+                         void(RemoteDatabaseContext::* slot)()= nullptr);
     void sendDeleteRequest(const QString &method,
                            const QString &urlParameter,
-                           void(LocalHTTPClientAPI::* slot)()= nullptr);
+                           void(RemoteDatabaseContext::* slot)()= nullptr);
 
-    void assembleBasicUrl(QString &hostUrl, QString method);
-    void processAndAssembleUrl(QString &hostUrl, QString methodName, QString urlParameter);
+    void processAndAssembleUrl(QString &hostUrl, QString methodName, QString urlParameter = QString());
 
     QNetworkAccessManager* _netMng;
     QString _rootDomain;

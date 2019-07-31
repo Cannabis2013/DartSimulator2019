@@ -25,16 +25,6 @@ void Tournament::setNumberOfRounds(int numberOfRounds)
     _numberOfRounds = numberOfRounds;
 }
 
-int Tournament::maxUsersAllowed() const
-{
-    return _maxUsersAllowed;
-}
-
-void Tournament::setMaxUsersAllowed(int maxUsersAllowed)
-{
-    _maxUsersAllowed = maxUsersAllowed;
-}
-
 int Tournament::numberOfUsersAssigned() const
 {
     return _users.count();
