@@ -26,35 +26,23 @@ CONFIG += c++11
 
 SOURCES += \
         customjsonassembler.cpp \
-        dbmanager.cpp \
         gamemanager.cpp \
         localdatabasecontext.cpp \
         main.cpp \
         mainapplication.cpp \
         idartsimulator.cpp \
-        model.cpp \
-        point.cpp \
         remotedatabasecontext.cpp \
-        round.cpp \
-        tournament.cpp \
-        user.cpp \
         httpreplyobject.cpp \
         myobject.cpp
 
 HEADERS += \
         customjsonassembler.h \
-        dbmanager.h \
         gamemanager.h \
         idartsimulator.h \
         imodelizer.h \
         localdatabasecontext.h \
         mainapplication.h \
-        model.h \
-        point.h \
         remotedatabasecontext.h \
-        round.h \
-        tournament.h \
-        user.h \
         httpreplyobject.h \
         myobject.h
 
