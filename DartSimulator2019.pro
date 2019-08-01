@@ -28,7 +28,6 @@ SOURCES += \
         abstractframeimplementable.cpp \
         customdialog.cpp \
         customjsonassembler.cpp \
-        graphicaluserdomain.cpp \
         iurlparser.cpp \
         localdatabasecontext.cpp \
         main.cpp \
@@ -40,13 +39,14 @@ SOURCES += \
         remoteservercontex.cpp \
         topframeform.cpp \
         tournamentselectorview.cpp \
-        urlparser.cpp
+        urlparser.cpp \
+        userdomain.cpp \
+        view.cpp
 
 HEADERS += \
         abstractframeimplementable.h \
         customdialog.h \
         customjsonassembler.h \
-        graphicaluserdomain.h \
         idartsimulator.h \
         igraphicaluserinterface.h \
         ijsonconverter.h \
@@ -59,7 +59,9 @@ HEADERS += \
         remoteservercontex.h \
         topframeform.h \
         tournamentselectorview.h \
-        urlparser.h
+        urlparser.h \
+        userdomain.h \
+        view.h
 
 FORMS += \
     topframeform.ui \

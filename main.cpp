@@ -4,7 +4,7 @@
 #include <tournamentselectorview.h>
 #include <customdialog.h>
 #include <qpointer.h>
-#include <graphicaluserdomain.h>
+#include <userdomain.h>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    GraphicalUserDomain* ui = new GraphicalUserDomain();
+    UserDomain* ui = new UserDomain();
     ui->setService(new MainApplication());
 
     ui->setupTournamentView(new TournamentSelectorView,"Tournaments");

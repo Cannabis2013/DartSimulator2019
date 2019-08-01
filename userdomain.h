@@ -3,20 +3,21 @@
 
 #include <igraphicaluserinterface.h>
 #include <idartsimulator.h>
-#include <abstractframeimplementable.h>
+#include <view.h>
 #include <customdialog.h>
 
-class GraphicalUserDomain : public QObject,
+class UserDomain : public QObject,
         public IGraphicalUserInterface<IDartSimulator>
 {
     Q_OBJECT
 public:
-    GraphicalUserDomain();
+    UserDomain();
 
-    virtual ~GraphicalUserDomain();
+    virtual ~UserDomain();
     void setService(IDartSimulator *service);
     IDartSimulator *service();
-    void setupTournamentView(AbstractFrameImplementable* v, const QString &frameTitle);
+
+    void setupTournamentView(View *v, const QString &frameTitle);
 
 private slots:
     void requestAllTournaments();

@@ -34,6 +34,16 @@ void LocalDatabaseContext::processRounds(const QByteArray &data, const QString &
     emit parseRoundsToExternal(models,log);
 }
 
+void LocalDatabaseContext::processUsers(const QByteArray &data, const QString &log)
+{
+    // TODO:
+}
+
+bool LocalDatabaseContext::allSubmittet()
+{
+    return _remainingSubmitters.isEmpty();
+}
+
 QTreeWidgetItem *LocalDatabaseContext::createModel(const QByteArray &item, const ModelType &type) const
 {
     QJsonParseError err;
@@ -72,7 +82,7 @@ QList<QTreeWidgetItem *> LocalDatabaseContext::createModels(const QByteArray &ar
     auto result = QList<QTreeWidgetItem*>();
     QJsonParseError err;
     auto doc = QJsonDocument::fromJson(array,&err);
-    if(doc.isObject() || doc.isArray() || doc.isNull())
+    if(doc.isObject() || !doc.isArray() || doc.isNull())
         throw err.errorString().toStdString();
     QJsonArray objects = doc.array();
     for (auto val : objects)
@@ -106,6 +116,16 @@ QList<QTreeWidgetItem *> LocalDatabaseContext::createModels(const QByteArray &ar
     return result;
 }
 
+QList<QUuid> LocalDatabaseContext::restusers() const
+{
+    return _remainingSubmitters;
+}
+
+bool LocalDatabaseContext::hasSubmitted(const QUuid &user)
+{
+    return !_remainingSubmitters.contains(user);
+}
+
 QUuid LocalDatabaseContext::currentRound() const
 {
     return _currentRound;
@@ -126,6 +146,7 @@ void LocalDatabaseContext::appendRound()
     obj["Point identities"] = QJsonArray();
 
     emit parseRoundToRemote(QJsonDocument(obj).toJson(),currentTournament());
+    _remainingSubmitters = _currentAssignedUsers;
 }
 
 void LocalDatabaseContext::createTournament(const QString &name, const int &maxRounds, const int &maxUsers, const QList<QUuid> &users)
@@ -142,11 +163,24 @@ void LocalDatabaseContext::createTournament(const QString &name, const int &maxR
 
 void LocalDatabaseContext::submitPoint(const QUuid &user, const int &point)
 {
+    if(hasSubmitted(user))
+        throw "User has already submittet point";
+
     QJsonObject obj;
     obj["User"] = user.toString(QUuid::WithoutBraces);
     obj["Point"] = point;
 
     emit parsePointToRemote(currentRound(),QJsonDocument(obj).toJson());
+
+    _remainingSubmitters.append(user);
+}
+
+void LocalDatabaseContext::nextRound()
+{
+    if(allSubmittet())
+        appendRound();
+    else
+        throw "All users needs to submit";
 }
 
 QUuid LocalDatabaseContext::currentTournament() const

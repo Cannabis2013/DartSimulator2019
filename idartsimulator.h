@@ -3,6 +3,7 @@
 
 #include <QTreeWidgetItem>
 #include "myobject.h"
+#include <quuid.h>
 
 class IDartSimulator : public MyObject
 {
@@ -10,13 +11,16 @@ class IDartSimulator : public MyObject
 public:
     virtual ~IDartSimulator();
 
+public slots:
     // GUI related
     virtual void createTournament(const QString &name,
-                                  const int &maxUsers,
-                                  const int &maxRounds)=0;
+                          const int &maxUsers,
+                          const int &maxRounds,
+                          const QList<QUuid> &users)=0;
     virtual void tournaments()=0;
     virtual void tournament(const QUuid &tournament)=0;
 
+    virtual void round(const QUuid &tournament)=0;
     virtual void rounds(const QUuid &tournament)=0;
 
 

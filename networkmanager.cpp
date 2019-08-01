@@ -5,6 +5,7 @@ NetworkManager::NetworkManager(const QString &serverHostUrl, const QString &code
 {
     _netMng = new QNetworkAccessManager();
     connect(_netMng,&QNetworkAccessManager::sslErrors,this,&NetworkManager::handleSslErrors);
+    setParserService(new UrlParser());
 }
 
 void NetworkManager::sendGetRequest(const QString &method,

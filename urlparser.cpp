@@ -22,13 +22,13 @@ QUrl UrlParser::parseUrl(const QString &baseUrl,
     if(hostUrl.at(hostUrl.length() - 1) != '/')
         hostUrl.append('/');
 
-    if(urlParameter != QString())
-    {
-        if(urlMethod.at(method.length() - 1) != '/')
-            urlMethod.append('/');
+    if(urlMethod.at(method.length() - 1) != '/')
+        urlMethod.append('/');
 
-        hostUrl += method + urlParameter;
-    }
+    hostUrl += urlMethod;
+
+    if(urlParameter != QString())
+        hostUrl += urlParameter;
 
     if(urlCode != QString())
         hostUrl += "?code=" + urlCode;

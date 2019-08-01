@@ -30,11 +30,16 @@ public:
                           const int &maxUsers,
                           const QList<QUuid> &users);
     void submitPoint(const QUuid &user,const int &point);
+
+    void nextRound();
+
 public slots:
     void processTournament(const QByteArray &data, const QString &log);
     void processTournaments(const QByteArray &data, const QString &log);
     void processRound(const QByteArray &data, const QString &log);
     void processRounds(const QByteArray &data, const QString &log);
+
+    void processUsers(const QByteArray &data, const QString &log);
 signals:
 
     void parseTournamentToExternal(QTreeWidgetItem* model,const QString &log);
@@ -48,6 +53,9 @@ signals:
 
 private:
 
+    bool allSubmittet();
+    QList<QUuid> restusers() const;
+    bool hasSubmitted(const QUuid &user);
     void appendRound();
 
     QTreeWidgetItem* createModel(const QByteArray &item, const ModelType &type) const;
@@ -56,6 +64,7 @@ private:
     QUuid _currentTournament;
     QUuid _currentRound;
     QList<QUuid> _currentAssignedUsers;
+    QList<QUuid> _remainingSubmitters;
     QList<QUuid> _rounds;
 };
 

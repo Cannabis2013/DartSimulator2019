@@ -3,14 +3,15 @@
 
 #include <QWidget>
 #include <QTreeWidgetItem>
+#include <qmessagebox.h>
 
-#include <abstractframeimplementable.h>
+#include <view.h>
 
 namespace Ui {
     class TournamentSelectorView;
 }
 
-class TournamentSelectorView : public AbstractFrameImplementable
+class TournamentSelectorView : public View
 {
     Q_OBJECT
 
@@ -19,19 +20,15 @@ public:
     ~TournamentSelectorView();
 
 public slots:
-    void handleReply(const QList<QTreeWidgetItem*> &items,const QString &logMessage);
-signals:
-    void requestTournaments();
+    void setModels(QList<QTreeWidgetItem*> models,const QString &msg);
+    void handleError(const QString &error);
 
-protected:
-    void resizeEvent(QSize newSize);
 private slots:
     void initiateRequest();
 private:
     Ui::TournamentSelectorView *ui;
 
     QTreeWidget* treeWidget;
-
 };
 
 #endif // TOURNAMENTSELECTORVIEW_H

@@ -93,6 +93,7 @@ void RemoteServerContex::handleRemoteTournaments()
     if(tempReply->error())
     {
         emit sendErrorString(tempReply->errorString());
+        cout << tempReply->errorString().toStdString() << endl;
         return;
     }
 
