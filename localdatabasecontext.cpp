@@ -10,42 +10,29 @@ LocalDatabaseContext::~LocalDatabaseContext()
 
 }
 
-void LocalDatabaseContext::createTournament(const QByteArray &data)
+void LocalDatabaseContext::processTournament(const QByteArray &data, const QString &log)
 {
     auto model = createModel(data,Tournament);
-    emit sendTournament(model);
+    emit parseTournamentToExternal(model,log);
 }
 
-void LocalDatabaseContext::createTournaments(const QByteArray &data)
+void LocalDatabaseContext::processTournaments(const QByteArray &data, const QString &log)
 {
     auto models = createModels(data,Tournament);
-    emit sendTournaments(models);
+    emit parseTournamentsToExternal(models,log);
 }
 
-void LocalDatabaseContext::createRound(const QByteArray &data)
+void LocalDatabaseContext::processRound(const QByteArray &data, const QString &log)
 {
     auto model = createModel(data,Round);
-    emit sendRound(model);
+    emit parseRoundToExternal(model,log);
 }
 
-void LocalDatabaseContext::createRounds(const QByteArray &data)
+void LocalDatabaseContext::processRounds(const QByteArray &data, const QString &log)
 {
     auto models = createModels(data,Round);
-    emit sendRounds(models);
+    emit parseRoundsToExternal(models,log);
 }
-
-void LocalDatabaseContext::createPoint(const QByteArray &data)
-{
-    auto model = createModel(data,Point);
-    emit sendPoint(model);
-}
-
-void LocalDatabaseContext::createPoints(const QByteArray &data)
-{
-    auto models = createModels(data,Point);
-    emit sendPoints(models);
-}
-
 
 QTreeWidgetItem *LocalDatabaseContext::createModel(const QByteArray &item, const ModelType &type) const
 {
@@ -117,4 +104,57 @@ QList<QTreeWidgetItem *> LocalDatabaseContext::createModels(const QByteArray &ar
     }
 
     return result;
+}
+
+QUuid LocalDatabaseContext::currentRound() const
+{
+    return _currentRound;
+}
+
+void LocalDatabaseContext::setCurrentRound(const QUuid &currentRound)
+{
+    _currentRound = currentRound;
+}
+
+void LocalDatabaseContext::appendRound()
+{
+    int roundNumber = _rounds.count();
+    QJsonObject obj;
+    obj["Id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    obj["Round number"] = roundNumber;
+    obj["Parent tournament:"] = currentRound().toString(QUuid::WithoutBraces);
+    obj["Point identities"] = QJsonArray();
+
+    emit parseRoundToRemote(QJsonDocument(obj).toJson(),currentTournament());
+}
+
+void LocalDatabaseContext::createTournament(const QString &name, const int &maxRounds, const int &maxUsers, const QList<QUuid> &users)
+{
+    QJsonObject obj;
+    obj["Id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    obj["Name"] = name;
+    obj["Maximum allowed rounds"] = maxRounds;
+    obj["Maximum allowed users"] = maxRounds;
+    obj["Users assigned"] = QJsonArray();
+
+    emit parseTournamentToRemote(QJsonDocument(obj).toJson());
+}
+
+void LocalDatabaseContext::submitPoint(const QUuid &user, const int &point)
+{
+    QJsonObject obj;
+    obj["User"] = user.toString(QUuid::WithoutBraces);
+    obj["Point"] = point;
+
+    emit parsePointToRemote(currentRound(),QJsonDocument(obj).toJson());
+}
+
+QUuid LocalDatabaseContext::currentTournament() const
+{
+    return _currentTournament;
+}
+
+void LocalDatabaseContext::setCurrentTournament(const QUuid &currentTournament)
+{
+    _currentTournament = currentTournament;
 }

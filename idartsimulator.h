@@ -10,16 +10,16 @@ class IDartSimulator : public MyObject
 public:
     virtual ~IDartSimulator();
 
-    virtual void requestAllTournaments()=0;
-    virtual void requestTournament(const QUuid &tournament)=0;
-
-    virtual void requestAllRounds(const QUuid &tournament)=0;
-
-
-    // Tournament related..
+    // GUI related
     virtual void createTournament(const QString &name,
                                   const int &maxUsers,
                                   const int &maxRounds)=0;
+    virtual void tournaments()=0;
+    virtual void tournament(const QUuid &tournament)=0;
+
+    virtual void rounds(const QUuid &tournament)=0;
+
+
     virtual void deleteTournament(const QUuid &tournament)=0;
 
 
@@ -28,14 +28,16 @@ public:
     virtual void submitPoint(const int &p, const QUuid &user)=0;
 
 signals:
-    void sendTournament(QTreeWidgetItem* model);
-    void sendTournaments(QList<QTreeWidgetItem*> models);
+    void sendTournament(QTreeWidgetItem* model,const QString &log);
+    void sendTournaments(const QList<QTreeWidgetItem*> &models,const QString &log);
 
-    void sendRound(QTreeWidgetItem* model);
-    void sendRounds(QList<QTreeWidgetItem*> models);
+    void sendRound(QTreeWidgetItem* model,const QString &log);
+    void sendRounds(QList<QTreeWidgetItem*> models,const QString &log);
 
-    void sendPoint(QTreeWidgetItem* model);
-    void sendPoints(QList<QTreeWidgetItem*> models);
+    void sendPoint(QTreeWidgetItem* model,const QString &log);
+    void sendPoints(QList<QTreeWidgetItem*> models,const QString &log);
+
+    void externalRequestFailed(const QString &error);
 };
 
 #endif // IDARTSIMULATOR_H

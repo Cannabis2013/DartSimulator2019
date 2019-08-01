@@ -25,28 +25,51 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        abstractframeimplementable.cpp \
+        customdialog.cpp \
         customjsonassembler.cpp \
-        gamemanager.cpp \
+        graphicaluserdomain.cpp \
+        iurlparser.cpp \
         localdatabasecontext.cpp \
         main.cpp \
         mainapplication.cpp \
         idartsimulator.cpp \
-        remotedatabasecontext.cpp \
+        networkmanager.cpp \
         httpreplyobject.cpp \
-        myobject.cpp
+        myobject.cpp \
+        remoteservercontex.cpp \
+        topframeform.cpp \
+        tournamentselectorview.cpp \
+        urlparser.cpp
 
 HEADERS += \
+        abstractframeimplementable.h \
+        customdialog.h \
         customjsonassembler.h \
-        gamemanager.h \
+        graphicaluserdomain.h \
         idartsimulator.h \
-        imodelizer.h \
+        igraphicaluserinterface.h \
+        ijsonconverter.h \
+        iurlparser.h \
         localdatabasecontext.h \
         mainapplication.h \
-        remotedatabasecontext.h \
+        networkmanager.h \
         httpreplyobject.h \
-        myobject.h
+        myobject.h \
+        remoteservercontex.h \
+        topframeform.h \
+        tournamentselectorview.h \
+        urlparser.h
+
+FORMS += \
+    topframeform.ui \
+    customdialog.ui \
+    tournamentselectorview.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+

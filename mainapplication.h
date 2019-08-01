@@ -1,9 +1,8 @@
 #ifndef MAINAPPLICATION_H
 #define MAINAPPLICATION_H
 
-#include <gamemanager.h>
 #include <idartsimulator.h>
-#include <remotedatabasecontext.h>
+#include <remoteservercontex.h>
 #include <localdatabasecontext.h>
 
 #define USERCODE "wQ71HOHNXNaHkDxnnaZ7kj6ujWYW2xBsV1VXxRqp8C/83IgryF1ADA=="
@@ -15,20 +14,20 @@ class MainApplication : public IDartSimulator
 public:
     MainApplication();
 
-    void requestAllTournaments();
-    void requestTournament(const QUuid &tournament);
-    void requestAllRounds(const QUuid &tournament);
+    void tournament(const QUuid &tournament);
+    void tournaments();
 
-    void createTournament(const QString &name, const int &maxUsers, const int &maxRounds);
+    void round(const QUuid &tournament);
+    void rounds(const QUuid &tournament);
+
+    void createTournament(const QString &name, const int &maxUsers, const int &maxRounds, const QList<QUuid> &users);
     void deleteTournament(const QUuid &tournament);
     void appendNewRound();
     void submitPoint(const int &p, const QUuid &user);
 
 private:
     LocalDatabaseContext* _lDb;
-    RemoteDatabaseContext* _rDb;
-
-    GameManager* _gMng;
+    RemoteServerContex* _rDb;
 };
 
 #endif // MAINAPPLICATION_H

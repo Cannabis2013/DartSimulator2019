@@ -1,7 +1,6 @@
 #ifndef CUSTOMJSONASSEMBLER_H
 #define CUSTOMJSONASSEMBLER_H
 
-#include <allmodels.h>
 #include <QList>
 #include <QPair>
 #include <QJsonObject>
