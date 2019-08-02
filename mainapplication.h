@@ -21,7 +21,7 @@ public:
     void rounds(const QUuid &tournament);
 
     void createTournament(const QString &name, const int &maxUsers, const int &maxRounds, const QList<QUuid> &users);
-    void deleteTournament(const QUuid &tournament);
+    void deleteTournament(const QUuid &tournament, const QUuid &callerId);
     void appendNewRound();
     void submitPoint(const int &p, const QUuid &user);
 

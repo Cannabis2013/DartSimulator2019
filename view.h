@@ -12,16 +12,31 @@ class View : public AbstractFrameImplementable
 public:
     View(QWidget *parent = nullptr);
 
+    QUuid classId() const;
+
 public slots:
     virtual void setModels(QList<QTreeWidgetItem*> models,const QString &msg)=0;
     virtual void handleError(const QString &error)=0;
+
+    virtual void updateModel();
+
+    virtual void requestCompleted();
 signals:
-    void requestModel(const QUuid &id);
+    void requestModel(const QUuid &model);
     void requestModels(const QUuid &parent = QUuid());
+
+    void requestDeleteModel(const QUuid &model, const QUuid &callerId);
+
+    void aboutToClose(const QUuid &id);
 
 
 protected:
     void resizeEvent(QSize newSize);
+
+    void closeEvent(QCloseEvent*e);
+
+private:
+    const QUuid _classId;
 };
 
 #endif // VIEW_H

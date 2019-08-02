@@ -23,10 +23,12 @@ public:
 public slots:
     void setModels(QList<QTreeWidgetItem*> models,const QString &msg);
     void handleError(const QString &error);
+    void updateModel();
+    void requestCompleted();
 
 private slots:
-    void initiateRequest();
     void changeViewIndex();
+    void deleteModel();
 private:
     Ui::TournamentSelectorView *ui;
 

@@ -5,6 +5,7 @@
 #include <idartsimulator.h>
 #include <view.h>
 #include <customdialog.h>
+#include <QSystemTrayIcon>
 
 class UserDomain : public QObject,
         public IGraphicalUserInterface<IDartSimulator>
@@ -20,10 +21,16 @@ public:
     void setupTournamentView(View *v, const QString &frameTitle);
 
 private slots:
+    void notifyView(const QUuid &id);
     void requestAllTournaments();
-private:
+    void showSystemTrayMessage(const QString &msg);
 
+    void removeView(const QUuid &id);
+private:
+    QSystemTrayIcon*systemTray;
     IDartSimulator* _service;
+
+    QList<View*> _views;
 };
 
 #endif // GRAPHICALUSERDOMAIN_H

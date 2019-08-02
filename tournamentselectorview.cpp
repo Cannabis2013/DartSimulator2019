@@ -24,16 +24,29 @@ void TournamentSelectorView::setModels(QList<QTreeWidgetItem *> models, const QS
     ui->RefreshButton->setDisabled(false);
 }
 
-void TournamentSelectorView::initiateRequest()
+void TournamentSelectorView::updateModel()
 {
     treeWidget->clear();
     ui->RefreshButton->setDisabled(true);
     emit requestModels();
 }
 
+void TournamentSelectorView::requestCompleted()
+{
+    updateModel();
+}
+
 void TournamentSelectorView::changeViewIndex()
 {
     stackedWidget->setCurrentIndex(1);
+}
+
+void TournamentSelectorView::deleteModel()
+{
+    QString string = treeWidget->currentItem()->text(3);
+    QUuid id = QUuid::fromString(string);
+
+    emit requestDeleteModel(id);
 }
 
 
