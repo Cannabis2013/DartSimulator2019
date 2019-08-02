@@ -9,6 +9,7 @@ MainApplication::MainApplication()
     connect(_lDb,&LocalDatabaseContext::parseTournamentToRemote,_rDb,&RemoteServerContex::createRemoteTournament);
     connect(_lDb,&LocalDatabaseContext::parseRoundToRemote,_rDb,&RemoteServerContex::createRemoteRound);
     connect(_lDb,&LocalDatabaseContext::parsePointToRemote,_rDb,&RemoteServerContex::submitRemotePoint);
+
     // Parse data from remote context to local context for processing
     connect(_rDb,&RemoteServerContex::sendTournamentData,_lDb,&LocalDatabaseContext::processTournament);
     connect(_rDb,&RemoteServerContex::sendAllTournamentsData,_lDb,&LocalDatabaseContext::processTournaments);

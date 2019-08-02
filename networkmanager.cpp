@@ -4,8 +4,10 @@ NetworkManager::NetworkManager(const QString &serverHostUrl, const QString &code
     _baseUrl(serverHostUrl),_userCode(code)
 {
     _netMng = new QNetworkAccessManager();
+
     connect(_netMng,&QNetworkAccessManager::sslErrors,this,&NetworkManager::handleSslErrors);
     setParserService(new UrlParser());
+
 }
 
 void NetworkManager::sendGetRequest(const QString &method,
@@ -19,8 +21,13 @@ void NetworkManager::sendGetRequest(const QString &method,
 
     _responseTimer.start();
 
+
     connect(tempReply,SIGNAL(finished()),reciever,slot);
-    connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
+    ReplyTimeout::setTimer(tempReply,
+                           timeoutThreshold(),
+                           this,
+                           SLOT(handleServerTimeout()),
+                           ReplyTimeout::Close);
 }
 
 void NetworkManager::sendPostRequest(const QString &method,
@@ -40,7 +47,11 @@ void NetworkManager::sendPostRequest(const QString &method,
     if(slot != nullptr)
         connect(tempReply,SIGNAL(finished()),reciever,slot);
 
-    connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
+    ReplyTimeout::setTimer(tempReply,
+                           timeoutThreshold(),
+                           this,
+                           SLOT(handleServerTimeout()),
+                           ReplyTimeout::Close);
 }
 
 
@@ -55,7 +66,11 @@ void NetworkManager::sendDeleteRequest(const QString &method,
     _responseTimer.start();
 
     connect(tempReply,SIGNAL(finished()),reciever,slot);
-    connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
+    ReplyTimeout::setTimer(tempReply,
+                           timeoutThreshold(),
+                           this,
+                           SLOT(handleServerTimeout()),
+                           ReplyTimeout::Close);
 }
 
 void NetworkManager::handleSslErrors(QNetworkReply *reply, const QList<QSslError> &errors)
@@ -64,6 +79,12 @@ void NetworkManager::handleSslErrors(QNetworkReply *reply, const QList<QSslError
     Q_UNUSED(errors);
 
     // TODO: Handle Ssl errors when its time for that
+}
+
+void NetworkManager::handleServerTimeout()
+{
+    emit sendErrorString("Server time out. Try again later.");
+    tempReply->close();
 }
 
 void NetworkManager::setBaseUrl(const QString &baseUrl)
@@ -95,4 +116,14 @@ void NetworkManager::setParserService(IParserService *t)
 IParserService *NetworkManager::parserService()
 {
     return _parserService;
+}
+
+int NetworkManager::timeoutThreshold() const
+{
+    return _timeoutThreshold;
+}
+
+void NetworkManager::setTimeoutThreshold(int timeoutThreshold)
+{
+    _timeoutThreshold = timeoutThreshold;
 }

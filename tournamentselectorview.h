@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTreeWidgetItem>
 #include <qmessagebox.h>
+#include <qstackedwidget.h>
 
 #include <view.h>
 
@@ -25,9 +26,11 @@ public slots:
 
 private slots:
     void initiateRequest();
+    void changeViewIndex();
 private:
     Ui::TournamentSelectorView *ui;
 
+    QStackedWidget* stackedWidget;
     QTreeWidget* treeWidget;
 };
 

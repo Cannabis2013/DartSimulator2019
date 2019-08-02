@@ -57,6 +57,7 @@ HEADERS += \
         httpreplyobject.h \
         myobject.h \
         remoteservercontex.h \
+        replytimeout.h \
         topframeform.h \
         tournamentselectorview.h \
         urlparser.h \

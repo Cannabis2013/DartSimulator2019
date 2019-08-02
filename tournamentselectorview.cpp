@@ -8,6 +8,7 @@ TournamentSelectorView::TournamentSelectorView(QWidget *parent) :
     ui->setupUi(this);
 
     treeWidget = ui->treeWidget;
+    stackedWidget = ui->stackedWidget;
 }
 
 TournamentSelectorView::~TournamentSelectorView()
@@ -25,9 +26,14 @@ void TournamentSelectorView::setModels(QList<QTreeWidgetItem *> models, const QS
 
 void TournamentSelectorView::initiateRequest()
 {
-    ui->treeWidget->clear();
+    treeWidget->clear();
     ui->RefreshButton->setDisabled(true);
     emit requestModels();
+}
+
+void TournamentSelectorView::changeViewIndex()
+{
+    stackedWidget->setCurrentIndex(1);
 }
 
 

@@ -92,8 +92,8 @@ QList<QTreeWidgetItem *> LocalDatabaseContext::createModels(const QByteArray &ar
         if(type == ModelType::Tournament)
         {
             data << obj.value("Name").toString() <<
-                    obj.value("Date created").toString() <<
-                    obj.value("Date finished").toString() <<
+                    obj.value("StartDateTime").toString() <<
+                    obj.value("EndDateTime").toString() <<
                     obj.value("Id").toString();
 
         }
