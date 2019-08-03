@@ -15,23 +15,6 @@
 
 using namespace std;
 
-class NetworkReply : public QNetworkReply
-{
-public:
-    NetworkReply();
-    QUuid callerId() const
-    {
-        return _callId;
-    }
-    void setCallerId(const QUuid &callId)
-    {
-        _callId = callId;
-    }
-
-private:
-    QUuid _callId;
-};
-
 class NetworkManager : public QObject,
         private IUrlParser
 {

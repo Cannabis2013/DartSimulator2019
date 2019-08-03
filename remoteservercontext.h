@@ -20,6 +20,7 @@ public:
     void remoteRemoveTournament(const QUuid &tournament);
 
 public slots:
+    // Upload models to remote
     void createRemoteTournament(const QByteArray &json);
     void createRemoteRound(const QByteArray &json, const QUuid &tournament);
     void submitRemotePoint(const QByteArray &json, const QUuid &round);

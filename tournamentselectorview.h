@@ -11,6 +11,8 @@
 
 #include <view.h>
 
+#define LOCALDATEFORMAT "dd-MM-yyyy"
+
 using namespace std;
 
 namespace Ui {

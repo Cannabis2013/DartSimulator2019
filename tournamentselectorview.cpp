@@ -18,6 +18,7 @@ TournamentSelectorView::TournamentSelectorView(QWidget *parent) :
     createTournamentButton = ui->CreateButton;
     deleteTournamentButton = ui->DeleteButton;
     resetEditState();
+    show_Overview_View();
 }
 
 TournamentSelectorView::~TournamentSelectorView()
@@ -36,7 +37,7 @@ void TournamentSelectorView::setModels(const QList<QTreeWidgetItem *> models, co
     } catch (const char* msg) {
         Q_UNUSED(msg);
     }
-    View::formatDate(headerLabels,items,{"StartDateTime","EndDateTime"},"dd-MM-yyyy");
+    View::formatDate(headerLabels,items,{"StartDateTime","EndDateTime"},LOCALDATEFORMAT);
 
     treeWidget->clear();
     int columns = header.count();

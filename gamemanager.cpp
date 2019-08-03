@@ -22,9 +22,9 @@ QList<QUuid> GameManager::remainingUsersToSubmit() const
 
 void GameManager::appendRound()
 {
-    int roundNumber = _rounds_History.count();
+    auto roundNumber = _rounds_History.count();
 
-    QUuid newRoundId = QUuid::createUuid();
+    auto newRoundId = QUuid::createUuid();
 
     _currentRound = newRoundId;
     _rounds_History << newRoundId;

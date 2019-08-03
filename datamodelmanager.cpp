@@ -73,10 +73,10 @@ QList<QTreeWidgetItem *> DataModelManager::extractChildren(const QJsonArray &jso
         auto data = QStringList();
         auto children = QList<QTreeWidgetItem*>();
 
-        for (QString key : val.toObject().keys()) {
-            QJsonValue jVal = val.toObject().value(key);
+        for (auto key : val.toObject().keys()) {
+            auto jVal = val.toObject().value(key);
             if(!jVal.isArray())
-                data << val.toObject().value(key).toString("NULL");
+                data << val.toObject().value(key).toString("Not defined");
             else
                 children = extractChildren(jVal.toArray());
         }
@@ -90,19 +90,19 @@ QList<QTreeWidgetItem *> DataModelManager::extractChildren(const QJsonArray &jso
 ModelContainer DataModelManager::ConvertDataItem(const QByteArray &item)
 {
     QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(item,&err);
+    auto doc = QJsonDocument::fromJson(item,&err);
     if(!doc.isObject() || doc.isArray() || doc.isNull())
         throw err.errorString().toStdString();
 
-    QJsonObject obj =  doc.object();
+    auto obj =  doc.object();
 
     QStringList data, header;
 
     QList<QTreeWidgetItem*> children;
 
-    for (QString key : obj.keys())
+    for (auto key : obj.keys())
     {
-        QJsonValue jVal = obj.value(key);
+        auto jVal = obj.value(key);
         if(!jVal.isArray())
         {
             data << jVal.toString("Not defined");
@@ -130,7 +130,7 @@ ModelContainer DataModelManager::ConvertDataItems(const QByteArray &array)
     QJsonArray objects = doc.array();
     for (auto val : objects)
     {
-        ModelContainer mContainer = ConvertDataItem(QJsonDocument(val.toObject()).toJson());
+        auto mContainer = ConvertDataItem(QJsonDocument(val.toObject()).toJson());
         if(header.isEmpty())
             header = mContainer.header;
         result << mContainer.model;
@@ -144,7 +144,6 @@ ModelContainer DataModelManager::ConvertDataItems(const QByteArray &array)
 void DataModelManager::createTournament(const QString &name, const QString &startDate, const QString &endDate)
 {
     QJsonObject obj;
-    //obj["id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
     obj["name"] = name;
     obj["startDateTime"] = QDateTime::fromString(startDate).toString(REMOTEDATEFORMAT);
     obj["endDateTime"] = QDateTime::fromString(endDate).toString(REMOTEDATEFORMAT);

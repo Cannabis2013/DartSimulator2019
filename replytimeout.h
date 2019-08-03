@@ -26,14 +26,15 @@ public:
         {
           _timer.start(timeout, this);
           connect(reply, &QNetworkReply::finished, this, &QObject::deleteLater);
-          connect(this,SIGNAL(timeoutOccured()),reciever,slot);
+          if(reciever != nullptr && slot != nullptr)
+            connect(this,SIGNAL(timeoutOccured()),reciever,slot);
         }
     }
     static void setTimer(QNetworkReply* reply,
                          const int timeout,
+                         HandleMethod method = Abort,
                          QObject*reciever = nullptr,
-                         const char* slot = nullptr,
-                         HandleMethod method = Abort)
+                         const char* slot = nullptr)
     {
         new ReplyTimeout(reply, timeout,reciever,slot, method);
     }
@@ -49,7 +50,6 @@ protected:
         auto reply = static_cast<QNetworkReply*>(parent());
         if (reply->isRunning())
         {
-            cout << __FILE__ << __LINE__ << endl;
           if (_method == Close)
             reply->close();
           else if (_method == Abort)

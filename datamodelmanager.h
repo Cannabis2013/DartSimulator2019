@@ -9,7 +9,6 @@
 #include <qdatetime.h>
 
 #define REMOTEDATEFORMAT "yyyy-MM-dd'T'hh:mm:ss.zzz'Z'"
-#define LOCALDATEFORMAT "dd-MM-yyyy"
 
 struct ModelContainer
 {

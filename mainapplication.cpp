@@ -8,7 +8,7 @@ MainApplication::MainApplication()
 
     _rDb->setTimeoutThreshold(10000);
 
-    // Game
+    // GameManager
     connect(_gMng,&GameManager::newRound,_dataMng,&DataModelManager::remoteAppendRound);
     connect(_gMng,&GameManager::sendPointSubmit,_dataMng,&DataModelManager::remoteAppendPoint);
 

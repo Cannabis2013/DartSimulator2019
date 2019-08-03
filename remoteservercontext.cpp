@@ -67,7 +67,6 @@ void RemoteServerContext::handleNonPostReply()
     if(tempReply->error())
     {
         QString err = tempReply->errorString();
-        cout << err.toStdString() << endl;
         emit sendStatusMsg("Error",err);
         emit sendNotification();
         return;
@@ -105,7 +104,6 @@ void RemoteServerContext::handleRemoteTournaments()
     if(tempReply->error())
     {
         emit sendErrorString(tempReply->errorString());
-        cout << tempReply->errorString().toStdString() << endl;
         return;
     }
 
