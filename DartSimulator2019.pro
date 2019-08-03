@@ -28,6 +28,7 @@ SOURCES += \
         abstractframeimplementable.cpp \
         customdialog.cpp \
         customjsonassembler.cpp \
+        gamemanager.cpp \
         iurlparser.cpp \
         localdatabasecontext.cpp \
         main.cpp \
@@ -36,7 +37,7 @@ SOURCES += \
         networkmanager.cpp \
         httpreplyobject.cpp \
         myobject.cpp \
-        remoteservercontex.cpp \
+        remoteservercontext.cpp \
         topframeform.cpp \
         tournamentselectorview.cpp \
         urlparser.cpp \
@@ -47,16 +48,18 @@ HEADERS += \
         abstractframeimplementable.h \
         customdialog.h \
         customjsonassembler.h \
+        gamemanager.h \
         idartsimulator.h \
         igraphicaluserinterface.h \
         ijsonconverter.h \
         iurlparser.h \
         localdatabasecontext.h \
         mainapplication.h \
+        model.h \
         networkmanager.h \
         httpreplyobject.h \
         myobject.h \
-        remoteservercontex.h \
+        remoteservercontext.h \
         replytimeout.h \
         topframeform.h \
         tournamentselectorview.h \

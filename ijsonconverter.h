@@ -4,11 +4,22 @@
 #include <qlist.h>
 #include <quuid.h>
 
-template<typename K,typename V,typename R = int>
+/*
+ * Convert from type V to K.
+ * Example:
+ *      V = QBytearray, K = QTreeWidgetItem*
+ *      QTreeWidgetItem* createModel(const QByteArray &paramter1);
+ */
+
+template<typename K,typename V,typename R = K>
 struct IJsonConverter
 {
-    virtual K createModel(const V &parameter1, const R &parameter2) const=0;
-    virtual QList<K> createModels(const V &parameter1, const R&parameter2) const=0;
+    virtual K processDataItem(V &parameter1)=0;
+    virtual K processDataItems(V &parameter1)=0;
+
+    virtual V deProcessDataItem(R &parameter1)=0;
+    virtual V deProcessDataItems(R &parameter1)=0;
+
 
 
 };

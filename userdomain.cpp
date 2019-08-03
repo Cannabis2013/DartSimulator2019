@@ -2,7 +2,7 @@
 
 UserDomain::UserDomain()
 {
-
+    systemTray = new QSystemTrayIcon();
 }
 
 UserDomain::~UserDomain()
@@ -16,6 +16,7 @@ void UserDomain::setService(IDartSimulator *service)
     _service = service;
 
     connect(_service,&IDartSimulator::externalPopupMessage,this,&UserDomain::showSystemTrayMessage);
+    connect(_service,&IDartSimulator::externalNotifyResponse,this,&UserDomain::notifyView);
 }
 
 IDartSimulator *UserDomain::service()
@@ -36,15 +37,14 @@ void UserDomain::setupTournamentView(View *v,const QString &frameTitle)
     connect(v,&View::aboutToClose,this,&UserDomain::removeView);
 
     view->show();
-    v->updateModel();
+    v->updateState();
 }
 
-void UserDomain::notifyView(const QUuid &id)
+void UserDomain::notifyView()
 {
     for (View* v : _views)
     {
-        if(v->classId() == id)
-            v->requestCompleted();
+        v->requestCompleted();
     }
 }
 
@@ -65,7 +65,7 @@ void UserDomain::removeView(const QUuid &id)
 {
     for (View* v : _views)
     {
-        if(v->classId() == id)
+        if(v != nullptr && v->classId() == id)
         {
             _views.removeOne(v);
         }

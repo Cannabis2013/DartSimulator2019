@@ -21,7 +21,7 @@ public:
     void setupTournamentView(View *v, const QString &frameTitle);
 
 private slots:
-    void notifyView(const QUuid &id);
+    void notifyView();
     void requestAllTournaments();
     void showSystemTrayMessage(const QString &msg);
 

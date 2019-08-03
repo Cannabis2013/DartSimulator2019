@@ -15,6 +15,23 @@
 
 using namespace std;
 
+class NetworkReply : public QNetworkReply
+{
+public:
+    NetworkReply();
+    QUuid callerId() const
+    {
+        return _callId;
+    }
+    void setCallerId(const QUuid &callId)
+    {
+        _callId = callId;
+    }
+
+private:
+    QUuid _callId;
+};
+
 class NetworkManager : public QObject,
         private IUrlParser
 {
@@ -31,7 +48,7 @@ public:
     void setTimeoutThreshold(int timeoutThreshold);
 
 signals:
-
+    void sendNotification();
     void sendErrorString(const QString &err);
     void sendSslErrorStrings(const QStringList &err);
 
@@ -49,7 +66,7 @@ protected:
     void sendDeleteRequest(const QString &method,
                            const QString &urlParameter = QString(),
                            QObject *reciever = nullptr,
-                           const char *slot= nullptr);
+                           const char* slot = nullptr);
 
     int timeElapsed();
 

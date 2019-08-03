@@ -1,27 +1,27 @@
-#include "remoteservercontex.h"
+#include "remoteservercontext.h"
 
-RemoteServerContex::RemoteServerContex(const QString &server, const QString &userCode):
+RemoteServerContext::RemoteServerContext(const QString &server, const QString &userCode):
     NetworkManager(server,userCode)
 {
 
 }
 
-void RemoteServerContex::createRemoteTournament(const QByteArray &json)
+void RemoteServerContext::createRemoteTournament(const QByteArray &json)
 {
     sendPostRequest("CreateTournament",json,QString(),this,SLOT(handleNonPostReply()));
 }
 
-void RemoteServerContex::remoteTournament(const QUuid &id)
+void RemoteServerContext::remoteTournament(const QUuid &id)
 {
     sendGetRequest("GetTournament",id.toString(QUuid::WithoutBraces),this,SLOT(handleRemoteTournament()));
 }
 
-void RemoteServerContex::remoteTournaments()
+void RemoteServerContext::remoteTournaments()
 {
     sendGetRequest("GetTournaments",QString(),this,SLOT(handleRemoteTournaments()));
 }
 
-void RemoteServerContex::createRemoteRound(const QByteArray &json, const QUuid &tournament)
+void RemoteServerContext::createRemoteRound(const QByteArray &json, const QUuid &tournament)
 {
     sendPostRequest("CreateRound",
                     json,tournament.toString(QUuid::WithoutBraces),
@@ -29,7 +29,7 @@ void RemoteServerContex::createRemoteRound(const QByteArray &json, const QUuid &
                     SLOT(handleCreateRoundReply()));
 }
 
-void RemoteServerContex::remoteRound(const QUuid &tournament)
+void RemoteServerContext::remoteRound(const QUuid &tournament)
 {
     sendGetRequest("GetRound",
                    tournament.toString(QUuid::WithoutBraces),
@@ -37,7 +37,7 @@ void RemoteServerContex::remoteRound(const QUuid &tournament)
                    SLOT(handleRemoteRound()));
 }
 
-void RemoteServerContex::remoteRounds(const QUuid &tournament)
+void RemoteServerContext::remoteRounds(const QUuid &tournament)
 {
     sendGetRequest("GetRounds",
                    tournament.toString(QUuid::WithoutBraces),
@@ -45,7 +45,7 @@ void RemoteServerContex::remoteRounds(const QUuid &tournament)
                    SLOT(handleRemoteRounds()));
 }
 
-void RemoteServerContex::remoteRemoveTournament(const QUuid &tournament)
+void RemoteServerContext::remoteRemoveTournament(const QUuid &tournament)
 {
     sendDeleteRequest("DeleteTournament",
                       tournament.toString(QUuid::WithoutBraces),
@@ -53,7 +53,7 @@ void RemoteServerContex::remoteRemoveTournament(const QUuid &tournament)
                       SLOT(handleNonPostReply()));
 }
 
-void RemoteServerContex::submitRemotePoint(const QUuid &round, const QByteArray &json)
+void RemoteServerContext::submitRemotePoint(const QUuid &round, const QByteArray &json)
 {
     sendPostRequest("SubmitPoint",
                     json,
@@ -62,13 +62,17 @@ void RemoteServerContex::submitRemotePoint(const QUuid &round, const QByteArray 
                     SLOT(handleSubmitPoint()));
 }
 
-void RemoteServerContex::handleNonPostReply()
+void RemoteServerContext::handleNonPostReply()
 {
     if(tempReply->error())
     {
-        emit sendStatusMsg("Error",tempReply->errorString());
+        QString err = tempReply->errorString();
+        cout << err.toStdString() << endl;
+        emit sendStatusMsg("Error",err);
+        emit sendNotification();
         return;
     }
+
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
@@ -76,15 +80,17 @@ void RemoteServerContex::handleNonPostReply()
     QUuid id = QUuid::fromRfc4122(data);
     QString msg = "Operation successed on model with identification: %1";
     msg = msg.arg(id.toString(QUuid::WithoutBraces));
+    emit sendNotification();
 
     emit sendStatusMsg("Success",msg);
 }
 
-void RemoteServerContex::handleRemoteTournament()
+void RemoteServerContext::handleRemoteTournament()
 {
     if(tempReply->error())
     {
         emit sendErrorString(tempReply->errorString());
+        tempReply->close();
         return;
     }
 
@@ -94,7 +100,7 @@ void RemoteServerContex::handleRemoteTournament()
     emit sendTournamentData(data,logMessage);
 }
 
-void RemoteServerContex::handleRemoteTournaments()
+void RemoteServerContext::handleRemoteTournaments()
 {
     if(tempReply->error())
     {
@@ -109,12 +115,12 @@ void RemoteServerContex::handleRemoteTournaments()
     emit sendAllTournamentsData(data,logMessage);
 }
 
-void RemoteServerContex::handleCreateRoundReply()
+void RemoteServerContext::handleCreateRoundReply()
 {
 
 }
 
-void RemoteServerContex::handleRemoteRound()
+void RemoteServerContext::handleRemoteRound()
 {
     if(tempReply->error())
     {
@@ -128,7 +134,7 @@ void RemoteServerContex::handleRemoteRound()
     emit sendRoundData(data,logMessage);
 }
 
-void RemoteServerContex::handleRemoteRounds()
+void RemoteServerContext::handleRemoteRounds()
 {
     if(tempReply->error())
     {
@@ -142,7 +148,7 @@ void RemoteServerContex::handleRemoteRounds()
     emit sendRoundsData(data,logMessage);
 }
 
-void RemoteServerContex::handleSubmitPoint()
+void RemoteServerContext::handleSubmitPoint()
 {
     if(tempReply->error())
     {

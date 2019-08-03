@@ -7,11 +7,17 @@
 #include <QJsonObject>
 #include <qjsonarray.h>
 
+struct ModelContainer
+{
+    QTreeWidgetItem* model = nullptr;
+    QList<QTreeWidgetItem*> models;
+    QStringList header;
+};
 
 enum ModelType{Tournament,Round,Point};
 
 class LocalDatabaseContext : public QObject,
-        public IJsonConverter<QTreeWidgetItem*,QByteArray,ModelType>
+        public IJsonConverter<ModelContainer,const QByteArray,const QTreeWidgetItem*>
 {
     Q_OBJECT
 public:
@@ -19,33 +25,29 @@ public:
 
     virtual ~LocalDatabaseContext();
 
-    QUuid currentTournament() const;
-    void setCurrentTournament(const QUuid &currentTournament);
-
-    QUuid currentRound() const;
-    void setCurrentRound(const QUuid &currentRound);
-
     void createTournament(const QString &name,
                           const int &maxRounds,
                           const int &maxUsers,
                           const QList<QUuid> &users);
-    void submitPoint(const QUuid &user,const int &point);
-
-    void nextRound();
 
 public slots:
-    void processTournament(const QByteArray &data, const QString &log);
-    void processTournaments(const QByteArray &data, const QString &log);
-    void processRound(const QByteArray &data, const QString &log);
-    void processRounds(const QByteArray &data, const QString &log);
 
-    void processUsers(const QByteArray &data, const QString &log);
+    // Convert models from remote to QTreeWidgetItem*
+    void tournamentFromJson(const QByteArray &data, const QString &log);
+    void tournamentsFromJson(const QByteArray &data, const QString &log);
+    void roundFromJson(const QByteArray &data, const QString &log);
+    void roundsFromJson(const QByteArray &data, const QString &log);
+
+    void usersFromJson(const QByteArray &data, const QString &log);
+
+    // Convert models from local to Json format
+    void tournamentToJson(QTreeWidgetItem* model);
 signals:
 
-    void parseTournamentToExternal(QTreeWidgetItem* model,const QString &log);
-    void parseTournamentsToExternal(QList<QTreeWidgetItem*> models,const QString &log);
-    void parseRoundToExternal(QTreeWidgetItem* model,const QString &log);
-    void parseRoundsToExternal(QList<QTreeWidgetItem*> models,const QString &log);
+    void parseTournamentToExternal(const QTreeWidgetItem* model,const QStringList &headers,const QString &log);
+    void parseTournamentsToExternal(const QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &log);
+    void parseRoundToExternal(QTreeWidgetItem* model,const QStringList &header,const QString &log);
+    void parseRoundsToExternal(QList<QTreeWidgetItem*> models,const QStringList &header,const QString &log);
 
     void parseTournamentToRemote(const QByteArray &json);
     void parseRoundToRemote(const QByteArray &json,const QUuid &tournament);
@@ -53,19 +55,20 @@ signals:
 
 private:
 
-    bool allSubmittet();
+    QList<QTreeWidgetItem*> extractChildren(const QJsonArray &json);
+
     QList<QUuid> restusers() const;
-    bool hasSubmitted(const QUuid &user);
     void appendRound();
 
-    QTreeWidgetItem* createModel(const QByteArray &item, const ModelType &type) const;
-    QList<QTreeWidgetItem*> createModels(const QByteArray &array, const ModelType &type) const;
+    ModelContainer processDataItem(const QByteArray &item);
+    ModelContainer processDataItems(const QByteArray &array);
 
-    QUuid _currentTournament;
-    QUuid _currentRound;
-    QList<QUuid> _currentAssignedUsers;
-    QList<QUuid> _remainingSubmitters;
-    QList<QUuid> _rounds;
+    const QByteArray deProcessDataItem(const QTreeWidgetItem* &parameter1);
+    const QByteArray deProcessDataItems(const QTreeWidgetItem* &parameter1);
+
+
+
+
 };
 
 #endif // LOCALDATABASECONTEXT_H

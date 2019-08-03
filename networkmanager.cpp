@@ -43,6 +43,7 @@ void NetworkManager::sendPostRequest(const QString &method,
     req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     tempReply = _netMng->post(req,data);
 
+
     _responseTimer.start();
     if(slot != nullptr)
         connect(tempReply,SIGNAL(finished()),reciever,slot);
@@ -56,16 +57,21 @@ void NetworkManager::sendPostRequest(const QString &method,
 
 
 void NetworkManager::sendDeleteRequest(const QString &method,
-                                              const QString &urlParameter,
-                                           QObject *reciever,
-                                           const char *slot)
+                                       const QString &urlParameter,
+                                       QObject *reciever,
+                                       const char* slot)
 {
     QUrl fullServerUrl = parserService()->parseUrl(_baseUrl,method,urlParameter,_userCode);
-    tempReply = _netMng->deleteResource(QNetworkRequest(fullServerUrl));
+    tempReply = static_cast<NetworkReply*>(_netMng->deleteResource(QNetworkRequest(fullServerUrl)));
 
     _responseTimer.start();
 
-    connect(tempReply,SIGNAL(finished()),reciever,slot);
+    if(slot != nullptr)
+        connect(tempReply,SIGNAL(finished()),reciever,slot);
+
+    connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
+
+
     ReplyTimeout::setTimer(tempReply,
                            timeoutThreshold(),
                            this,
@@ -126,4 +132,10 @@ int NetworkManager::timeoutThreshold() const
 void NetworkManager::setTimeoutThreshold(int timeoutThreshold)
 {
     _timeoutThreshold = timeoutThreshold;
+}
+
+NetworkReply::NetworkReply():
+    QNetworkReply (nullptr)
+{
+
 }

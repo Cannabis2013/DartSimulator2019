@@ -16,24 +16,36 @@ TournamentSelectorView::~TournamentSelectorView()
     delete ui;
 }
 
-void TournamentSelectorView::setModels(QList<QTreeWidgetItem *> models, const QString &msg)
+void TournamentSelectorView::setModels(const QList<QTreeWidgetItem *> models, const QStringList &header, const QString &msg)
 {
     Q_UNUSED(msg);
+
+    QStringList headerLabels = header;
+    QList<QTreeWidgetItem*> items = models;
+    try {
+        View::orderModels(headerLabels,items,{"Name","StartDateTime","EndDateTime","Created","Updated","Id"});
+    } catch (const char* msg) {
+
+    }
+
     treeWidget->clear();
-    treeWidget->addTopLevelItems(models);
+    int columns = header.count();
+    treeWidget->setColumnCount(columns);
+    treeWidget->setHeaderLabels(headerLabels);
+    treeWidget->addTopLevelItems(items);
     ui->RefreshButton->setDisabled(false);
 }
 
-void TournamentSelectorView::updateModel()
+void TournamentSelectorView::updateState()
 {
-    treeWidget->clear();
     ui->RefreshButton->setDisabled(true);
     emit requestModels();
 }
 
 void TournamentSelectorView::requestCompleted()
 {
-    updateModel();
+    ui->DeleteButton->setDisabled(false);
+    updateState();
 }
 
 void TournamentSelectorView::changeViewIndex()
@@ -43,10 +55,12 @@ void TournamentSelectorView::changeViewIndex()
 
 void TournamentSelectorView::deleteModel()
 {
-    QString string = treeWidget->currentItem()->text(3);
-    QUuid id = QUuid::fromString(string);
-
-    emit requestDeleteModel(id);
+    if(treeWidget->currentItem() == nullptr)
+        return;
+    QString string = treeWidget->currentItem()->text(5);
+    QUuid id = QUuid::fromString(string), caller = this->classId();
+    ui->DeleteButton->setDisabled(true);
+    emit requestDeleteModel(id,caller);
 }
 
 

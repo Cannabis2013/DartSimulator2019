@@ -2,7 +2,7 @@
 #define MAINAPPLICATION_H
 
 #include <idartsimulator.h>
-#include <remoteservercontex.h>
+#include <remoteservercontext.h>
 #include <localdatabasecontext.h>
 
 #define USERCODE "wQ71HOHNXNaHkDxnnaZ7kj6ujWYW2xBsV1VXxRqp8C/83IgryF1ADA=="
@@ -21,13 +21,16 @@ public:
     void rounds(const QUuid &tournament);
 
     void createTournament(const QString &name, const int &maxUsers, const int &maxRounds, const QList<QUuid> &users);
-    void deleteTournament(const QUuid &tournament, const QUuid &callerId);
     void appendNewRound();
     void submitPoint(const int &p, const QUuid &user);
 
 private:
     LocalDatabaseContext* _lDb;
-    RemoteServerContex* _rDb;
+    RemoteServerContext* _rDb;
+
+    // IDartSimulator interface
+public slots:
+    void deleteTournament(const QUuid &tournament);
 };
 
 #endif // MAINAPPLICATION_H

@@ -5,6 +5,9 @@
 #include <qnetworkreply.h>
 #include <qbasictimer.h>
 #include <QTimerEvent>
+#include <iostream>
+
+using namespace std;
 
 class ReplyTimeout : public QObject
 {
@@ -19,8 +22,7 @@ public:
                  HandleMethod method = Abort) :
         QObject(reply), _method(method)
     {
-        Q_ASSERT(reply);
-        if (reply && reply->isRunning())
+        if (reply->isRunning())
         {
           _timer.start(timeout, this);
           connect(reply, &QNetworkReply::finished, this, &QObject::deleteLater);
@@ -47,6 +49,7 @@ protected:
         auto reply = static_cast<QNetworkReply*>(parent());
         if (reply->isRunning())
         {
+            cout << __FILE__ << __LINE__ << endl;
           if (_method == Close)
             reply->close();
           else if (_method == Abort)

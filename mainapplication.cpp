@@ -3,27 +3,28 @@
 MainApplication::MainApplication()
 {
     _lDb = new LocalDatabaseContext();
-    _rDb = new RemoteServerContex(HOSTURL,USERCODE);
+    _rDb = new RemoteServerContext(HOSTURL,USERCODE);
 
-    _rDb->setTimeoutThreshold(4500); // Initialize the timeout threshold to 4500 ms
+    _rDb->setTimeoutThreshold(10000);
 
     // Parse data from local context to remote context
-    connect(_lDb,&LocalDatabaseContext::parseTournamentToRemote,_rDb,&RemoteServerContex::createRemoteTournament);
-    connect(_lDb,&LocalDatabaseContext::parseRoundToRemote,_rDb,&RemoteServerContex::createRemoteRound);
-    connect(_lDb,&LocalDatabaseContext::parsePointToRemote,_rDb,&RemoteServerContex::submitRemotePoint);
+    connect(_lDb,&LocalDatabaseContext::parseTournamentToRemote,_rDb,&RemoteServerContext::createRemoteTournament);
+    connect(_lDb,&LocalDatabaseContext::parseRoundToRemote,_rDb,&RemoteServerContext::createRemoteRound);
+    connect(_lDb,&LocalDatabaseContext::parsePointToRemote,_rDb,&RemoteServerContext::submitRemotePoint);
 
     // Parse data from remote context to local context for processing
-    connect(_rDb,&RemoteServerContex::sendTournamentData,_lDb,&LocalDatabaseContext::processTournament);
-    connect(_rDb,&RemoteServerContex::sendAllTournamentsData,_lDb,&LocalDatabaseContext::processTournaments);
+    connect(_rDb,&RemoteServerContext::sendTournamentData,_lDb,&LocalDatabaseContext::tournamentFromJson);
+    connect(_rDb,&RemoteServerContext::sendAllTournamentsData,_lDb,&LocalDatabaseContext::tournamentsFromJson);
 
     // Return models to user domain
     connect(_lDb,&LocalDatabaseContext::parseTournamentToExternal,this,&IDartSimulator::sendModel);
     connect(_lDb,&LocalDatabaseContext::parseTournamentsToExternal,this,&IDartSimulator::sendModels);
 
-    connect(_rDb,&RemoteServerContex::sendStatusMsg,this,&IDartSimulator::externalPopupMessage);
+    connect(_rDb,&RemoteServerContext::sendStatusMsg,this,&IDartSimulator::externalPopupMessage);
+    connect(_rDb,&RemoteServerContext::sendNotification,this,&IDartSimulator::externalNotifyResponse);
 
     // Connection/request failed
-    connect(_rDb,&RemoteServerContex::sendErrorString,this,&IDartSimulator::externalRequestFailed);
+    connect(_rDb,&RemoteServerContext::sendErrorString,this,&IDartSimulator::externalRequestFailed);
 }
 
 void MainApplication::createTournament(const QString &name,
@@ -32,11 +33,6 @@ void MainApplication::createTournament(const QString &name,
                                        const QList<QUuid> &users)
 {
     _lDb->createTournament(name,maxRounds,maxUsers,users);
-}
-
-void MainApplication::deleteTournament(const QUuid &tournament, const QUuid &callerId)
-{
-    _rDb->remoteRemoveTournament(tournament);
 }
 
 void MainApplication::appendNewRound()
@@ -74,3 +70,9 @@ void MainApplication::rounds(const QUuid &tournament)
     _rDb->remoteRounds(tournament);
 }
 
+
+
+void MainApplication::deleteTournament(const QUuid &tournament)
+{
+    _rDb->remoteRemoveTournament(tournament);
+}

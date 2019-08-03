@@ -6,7 +6,7 @@ View::View(QWidget* parent):
 
 }
 
-void View::updateModel()
+void View::updateState()
 {
 
 }
@@ -33,4 +33,34 @@ void View::closeEvent(QCloseEvent *e)
 QUuid View::classId() const
 {
     return _classId;
+}
+
+void View::orderModels(QStringList &unorderedList, QList<QTreeWidgetItem *> &models, std::initializer_list<QString> list)
+{
+    if(list.size() == 0)
+        throw "No order set!";
+
+    QStringList orderedList = list;
+    for (QString s : orderedList)
+    {
+        if(!unorderedList.contains(s))
+            throw "Ordered list is not consistent with unordered list!";
+    }
+
+    for (int i = 0; i < orderedList.count(); ++i) {
+        QString firstItem = orderedList.at(i);
+        int index = unorderedList.indexOf(firstItem);
+
+        if(index == i)
+            continue;
+
+        unorderedList.swapItemsAt(i,index);
+        for (QTreeWidgetItem* item : models)
+        {
+            QString itemAtOrderedIndex = item->text(i);
+            QString itemAtUnorderedIndex = item->text(index);
+            item->setText(i,itemAtUnorderedIndex);
+            item->setText(index,itemAtOrderedIndex);
+        }
+    }
 }

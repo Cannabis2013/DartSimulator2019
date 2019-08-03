@@ -23,17 +23,18 @@ public slots:
     virtual void round(const QUuid &tournament)=0;
     virtual void rounds(const QUuid &tournament)=0;
 
-    virtual void deleteTournament(const QUuid &tournament, const QUuid &callerId)=0;
+    virtual void deleteTournament(const QUuid &tournament)=0;
 
     // Game control related..
     virtual void appendNewRound()=0;
     virtual void submitPoint(const int &p, const QUuid &user)=0;
 
 signals:
-    void sendModel(QTreeWidgetItem* model,const QString &log);
-    void sendModels(QList<QTreeWidgetItem*> models,const QString &log);
+    void sendModel(const QTreeWidgetItem* model,const QStringList &headers,const QString &log);
+    void sendModels(const QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &log);
 
     void externalPopupMessage(const QString &title,const QString &msg);
+    void externalNotifyResponse();
     void externalRequestFailed(const QString &error);
 };
 

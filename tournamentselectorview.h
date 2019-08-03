@@ -5,8 +5,12 @@
 #include <QTreeWidgetItem>
 #include <qmessagebox.h>
 #include <qstackedwidget.h>
+#include <iostream>
+
 
 #include <view.h>
+
+using namespace std;
 
 namespace Ui {
     class TournamentSelectorView;
@@ -21,10 +25,10 @@ public:
     ~TournamentSelectorView();
 
 public slots:
-    void setModels(QList<QTreeWidgetItem*> models,const QString &msg);
-    void handleError(const QString &error);
-    void updateModel();
-    void requestCompleted();
+    virtual void setModels(const QList<QTreeWidgetItem *> models, const QStringList &header, const QString &msg);
+    virtual void handleError(const QString &error);
+    virtual void updateState();
+    virtual void requestCompleted();
 
 private slots:
     void changeViewIndex();

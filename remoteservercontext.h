@@ -3,11 +3,11 @@
 
 #include <networkmanager.h>
 
-class RemoteServerContex : public NetworkManager
+class RemoteServerContext : public NetworkManager
 {
     Q_OBJECT
 public:
-    RemoteServerContex(const QString &server, const QString &userCode = QString());
+    RemoteServerContext(const QString &server, const QString &userCode = QString());
 
     // Requests
     void remoteTournament(const QUuid &id);
