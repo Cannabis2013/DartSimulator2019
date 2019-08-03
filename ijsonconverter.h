@@ -14,11 +14,9 @@
 template<typename K,typename V,typename R = K>
 struct IJsonConverter
 {
-    virtual K processDataItem(V &parameter1)=0;
-    virtual K processDataItems(V &parameter1)=0;
+    virtual K ConvertDataItem(V &parameter1)=0;
+    virtual K ConvertDataItems(V &parameter1)=0;
 
-    virtual V deProcessDataItem(R &parameter1)=0;
-    virtual V deProcessDataItems(R &parameter1)=0;
 
 
 

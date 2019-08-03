@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <qjsonarray.h>
+#include <qdatetime.h>
 
 struct ModelContainer
 {
@@ -16,21 +17,21 @@ struct ModelContainer
 
 enum ModelType{Tournament,Round,Point};
 
-class LocalDatabaseContext : public QObject,
-        public IJsonConverter<ModelContainer,const QByteArray,const QTreeWidgetItem*>
+class DataModelManager : public QObject,
+        public IJsonConverter<ModelContainer,const QByteArray>
 {
     Q_OBJECT
 public:
-    LocalDatabaseContext();
+    DataModelManager();
 
-    virtual ~LocalDatabaseContext();
+    virtual ~DataModelManager();
 
-    void createTournament(const QString &name,
-                          const int &maxRounds,
-                          const int &maxUsers,
-                          const QList<QUuid> &users);
+
 
 public slots:
+    void createTournament(const QString &name,
+                          const QString &startDate,
+                          const QString &endDate);
 
     // Convert models from remote to QTreeWidgetItem*
     void tournamentFromJson(const QByteArray &data, const QString &log);
@@ -42,6 +43,9 @@ public slots:
 
     // Convert models from local to Json format
     void tournamentToJson(QTreeWidgetItem* model);
+
+    void remoteAppendRound(const QUuid &tournament, const QUuid &round, const int &roundNumber);
+    void remoteAppendPoint(const QUuid &round, const QUuid &userId, const quint32 &point);
 signals:
 
     void parseTournamentToExternal(const QTreeWidgetItem* model,const QStringList &headers,const QString &log);
@@ -51,24 +55,13 @@ signals:
 
     void parseTournamentToRemote(const QByteArray &json);
     void parseRoundToRemote(const QByteArray &json,const QUuid &tournament);
-    void parsePointToRemote(const QUuid &round,const QByteArray &json);
+    void parsePointToRemote(const QByteArray &json,const QUuid &round);
 
 private:
-
     QList<QTreeWidgetItem*> extractChildren(const QJsonArray &json);
 
-    QList<QUuid> restusers() const;
-    void appendRound();
-
-    ModelContainer processDataItem(const QByteArray &item);
-    ModelContainer processDataItems(const QByteArray &array);
-
-    const QByteArray deProcessDataItem(const QTreeWidgetItem* &parameter1);
-    const QByteArray deProcessDataItems(const QTreeWidgetItem* &parameter1);
-
-
-
-
+    ModelContainer ConvertDataItem(const QByteArray &item);
+    ModelContainer ConvertDataItems(const QByteArray &array);
 };
 
 #endif // LOCALDATABASECONTEXT_H

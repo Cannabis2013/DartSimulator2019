@@ -28,9 +28,9 @@ SOURCES += \
         abstractframeimplementable.cpp \
         customdialog.cpp \
         customjsonassembler.cpp \
+        datamodelmanager.cpp \
         gamemanager.cpp \
         iurlparser.cpp \
-        localdatabasecontext.cpp \
         main.cpp \
         mainapplication.cpp \
         idartsimulator.cpp \
@@ -48,12 +48,12 @@ HEADERS += \
         abstractframeimplementable.h \
         customdialog.h \
         customjsonassembler.h \
+        datamodelmanager.h \
         gamemanager.h \
         idartsimulator.h \
         igraphicaluserinterface.h \
         ijsonconverter.h \
         iurlparser.h \
-        localdatabasecontext.h \
         mainapplication.h \
         model.h \
         networkmanager.h \

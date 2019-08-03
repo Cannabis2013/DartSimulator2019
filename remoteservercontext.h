@@ -22,7 +22,7 @@ public:
 public slots:
     void createRemoteTournament(const QByteArray &json);
     void createRemoteRound(const QByteArray &json, const QUuid &tournament);
-    void submitRemotePoint(const QUuid &round, const QByteArray &json);
+    void submitRemotePoint(const QByteArray &json, const QUuid &round);
 
 signals:
     void sendModelIdentity(const QByteArray &data, const QString &log);

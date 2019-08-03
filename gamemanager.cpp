@@ -23,14 +23,14 @@ QList<QUuid> GameManager::remainingUsersToSubmit() const
 void GameManager::appendRound()
 {
     int roundNumber = _rounds_History.count();
-    QJsonObject obj;
-    obj["Id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
-    obj["Round number"] = roundNumber;
-    obj["Parent tournament:"] = currentRound().toString(QUuid::WithoutBraces);
-    obj["Point identities"] = QJsonArray();
 
-    emit parseRoundToRemote(QJsonDocument(obj).toJson(),currentTournament());
+    QUuid newRoundId = QUuid::createUuid();
+
+    _currentRound = newRoundId;
+    _rounds_History << newRoundId;
     _remainingSubmitters = _currentAssignedUsers;
+
+    emit newRound(currentTournament(),newRoundId,roundNumber);
 }
 
 QUuid GameManager::currentTournament() const
@@ -43,7 +43,7 @@ void GameManager::setCurrentTournament(const QUuid &currentTournament)
     _currentTournament = currentTournament;
 }
 
-void GameManager::nextRound()
+void GameManager::initiateNewRound()
 {
     if(allSubmittet())
         appendRound();
@@ -51,18 +51,13 @@ void GameManager::nextRound()
         throw "All users needs to submit";
 }
 
-void GameManager::submitPoint(const QUuid &user, const int &point)
+void GameManager::submitPoint(const QUuid &userId, const quint32 &point)
 {
-    if(hasSubmitted(user))
+    if(hasSubmitted(userId))
         throw "User has already submittet point";
 
-    QJsonObject obj;
-    obj["User"] = user.toString(QUuid::WithoutBraces);
-    obj["Point"] = point;
-
-    emit parsePointToRemote(currentRound(),QJsonDocument(obj).toJson());
-
-    _remainingSubmitters.append(user);
+    emit sendPointSubmit(currentRound(),userId,point);
+    _remainingSubmitters.removeOne(userId);
 }
 
 QUuid GameManager::currentRound() const

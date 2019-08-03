@@ -53,7 +53,7 @@ void RemoteServerContext::remoteRemoveTournament(const QUuid &tournament)
                       SLOT(handleNonPostReply()));
 }
 
-void RemoteServerContext::submitRemotePoint(const QUuid &round, const QByteArray &json)
+void RemoteServerContext::submitRemotePoint(const QByteArray &json,const QUuid &round)
 {
     sendPostRequest("SubmitPoint",
                     json,

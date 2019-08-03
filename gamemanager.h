@@ -3,9 +3,11 @@
 
 #include <quuid.h>
 #include <qlist.h>
+#include <qobject.h>
 
-class GameManager
+class GameManager : public QObject
 {
+    Q_OBJECT
 public:
     GameManager();
 
@@ -15,9 +17,13 @@ public:
     QUuid currentTournament() const;
     void setCurrentTournament(const QUuid &currentTournament);
 
-    void nextRound();
+public slots:
+    void initiateNewRound();
+    void submitPoint(const QUuid &userId, const quint32 &point);
 
-    void submitPoint(const QUuid &user,const int &point);
+signals:
+    void newRound(const QUuid &tournament,const QUuid &newRoundId,const int &roundNumber);
+    void sendPointSubmit(const QUuid &round, const QUuid &userId, const quint32 &point);
 private:
     bool allSubmittet();
     bool hasSubmitted(const QUuid &user);

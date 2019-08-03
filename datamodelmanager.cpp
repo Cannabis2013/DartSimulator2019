@@ -1,50 +1,71 @@
-#include "localdatabasecontext.h"
+#include "datamodelmanager.h"
 
-LocalDatabaseContext::LocalDatabaseContext()
+DataModelManager::DataModelManager()
 {
 
 }
 
-LocalDatabaseContext::~LocalDatabaseContext()
+DataModelManager::~DataModelManager()
 {
 
 }
 
-void LocalDatabaseContext::tournamentFromJson(const QByteArray &data, const QString &log)
+void DataModelManager::tournamentFromJson(const QByteArray &data, const QString &log)
 {
-    auto container = processDataItem(data);
+    auto container = ConvertDataItem(data);
     emit parseTournamentToExternal(container.model,container.header,log);
 }
 
-void LocalDatabaseContext::tournamentsFromJson(const QByteArray &data, const QString &log)
+void DataModelManager::tournamentsFromJson(const QByteArray &data, const QString &log)
 {
-    auto container = processDataItems(data);
+    auto container = ConvertDataItems(data);
     emit parseTournamentsToExternal(container.models,container.header,log);
 }
 
-void LocalDatabaseContext::roundFromJson(const QByteArray &data, const QString &log)
+void DataModelManager::roundFromJson(const QByteArray &data, const QString &log)
 {
-    auto container = processDataItem(data);
+    auto container = ConvertDataItem(data);
     emit parseRoundToExternal(container.model,container.header,log);
 }
 
-void LocalDatabaseContext::roundsFromJson(const QByteArray &data, const QString &log)
+void DataModelManager::roundsFromJson(const QByteArray &data, const QString &log)
 {
-    auto container = processDataItem(data);
+    auto container = ConvertDataItem(data);
     emit parseRoundsToExternal(container.models,container.header,log);
 }
 
-void LocalDatabaseContext::usersFromJson(const QByteArray &data, const QString &log)
+void DataModelManager::usersFromJson(const QByteArray &data, const QString &log)
 {
     // TODO:
 }
 
-void LocalDatabaseContext::tournamentToJson(QTreeWidgetItem *model)
+void DataModelManager::tournamentToJson(QTreeWidgetItem *model)
 {
 
 }
 
-QList<QTreeWidgetItem *> LocalDatabaseContext::extractChildren(const QJsonArray &json)
+void DataModelManager::remoteAppendRound(const QUuid &tournament, const QUuid &round,const int &roundNumber)
+{
+    QJsonObject obj;
+    obj["Id"] = round.toString(QUuid::WithoutBraces);
+    obj["Round number"] = roundNumber;
+    obj["Parent tournament:"] = tournament.toString(QUuid::WithoutBraces);
+    obj["Point identities"] = QJsonArray();
+
+    emit parseRoundToRemote(QJsonDocument(obj).toJson(),tournament);
+}
+
+void DataModelManager::remoteAppendPoint(const QUuid &round, const QUuid &userId, const quint32 &point)
+{
+    QJsonObject obj;
+    obj["id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    obj["userId"] = userId.toString(QUuid::WithoutBraces);
+    obj["points"] = QJsonValue::fromVariant(point);
+
+    emit parsePointToRemote(QJsonDocument(obj).toJson(),round);
+}
+
+QList<QTreeWidgetItem *> DataModelManager::extractChildren(const QJsonArray &json)
 {
     auto result = QList<QTreeWidgetItem*>();
     for (auto val : json)
@@ -66,7 +87,7 @@ QList<QTreeWidgetItem *> LocalDatabaseContext::extractChildren(const QJsonArray 
     return result;
 }
 
-ModelContainer LocalDatabaseContext::processDataItem(const QByteArray &item)
+ModelContainer DataModelManager::ConvertDataItem(const QByteArray &item)
 {
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(item,&err);
@@ -98,7 +119,7 @@ ModelContainer LocalDatabaseContext::processDataItem(const QByteArray &item)
     return mContainer;
 }
 
-ModelContainer LocalDatabaseContext::processDataItems(const QByteArray &array)
+ModelContainer DataModelManager::ConvertDataItems(const QByteArray &array)
 {
     auto result = QList<QTreeWidgetItem*>();
     QJsonParseError err;
@@ -109,7 +130,7 @@ ModelContainer LocalDatabaseContext::processDataItems(const QByteArray &array)
     QJsonArray objects = doc.array();
     for (auto val : objects)
     {
-        ModelContainer mContainer = processDataItem(QJsonDocument(val.toObject()).toJson());
+        ModelContainer mContainer = ConvertDataItem(QJsonDocument(val.toObject()).toJson());
         if(header.isEmpty())
             header = mContainer.header;
         result << mContainer.model;
@@ -120,33 +141,14 @@ ModelContainer LocalDatabaseContext::processDataItems(const QByteArray &array)
     return resultingContainer;
 }
 
-void LocalDatabaseContext::createTournament(const QString &name, const int &maxRounds, const int &maxUsers, const QList<QUuid> &users)
+void DataModelManager::createTournament(const QString &name, const QString &startDate, const QString &endDate)
 {
     QJsonObject obj;
-    obj["Id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
-    obj["Name"] = name;
-    obj["Maximum allowed rounds"] = maxRounds;
-    obj["Maximum allowed users"] = maxRounds;
-    obj["Users assigned"] = QJsonArray();
+    obj["id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    obj["name"] = name;
+    obj["startDateTime"] = QDateTime::fromString(startDate).toString("yyyy.MM.dd.hh.mm.ss.zzz");
+    obj["endDateTime"] = QDateTime::fromString(endDate).toString("yyyy.MM.dd.hh.mm.ss.zzz");
 
     emit parseTournamentToRemote(QJsonDocument(obj).toJson());
 }
 
-QUuid LocalDatabaseContext::currentTournament() const
-{
-    return _currentTournament;
-}
-
-void LocalDatabaseContext::setCurrentTournament(const QUuid &currentTournament)
-{
-    _currentTournament = currentTournament;
-}
-
-const QByteArray LocalDatabaseContext::deProcessDataItem(const QTreeWidgetItem *&parameter1)
-{
-
-}
-
-const QByteArray LocalDatabaseContext::deProcessDataItems(const QTreeWidgetItem *&parameter1)
-{
-}
