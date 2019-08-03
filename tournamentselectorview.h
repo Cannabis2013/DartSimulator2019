@@ -6,7 +6,8 @@
 #include <qmessagebox.h>
 #include <qstackedwidget.h>
 #include <iostream>
-
+#include <qpushbutton.h>
+#include <QDateEdit>
 
 #include <view.h>
 
@@ -31,13 +32,24 @@ public slots:
     virtual void requestCompleted();
 
 private slots:
-    void changeViewIndex();
+    void show_Create_View();
+    void show_Overview_View();
     void deleteModel();
+
+    void send_New_Tournament();
 private:
+
+    void resetEditState();
+    void disableAllButtons();
+    void enableAllButtons();
+
     Ui::TournamentSelectorView *ui;
 
-    QStackedWidget* stackedWidget;
+    QStackedWidget* sWidget;
     QTreeWidget* treeWidget;
+    QPushButton* refreshButton, *deleteTournamentButton,*createTournamentButton;
+    QLineEdit* titleSelector;
+    QDateTimeEdit* startDateSelector, *endDateSelector;
 };
 
 #endif // TOURNAMENTSELECTORVIEW_H

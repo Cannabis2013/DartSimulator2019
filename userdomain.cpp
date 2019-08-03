@@ -35,6 +35,7 @@ void UserDomain::setupTournamentView(View *v,const QString &frameTitle)
     connect(_service,&IDartSimulator::externalRequestFailed,v,&View::handleError);
     connect(v,&View::requestDeleteModel,_service,&IDartSimulator::deleteTournament);
     connect(v,&View::aboutToClose,this,&UserDomain::removeView);
+    connect(v,&View::new_Tournament_Request,_service,&IDartSimulator::createTournament);
 
     view->show();
     v->updateState();

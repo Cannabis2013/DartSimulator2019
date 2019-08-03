@@ -3,7 +3,7 @@
 
 #include <igraphicaluserinterface.h>
 #include <idartsimulator.h>
-#include <view.h>
+#include <tournamentselectorview.h>
 #include <customdialog.h>
 #include <QSystemTrayIcon>
 

@@ -8,7 +8,16 @@ TournamentSelectorView::TournamentSelectorView(QWidget *parent) :
     ui->setupUi(this);
 
     treeWidget = ui->treeWidget;
-    stackedWidget = ui->stackedWidget;
+    sWidget = ui->stackedWidget;
+
+    titleSelector = ui->titleSelector;
+    startDateSelector = ui->startDateSelector;
+    endDateSelector = ui->endDateSelector;
+
+    refreshButton = ui->RefreshButton;
+    createTournamentButton = ui->CreateButton;
+    deleteTournamentButton = ui->DeleteButton;
+    resetEditState();
 }
 
 TournamentSelectorView::~TournamentSelectorView()
@@ -25,32 +34,40 @@ void TournamentSelectorView::setModels(const QList<QTreeWidgetItem *> models, co
     try {
         View::orderModels(headerLabels,items,{"Name","StartDateTime","EndDateTime","Created","Updated","Id"});
     } catch (const char* msg) {
-
+        Q_UNUSED(msg);
     }
+    View::formatDate(headerLabels,items,{"StartDateTime","EndDateTime"},"dd-MM-yyyy");
 
     treeWidget->clear();
     int columns = header.count();
     treeWidget->setColumnCount(columns);
     treeWidget->setHeaderLabels(headerLabels);
     treeWidget->addTopLevelItems(items);
-    ui->RefreshButton->setDisabled(false);
+
+    enableAllButtons();
 }
 
 void TournamentSelectorView::updateState()
 {
-    ui->RefreshButton->setDisabled(true);
+    disableAllButtons();
     emit requestModels();
 }
 
 void TournamentSelectorView::requestCompleted()
 {
-    ui->DeleteButton->setDisabled(false);
+    enableAllButtons();
     updateState();
 }
 
-void TournamentSelectorView::changeViewIndex()
+void TournamentSelectorView::show_Create_View()
 {
-    stackedWidget->setCurrentIndex(1);
+    sWidget->setCurrentIndex(1);
+}
+
+void TournamentSelectorView::show_Overview_View()
+{
+    sWidget->setCurrentIndex(0);
+    resetEditState();
 }
 
 void TournamentSelectorView::deleteModel()
@@ -61,6 +78,39 @@ void TournamentSelectorView::deleteModel()
     QUuid id = QUuid::fromString(string), caller = this->classId();
     ui->DeleteButton->setDisabled(true);
     emit requestDeleteModel(id,caller);
+}
+
+void TournamentSelectorView::send_New_Tournament()
+{
+    QString name = titleSelector->text();
+    QString startDate = startDateSelector->dateTime().toString();
+    QString endDate = endDateSelector->dateTime().toString();
+
+    if(!name.isEmpty())
+        emit new_Tournament_Request(name,startDate,endDate);
+
+    show_Overview_View();
+}
+
+void TournamentSelectorView::resetEditState()
+{
+    titleSelector->clear();
+    startDateSelector->setDateTime(QDateTime::currentDateTime());
+    endDateSelector->setDateTime(QDateTime::currentDateTime());
+}
+
+void TournamentSelectorView::disableAllButtons()
+{
+    refreshButton->setDisabled(true);
+    createTournamentButton->setDisabled(true);
+    deleteTournamentButton->setDisabled(true);
+}
+
+void TournamentSelectorView::enableAllButtons()
+{
+    refreshButton->setDisabled(false);
+    createTournamentButton->setDisabled(false);
+    deleteTournamentButton->setDisabled(false);
 }
 
 

@@ -22,7 +22,7 @@ QUrl UrlParser::parseUrl(const QString &baseUrl,
     if(hostUrl.at(hostUrl.length() - 1) != '/')
         hostUrl.append('/');
 
-    if(urlMethod.at(method.length() - 1) != '/')
+    if(urlMethod.at(method.length() - 1 ) != '/' && urlParameter != QString())
         urlMethod.append('/');
 
     hostUrl += urlMethod;

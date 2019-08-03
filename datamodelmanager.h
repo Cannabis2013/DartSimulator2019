@@ -8,6 +8,9 @@
 #include <qjsonarray.h>
 #include <qdatetime.h>
 
+#define REMOTEDATEFORMAT "yyyy-MM-dd'T'hh:mm:ss.zzz'Z'"
+#define LOCALDATEFORMAT "dd-MM-yyyy"
+
 struct ModelContainer
 {
     QTreeWidgetItem* model = nullptr;
@@ -23,10 +26,7 @@ class DataModelManager : public QObject,
     Q_OBJECT
 public:
     DataModelManager();
-
     virtual ~DataModelManager();
-
-
 
 public slots:
     void createTournament(const QString &name,

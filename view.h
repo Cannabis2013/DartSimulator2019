@@ -5,6 +5,7 @@
 #include <qlist.h>
 #include <QTreeWidgetItem>
 #include <quuid.h>
+#include <qdatetime.h>
 
 class View : public AbstractFrameImplementable
 {
@@ -15,7 +16,7 @@ public:
     QUuid classId() const;
 
     static void orderModels(QStringList &stringList, QList<QTreeWidgetItem*> &models,std::initializer_list<QString> list = std::initializer_list<QString>());
-
+    static void formatDate(const QStringList &header,QList<QTreeWidgetItem*> &models, const std::initializer_list<QString> &keys, const QString &dateFormat);
 public slots:
     virtual void setModels(QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &msg)=0;
     virtual void handleError(const QString &error)=0;
@@ -30,6 +31,8 @@ signals:
     void requestDeleteModel(const QUuid &model, const QUuid &caller);
 
     void aboutToClose(const QUuid &id);
+
+    void new_Tournament_Request(const QString &name,const QString &startDate, const QString &endDate);
 
 
 protected:

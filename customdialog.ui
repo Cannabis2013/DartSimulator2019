@@ -29,6 +29,7 @@
    <string notr="true">QWidget#CustomDialog
 {
 	background-color: rgb(67, 3, 3);
+
 }</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">

@@ -64,3 +64,24 @@ void View::orderModels(QStringList &unorderedList, QList<QTreeWidgetItem *> &mod
         }
     }
 }
+
+void View::formatDate(const QStringList &header,QList<QTreeWidgetItem *> &models, const std::initializer_list<QString> &keys, const QString &dateFormat)
+{
+    const QStringList allKeys = keys;
+    for (int i = 0; i < header.count(); ++i)
+    {
+        auto key = header.at(i);
+        if(allKeys.contains(key))
+        {
+            for (auto model : models)
+            {
+                QString columnText = model->text(i);
+                if(columnText == "Not defined")
+                    continue;
+                QDateTime dt = QDateTime::fromString(columnText,Qt::DateFormat::ISODate);
+                QString newColumnText = dt.toString("dd.MM.yyyy");
+                model->setText(i,newColumnText);
+            }
+        }
+    }
+}

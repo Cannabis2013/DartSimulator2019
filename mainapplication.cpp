@@ -37,13 +37,19 @@ void MainApplication::appendNewRound()
     try {
         _gMng->initiateNewRound();
     } catch (const char* msg) {
-        // TODO: Implement some error handling
+        // TODO: Implement notification to external caller
+        Q_UNUSED(msg);
     }
 }
 
 void MainApplication::submitPoint(const quint32 &point, const QUuid &userId)
 {
-    _gMng->submitPoint(userId,point);
+    try {
+        _gMng->submitPoint(userId,point);
+    } catch (const char* msg) {
+        // TODO: Implement notification to external caller
+        Q_UNUSED(msg);
+    }
 }
 
 void MainApplication::tournament(const QUuid &tournament)
@@ -67,8 +73,6 @@ void MainApplication::rounds(const QUuid &tournament)
     _rDb->remoteRounds(tournament);
 }
 
-
-
 void MainApplication::deleteTournament(const QUuid &tournament)
 {
     _rDb->remoteRemoveTournament(tournament);
@@ -77,4 +81,5 @@ void MainApplication::deleteTournament(const QUuid &tournament)
 
 void MainApplication::createTournament(const QString &name, const QString &startDate, const QString &endDate)
 {
+    _dataMng->createTournament(name,startDate,endDate);
 }

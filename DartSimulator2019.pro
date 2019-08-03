@@ -55,7 +55,6 @@ HEADERS += \
         ijsonconverter.h \
         iurlparser.h \
         mainapplication.h \
-        model.h \
         networkmanager.h \
         httpreplyobject.h \
         myobject.h \

@@ -11,12 +11,6 @@ class GameManager : public QObject
 public:
     GameManager();
 
-    QUuid currentRound() const;
-    void setCurrentRound(const QUuid &currentRound);
-
-    QUuid currentTournament() const;
-    void setCurrentTournament(const QUuid &currentTournament);
-
 public slots:
     void initiateNewRound();
     void submitPoint(const QUuid &userId, const quint32 &point);
@@ -25,6 +19,13 @@ signals:
     void newRound(const QUuid &tournament,const QUuid &newRoundId,const int &roundNumber);
     void sendPointSubmit(const QUuid &round, const QUuid &userId, const quint32 &point);
 private:
+
+    QUuid currentRound() const;
+    void setCurrentRound(const QUuid &currentRound);
+
+    QUuid currentTournament() const;
+    void setCurrentTournament(const QUuid &currentTournament);
+
     bool allSubmittet();
     bool hasSubmitted(const QUuid &user);
     QList<QUuid> remainingUsersToSubmit() const;

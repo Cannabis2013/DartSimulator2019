@@ -144,10 +144,10 @@ ModelContainer DataModelManager::ConvertDataItems(const QByteArray &array)
 void DataModelManager::createTournament(const QString &name, const QString &startDate, const QString &endDate)
 {
     QJsonObject obj;
-    obj["id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    //obj["id"] = QUuid::createUuid().toString(QUuid::WithoutBraces);
     obj["name"] = name;
-    obj["startDateTime"] = QDateTime::fromString(startDate).toString("yyyy.MM.dd.hh.mm.ss.zzz");
-    obj["endDateTime"] = QDateTime::fromString(endDate).toString("yyyy.MM.dd.hh.mm.ss.zzz");
+    obj["startDateTime"] = QDateTime::fromString(startDate).toString(REMOTEDATEFORMAT);
+    obj["endDateTime"] = QDateTime::fromString(endDate).toString(REMOTEDATEFORMAT);
 
     emit parseTournamentToRemote(QJsonDocument(obj).toJson());
 }
