@@ -32,11 +32,13 @@ public:
                           const QString &arg3)=0;
 #endif
 };
-
+template<typename T>
 struct IUrlParser
 {
-    virtual ~IUrlParser();
-    virtual void setParserService(IParserService* t)=0;
+    virtual ~IUrlParser()
+    {
+    }
+    virtual void setParserService(T t)=0;
     virtual IParserService* parserService()=0;
 };
 

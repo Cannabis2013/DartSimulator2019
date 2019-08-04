@@ -6,9 +6,9 @@
 #include <tournamentselectorview.h>
 #include <customdialog.h>
 #include <QSystemTrayIcon>
+#include <loginview.h>
 
-class UserDomain : public QObject,
-        public IGraphicalUserInterface<IDartSimulator>
+class UserDomain : public QObject,public IGraphicalUserInterface<IDartSimulator,View*>
 {
     Q_OBJECT
 public:
@@ -18,6 +18,8 @@ public:
     void setService(IDartSimulator *service);
     IDartSimulator *service();
 
+public slots:
+    void setupLoginView(View *v, const QString &frameTitle);
     void setupTournamentView(View *v, const QString &frameTitle);
 
 private slots:

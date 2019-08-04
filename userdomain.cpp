@@ -24,9 +24,20 @@ IDartSimulator *UserDomain::service()
     return _service;
 }
 
+void UserDomain::setupLoginView(View *v,const QString &frameTitle)
+{
+    _views.append(v);
+    v->setResizeable(false);
+    QPointer<CustomDialog> view = new CustomDialog(v);
+    view->setFrameTitle(frameTitle);
+
+    view->show();
+}
+
 void UserDomain::setupTournamentView(View *v,const QString &frameTitle)
 {
     _views.append(v);
+    v->setResizeable(false);
     QPointer<CustomDialog> view = new CustomDialog(v);
     view->setFrameTitle(frameTitle);
 

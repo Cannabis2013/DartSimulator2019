@@ -47,8 +47,6 @@ void GameManager::initiateNewRound()
 {
     if(allSubmittet())
         appendRound();
-    else
-        throw "All users needs to submit";
 }
 
 void GameManager::submitPoint(const QUuid &userId, const quint32 &point)

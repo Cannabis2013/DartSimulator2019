@@ -18,12 +18,12 @@ public:
     static void orderModels(QStringList &stringList, QList<QTreeWidgetItem*> &models,std::initializer_list<QString> list = std::initializer_list<QString>());
     static void formatDate(const QStringList &header,QList<QTreeWidgetItem*> &models, const std::initializer_list<QString> &keys, const QString &dateFormat);
 public slots:
-    virtual void setModels(QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &msg)=0;
+    virtual void setModels(QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &msg);
     virtual void handleError(const QString &error)=0;
 
     virtual void updateState();
 
-    virtual void requestCompleted();
+    virtual void requestCompleted()=0;
 signals:
     void requestModel(const QUuid &model);
     void requestModels(const QUuid &parent = QUuid());

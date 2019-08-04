@@ -10,7 +10,7 @@ class UrlParser : public IParserService
 public:
     UrlParser();
 
-    QUrl parseUrl(const QString &baseUrl, const QString &method, const QString &urlParameter, const QString &apiCode);
+    QUrl parseUrl(const QString &baseUrl, const QString &method, const QString &nonQueryParameter, const QString &queryParameter);
 };
 
 #endif // MYPARSER_H

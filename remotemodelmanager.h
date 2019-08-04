@@ -3,28 +3,24 @@
 
 #include <networkmanager.h>
 
-class RemoteServerContext : public NetworkManager
+class RemoteModelManager : public NetworkManager
 {
     Q_OBJECT
 public:
-    RemoteServerContext(const QString &server, const QString &userCode = QString());
+    RemoteModelManager(const QString &server, const QString &userCode = QString());
 
-    // Requests
+public slots:
+    // Requests models from remote
     void remoteTournament(const QUuid &id);
     void remoteTournaments();
     void remoteRound(const QUuid &tournament);
     void remoteRounds(const QUuid &tournament);
-
-    // Remote operations
-
-    void remoteRemoveTournament(const QUuid &tournament);
-
-public slots:
     // Upload models to remote
     void createRemoteTournament(const QByteArray &json);
     void createRemoteRound(const QByteArray &json, const QUuid &tournament);
     void submitRemotePoint(const QByteArray &json, const QUuid &round);
-
+    // Delete remote model
+    void remoteRemoveTournament(const QUuid &tournament);
 signals:
     void sendModelIdentity(const QByteArray &data, const QString &log);
     void sendTournamentData(const QByteArray &data,const QString &log);
@@ -37,13 +33,11 @@ signals:
     void operationFinished(const QUuid &classId);
 
 private slots:
-    virtual void handleNonPostReply();
+    virtual void handleReply();
 
     // Handle requests
-
     virtual void handleRemoteTournament();
     virtual void handleRemoteTournaments();
-    virtual void handleCreateRoundReply();
     virtual void handleRemoteRound();
     virtual void handleRemoteRounds();
     virtual void handleSubmitPoint();

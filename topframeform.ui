@@ -76,7 +76,7 @@
      <property name="styleSheet">
       <string notr="true">QWidget#topWidget
 {
-	background-color: rgb(67, 3, 3);
+	background-color: white;
 }
 </string>
      </property>
@@ -195,7 +195,6 @@
 	color:white;
 	border:1px solid black;
 	padding:4px;
-	margin-right:2px;
 	border-radius:5px;
 }
 QPushButton#exitButton:hover

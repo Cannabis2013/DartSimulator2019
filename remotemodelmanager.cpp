@@ -1,35 +1,35 @@
-#include "remoteservercontext.h"
+#include "remotemodelmanager.h"
 
-RemoteServerContext::RemoteServerContext(const QString &server, const QString &userCode):
+RemoteModelManager::RemoteModelManager(const QString &server, const QString &userCode):
     NetworkManager(server,userCode)
 {
 
 }
 
-void RemoteServerContext::createRemoteTournament(const QByteArray &json)
+void RemoteModelManager::createRemoteTournament(const QByteArray &json)
 {
-    sendPostRequest("CreateTournament",json,QString(),this,SLOT(handleNonPostReply()));
+    sendPostRequest("CreateTournament",json,QString(),this,SLOT(handleReply()));
 }
 
-void RemoteServerContext::remoteTournament(const QUuid &id)
+void RemoteModelManager::remoteTournament(const QUuid &id)
 {
     sendGetRequest("GetTournament",id.toString(QUuid::WithoutBraces),this,SLOT(handleRemoteTournament()));
 }
 
-void RemoteServerContext::remoteTournaments()
+void RemoteModelManager::remoteTournaments()
 {
     sendGetRequest("GetTournaments",QString(),this,SLOT(handleRemoteTournaments()));
 }
 
-void RemoteServerContext::createRemoteRound(const QByteArray &json, const QUuid &tournament)
+void RemoteModelManager::createRemoteRound(const QByteArray &json, const QUuid &tournament)
 {
     sendPostRequest("CreateRound",
                     json,tournament.toString(QUuid::WithoutBraces),
                     this,
-                    SLOT(handleCreateRoundReply()));
+                    SLOT(handleReply()));
 }
 
-void RemoteServerContext::remoteRound(const QUuid &tournament)
+void RemoteModelManager::remoteRound(const QUuid &tournament)
 {
     sendGetRequest("GetRound",
                    tournament.toString(QUuid::WithoutBraces),
@@ -37,7 +37,7 @@ void RemoteServerContext::remoteRound(const QUuid &tournament)
                    SLOT(handleRemoteRound()));
 }
 
-void RemoteServerContext::remoteRounds(const QUuid &tournament)
+void RemoteModelManager::remoteRounds(const QUuid &tournament)
 {
     sendGetRequest("GetRounds",
                    tournament.toString(QUuid::WithoutBraces),
@@ -45,15 +45,15 @@ void RemoteServerContext::remoteRounds(const QUuid &tournament)
                    SLOT(handleRemoteRounds()));
 }
 
-void RemoteServerContext::remoteRemoveTournament(const QUuid &tournament)
+void RemoteModelManager::remoteRemoveTournament(const QUuid &tournament)
 {
     sendDeleteRequest("DeleteTournament",
                       tournament.toString(QUuid::WithoutBraces),
                       this,
-                      SLOT(handleNonPostReply()));
+                      SLOT(handleReply()));
 }
 
-void RemoteServerContext::submitRemotePoint(const QByteArray &json,const QUuid &round)
+void RemoteModelManager::submitRemotePoint(const QByteArray &json,const QUuid &round)
 {
     sendPostRequest("SubmitPoint",
                     json,
@@ -62,11 +62,15 @@ void RemoteServerContext::submitRemotePoint(const QByteArray &json,const QUuid &
                     SLOT(handleSubmitPoint()));
 }
 
-void RemoteServerContext::handleNonPostReply()
+void RemoteModelManager::handleReply()
 {
-    if(tempReply->error())
+    if(errorOccured())
     {
-        QString err = tempReply->errorString();
+        QString err = errorString();
+        if(err == "Operation canceled")
+            err = "Operation was abortet probably due to server timeout. \n "
+                  "Go out and buy some more beer or cigarettes. \n "
+                  "You probably already smoked 10 of those in the time you waited.";
         emit sendStatusMsg("Error",err);
         emit sendNotification();
         return;
@@ -75,7 +79,7 @@ void RemoteServerContext::handleNonPostReply()
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     QUuid id = QUuid::fromRfc4122(data);
     QString msg = "Operation successed on model with identification: %1";
     msg = msg.arg(id.toString(QUuid::WithoutBraces));
@@ -84,78 +88,72 @@ void RemoteServerContext::handleNonPostReply()
     emit sendStatusMsg("Success",msg);
 }
 
-void RemoteServerContext::handleRemoteTournament()
+void RemoteModelManager::handleRemoteTournament()
 {
-    if(tempReply->error())
+    if(errorOccured())
     {
-        emit sendErrorString(tempReply->errorString());
-        tempReply->close();
+        emit sendErrorString(errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     emit sendTournamentData(data,logMessage);
 }
 
-void RemoteServerContext::handleRemoteTournaments()
+void RemoteModelManager::handleRemoteTournaments()
 {
-    if(tempReply->error())
+    if(errorOccured())
     {
-        emit sendErrorString(tempReply->errorString());
+        emit sendErrorString(errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     emit sendAllTournamentsData(data,logMessage);
 }
 
-void RemoteServerContext::handleCreateRoundReply()
+void RemoteModelManager::handleRemoteRound()
 {
-
-}
-
-void RemoteServerContext::handleRemoteRound()
-{
-    if(tempReply->error())
+    if(errorOccured())
     {
-        emit sendErrorString(tempReply->errorString());
+        emit sendErrorString(errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     emit sendRoundData(data,logMessage);
 }
 
-void RemoteServerContext::handleRemoteRounds()
+void RemoteModelManager::handleRemoteRounds()
 {
-    if(tempReply->error())
+    if(errorOccured())
     {
-        emit sendErrorString(tempReply->errorString());
+        emit sendErrorString(errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     emit sendRoundsData(data,logMessage);
 }
 
-void RemoteServerContext::handleSubmitPoint()
+void RemoteModelManager::handleSubmitPoint()
 {
-    if(tempReply->error())
+    if(errorOccured())
     {
-        emit sendErrorString(tempReply->errorString());
+        emit sendErrorString(errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
-    const QByteArray data = tempReply->readAll();
+    const QByteArray data = extractData();
     emit sendPointData(data,logMessage);
 }

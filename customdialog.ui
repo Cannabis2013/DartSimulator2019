@@ -28,8 +28,7 @@
   <property name="styleSheet">
    <string notr="true">QWidget#CustomDialog
 {
-	background-color: rgb(67, 3, 3);
-
+	background-color:white;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
@@ -85,7 +84,7 @@
       <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>

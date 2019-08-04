@@ -85,3 +85,8 @@ void View::formatDate(const QStringList &header,QList<QTreeWidgetItem *> &models
         }
     }
 }
+
+void View::setModels(QList<QTreeWidgetItem *> models, const QStringList &headers, const QString &msg)
+{
+
+}

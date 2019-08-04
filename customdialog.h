@@ -28,6 +28,7 @@ class CustomDialog : public QWidget
 
 public:
     enum widget_Location {center_on_screen,center_according_to_parent, default_location};
+    enum widget_Size_Policy {dynamicSizePolicy, fixedSizePolicy};
     explicit CustomDialog(AbstractFrameImplementable *implementable,
                           bool applicationModal = true, widget_Location location = center_on_screen,
                           QWidget *parent = nullptr);
@@ -40,6 +41,8 @@ public:
 
     void setWidget(AbstractFrameImplementable *implementable);
 
+    widget_Size_Policy size_Policy() const{return _size_Policy;}
+    void setSize_Policy(const widget_Size_Policy &size_Policy){_size_Policy = size_Policy;}
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -72,6 +75,7 @@ private:
     QPoint mousePressPosition;
     QRect tempGeometry;
     QSize widgetSize;
+    widget_Size_Policy _size_Policy;
 };
 
 #endif // CUSTOMDIALOG_H

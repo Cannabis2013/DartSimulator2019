@@ -75,6 +75,7 @@ void CustomDialog::closeEvent(QCloseEvent *event)
 
 void CustomDialog::mousePressEvent(QMouseEvent *event)
 {
+
     int rightBorder = width() - eventThreshold, southBorder = height() - eventThreshold;
     if((event->pos().x() >= rightBorder && event->pos().y() >= southBorder) && mainWidget->isResizeable())
     {
@@ -163,3 +164,7 @@ void CustomDialog::show_centered_on_screen()
     QRect dialogSize = QRect(widgetX,widgetY,widgetSize.width(),widgetSize.height());
     setGeometry(dialogSize);
 }
+
+
+
+

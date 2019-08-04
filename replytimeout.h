@@ -17,8 +17,6 @@ public:
     enum HandleMethod { Abort, Close };
     ReplyTimeout(QNetworkReply* reply,
                  const int timeout,
-                 QObject*reciever = nullptr,
-                 const char* slot = nullptr,
                  HandleMethod method = Abort) :
         QObject(reply), _method(method)
     {
@@ -26,17 +24,13 @@ public:
         {
           _timer.start(timeout, this);
           connect(reply, &QNetworkReply::finished, this, &QObject::deleteLater);
-          if(reciever != nullptr && slot != nullptr)
-            connect(this,SIGNAL(timeoutOccured()),reciever,slot);
         }
     }
     static void setTimer(QNetworkReply* reply,
                          const int timeout,
-                         HandleMethod method = Abort,
-                         QObject*reciever = nullptr,
-                         const char* slot = nullptr)
+                         HandleMethod method = Abort)
     {
-        new ReplyTimeout(reply, timeout,reciever,slot, method);
+        new ReplyTimeout(reply, timeout,method);
     }
 
 signals:

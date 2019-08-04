@@ -25,9 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        loginview.cpp \
         abstractframeimplementable.cpp \
         customdialog.cpp \
-        customjsonassembler.cpp \
         datamodelmanager.cpp \
         gamemanager.cpp \
         iurlparser.cpp \
@@ -35,9 +35,7 @@ SOURCES += \
         mainapplication.cpp \
         idartsimulator.cpp \
         networkmanager.cpp \
-        httpreplyobject.cpp \
-        myobject.cpp \
-        remoteservercontext.cpp \
+        remotemodelmanager.cpp \
         topframeform.cpp \
         tournamentselectorview.cpp \
         urlparser.cpp \
@@ -45,9 +43,9 @@ SOURCES += \
         view.cpp
 
 HEADERS += \
+        loginview.h \
         abstractframeimplementable.h \
         customdialog.h \
-        customjsonassembler.h \
         datamodelmanager.h \
         gamemanager.h \
         idartsimulator.h \
@@ -56,9 +54,7 @@ HEADERS += \
         iurlparser.h \
         mainapplication.h \
         networkmanager.h \
-        httpreplyobject.h \
-        myobject.h \
-        remoteservercontext.h \
+        remotemodelmanager.h \
         replytimeout.h \
         topframeform.h \
         tournamentselectorview.h \
@@ -67,6 +63,7 @@ HEADERS += \
         view.h
 
 FORMS += \
+    loginview.ui \
     topframeform.ui \
     customdialog.ui \
     tournamentselectorview.ui
@@ -76,5 +73,8 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    pictures.qrc
 
 

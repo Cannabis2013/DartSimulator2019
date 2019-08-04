@@ -16,7 +16,7 @@
 using namespace std;
 
 class NetworkManager : public QObject,
-        private IUrlParser
+        private IUrlParser<IParserService*>
 {
     Q_OBJECT
 public:
@@ -52,17 +52,19 @@ protected:
                            const char* slot = nullptr);
 
     int timeElapsed();
-
-    QNetworkReply* tempReply;
+    bool errorOccured();
+    QString errorString();
+    const QByteArray extractData();
 
 private slots:
     void handleSslErrors(QNetworkReply *reply,const QList<QSslError>&errors);
     void handleServerTimeout();
 
 private:
-    void setParserService(IParserService *t);
-    IParserService *parserService();
+    void setParserService(IParserService* t);
+    IParserService* parserService();
 
+    QNetworkReply* tempReply;
     QNetworkAccessManager* _netMng = new QNetworkAccessManager();
     QString _baseUrl;
     QString _userCode;

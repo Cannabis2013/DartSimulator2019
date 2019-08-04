@@ -41,8 +41,8 @@ void TournamentSelectorView::setModels(const QList<QTreeWidgetItem *> models, co
 
     treeWidget->clear();
     int columns = header.count();
-    treeWidget->setColumnCount(columns);
     treeWidget->setHeaderLabels(headerLabels);
+    treeWidget->setColumnCount(3);
     treeWidget->addTopLevelItems(items);
 
     enableAllButtons();
