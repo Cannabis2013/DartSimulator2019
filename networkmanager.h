@@ -30,6 +30,9 @@ public:
     int timeoutThreshold() const;
     void setTimeoutThreshold(int timeoutThreshold);
 
+    void setParserService(IParserService* t);
+    const IParserService* parserService();
+
 signals:
     void sendNotification();
     void sendErrorString(const QString &err);
@@ -58,11 +61,10 @@ protected:
 
 private slots:
     void handleSslErrors(QNetworkReply *reply,const QList<QSslError>&errors);
-    void handleServerTimeout();
+    virtual void handleReply();
 
 private:
-    void setParserService(IParserService* t);
-    IParserService* parserService();
+
 
     QNetworkReply* tempReply;
     QNetworkAccessManager* _netMng = new QNetworkAccessManager();

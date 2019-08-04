@@ -36,6 +36,7 @@ SOURCES += \
         idartsimulator.cpp \
         networkmanager.cpp \
         remotemodelmanager.cpp \
+        remoteusermanager.cpp \
         topframeform.cpp \
         tournamentselectorview.cpp \
         urlparser.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
         mainapplication.h \
         networkmanager.h \
         remotemodelmanager.h \
+        remoteusermanager.h \
         replytimeout.h \
         topframeform.h \
         tournamentselectorview.h \
@@ -76,5 +78,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     pictures.qrc
+
+DISTFILES +=
 
 

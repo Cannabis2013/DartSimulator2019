@@ -21,8 +21,11 @@ void NetworkManager::sendGetRequest(const QString &method,
 
     _responseTimer.start();
 
+    if(slot != nullptr)
+        connect(tempReply,SIGNAL(finished()),reciever,slot);
+    else
+        connect(tempReply,SIGNAL(finished()),this,SLOT(handleReply()));
 
-    connect(tempReply,SIGNAL(finished()),reciever,slot);
     ReplyTimeout::setTimer(tempReply,
                            timeoutThreshold(),
                            ReplyTimeout::Abort);
@@ -43,8 +46,11 @@ void NetworkManager::sendPostRequest(const QString &method,
 
 
     _responseTimer.start();
+
     if(slot != nullptr)
         connect(tempReply,SIGNAL(finished()),reciever,slot);
+    else
+        connect(tempReply,SIGNAL(finished()),this,SLOT(handleReply()));
 
     ReplyTimeout::setTimer(tempReply,
                            timeoutThreshold(),
@@ -64,6 +70,8 @@ void NetworkManager::sendDeleteRequest(const QString &method,
 
     if(slot != nullptr)
         connect(tempReply,SIGNAL(finished()),reciever,slot);
+    else
+        connect(tempReply,SIGNAL(finished()),this,SLOT(handleReply()));
 
     connect(tempReply,&QNetworkReply::finished,tempReply,&QNetworkReply::deleteLater);
 
@@ -80,10 +88,9 @@ void NetworkManager::handleSslErrors(QNetworkReply *reply, const QList<QSslError
     // TODO: Handle Ssl errors when its time for that
 }
 
-void NetworkManager::handleServerTimeout()
+void NetworkManager::handleReply()
 {
-    emit sendErrorString("Server timed out. Try again later.");
-    tempReply->close();
+
 }
 
 void NetworkManager::setBaseUrl(const QString &baseUrl)
@@ -127,7 +134,7 @@ void NetworkManager::setParserService(IParserService *t)
     _parserService = t;
 }
 
-IParserService *NetworkManager::parserService()
+const IParserService *NetworkManager::parserService()
 {
     return _parserService;
 }

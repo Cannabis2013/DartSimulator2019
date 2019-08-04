@@ -33,7 +33,7 @@ signals:
     void operationFinished(const QUuid &classId);
 
 private slots:
-    virtual void handleReply();
+    void handleReply();
 
     // Handle requests
     virtual void handleRemoteTournament();

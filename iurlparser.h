@@ -39,7 +39,7 @@ struct IUrlParser
     {
     }
     virtual void setParserService(T t)=0;
-    virtual IParserService* parserService()=0;
+    virtual const IParserService* parserService()=0;
 };
 
 #endif // IURLPARSER_H
