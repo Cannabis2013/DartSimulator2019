@@ -1,2 +1,9 @@
-*.pro.user
 *.autosave
+*.user
+/SSL/*
+/debug/*
+ui_*.*
+Makefile
+Makefile.*
+object*.*
+*.stash

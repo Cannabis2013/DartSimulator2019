@@ -1,23 +1,36 @@
 #include "gamemanager.h"
 
-
-
-GameManager::GameManager(const QUuid &season, const QUuid &tournament):
-    _currentSeason(season),_currentTournament(tournament)
+GameManager::GameManager()
 {
-    dbMng = new DBManager();
 
-    const TournamentModel* tModel = dbMng->model<TournamentModel>(tournament);
-    _rounds = *tModel->allIdentifiers();
-}
-QUuid GameManager::currentSeason() const
-{
-    return _currentSeason;
 }
 
-void GameManager::setCurrentSeason(const QUuid &currentSeason)
+bool GameManager::allSubmittet()
 {
-    _currentSeason = currentSeason;
+    return _remainingSubmitters.isEmpty();
+}
+
+bool GameManager::hasSubmitted(const QUuid &user)
+{
+    return !_remainingSubmitters.contains(user);
+}
+
+QList<QUuid> GameManager::remainingUsersToSubmit() const
+{
+    return _remainingSubmitters;
+}
+
+void GameManager::appendRound()
+{
+    auto roundNumber = _rounds_History.count();
+
+    auto newRoundId = QUuid::createUuid();
+
+    _currentRound = newRoundId;
+    _rounds_History << newRoundId;
+    _remainingSubmitters = _currentAssignedUsers;
+
+    emit newRound(currentTournament(),newRoundId,roundNumber);
 }
 
 QUuid GameManager::currentTournament() const
@@ -30,65 +43,27 @@ void GameManager::setCurrentTournament(const QUuid &currentTournament)
     _currentTournament = currentTournament;
 }
 
+void GameManager::initiateNewRound()
+{
+    if(allSubmittet())
+        appendRound();
+}
+
+void GameManager::submitPoint(const QUuid &userId, const quint32 &point)
+{
+    if(hasSubmitted(userId))
+        throw "User has already submittet point";
+
+    emit sendPointSubmit(currentRound(),userId,point);
+    _remainingSubmitters.removeOne(userId);
+}
+
+QUuid GameManager::currentRound() const
+{
+    return _currentRound;
+}
+
 void GameManager::setCurrentRound(const QUuid &currentRound)
 {
     _currentRound = currentRound;
-}
-
-void GameManager::appendNextRound()
-{
-    RoundModel* round = new RoundModel(_rounds.count());
-    dbMng->addModel(round,currentTournament());
-}
-
-const QList<QUuid> *GameManager::allRounds()
-{
-    return &_rounds;
-}
-
-const QUuid *GameManager::currentRoundAtHead()
-{
-    return &_rounds.at(_indexHead);
-}
-
-void GameManager::addPoint(PointModel *point)
-{
-    if(!isDetached())
-        dbMng->addModel(point,*currentRoundAtHead());
-}
-
-void GameManager::resetTournament()
-{
-    dbMng->resetModel(currentTournament());
-}
-
-void GameManager::resetRound()
-{
-    dbMng->resetModel(*currentRoundAtHead());
-}
-
-void GameManager::assignUser(const QUuid &user)
-{
-    dbMng->addSubIdentity(user,currentTournament());
-}
-
-void GameManager::unAssignUser(const QUuid &user)
-{
-    if(dbMng->modelType(user) == mType::UserModel)
-        dbMng->removeChildIdentity(user,currentTournament());
-}
-
-void GameManager::nextRound()
-{
-    appendNextRound();
-}
-
-int GameManager::head() const
-{
-    return _indexHead;
-}
-
-bool GameManager::isDetached()
-{
-    return _indexHead != _rounds.count() - 1 || _indexHead == -1;
 }

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,40 +25,59 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
-        abstractcomparable.cpp \
-        customjsonassembler.cpp \
-        dbmanager.cpp \
+        loginview.cpp \
+        abstractframeimplementable.cpp \
+        customdialog.cpp \
+        datamodelmanager.cpp \
         gamemanager.cpp \
+        iurlparser.cpp \
         main.cpp \
         mainapplication.cpp \
-        model.cpp \
-        pointmodel.cpp \
-        roundmodel.cpp \
-        seasonmodel.cpp \
-        tournamentmodel.cpp \
-        usermodel.cpp
+        idartsimulator.cpp \
+        networkmanager.cpp \
+        remotemodelmanager.cpp \
+        remoteusermanager.cpp \
+        topframeform.cpp \
+        tournamentselectorview.cpp \
+        urlparser.cpp \
+        userdomain.cpp \
+        view.cpp
 
 HEADERS += \
-        abstractcomparable.h \
-        allmodels.h \
-        customjsonassembler.h \
-        dbmanager.h \
+        loginview.h \
+        abstractframeimplementable.h \
+        customdialog.h \
+        datamodelmanager.h \
         gamemanager.h \
+        idartsimulator.h \
+        igraphicaluserinterface.h \
+        ijsonconverter.h \
+        iurlparser.h \
         mainapplication.h \
-        model.h \
-        outputmanager.h \
-        pointmodel.h \
-        roundmodel.h \
-        seasonmodel.h \
-        tournamentmodel.h \
-        usermodel.h
+        networkmanager.h \
+        remotemodelmanager.h \
+        remoteusermanager.h \
+        replytimeout.h \
+        topframeform.h \
+        tournamentselectorview.h \
+        urlparser.h \
+        userdomain.h \
+        view.h
 
 FORMS += \
-        mainwindow.ui
+    loginview.ui \
+    topframeform.ui \
+    customdialog.ui \
+    tournamentselectorview.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+RESOURCES += \
+    pictures.qrc
+
 DISTFILES +=
+
