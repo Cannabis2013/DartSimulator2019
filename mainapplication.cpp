@@ -6,7 +6,8 @@ MainApplication::MainApplication()
     _remoteMng = new RemoteModelManager(HOSTURL,USERCODE);
     _gameMng = new GameManager();
 
-    _remoteMng->setTimeoutThreshold(10000);
+    _remoteMng->setTimeoutThreshold(-1);
+
     // Create/delete tournament
     connect(this,&IDartSimulator::createTournament,_dataModelMng ,&DataModelManager::createTournament);
     connect(this,&IDartSimulator::deleteTournament,_remoteMng,&RemoteModelManager::remoteRemoveTournament);

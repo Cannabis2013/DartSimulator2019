@@ -29,7 +29,6 @@ signals:
 
 protected:
     void resizeEvent(QSize newSize);
-
     void closeEvent(QCloseEvent*e);
 
 private:

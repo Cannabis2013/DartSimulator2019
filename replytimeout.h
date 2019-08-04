@@ -30,7 +30,8 @@ public:
                          const int timeout,
                          HandleMethod method = Abort)
     {
-        new ReplyTimeout(reply, timeout,method);
+        if(timeout > 5)
+            new ReplyTimeout(reply, timeout,method);
     }
 
 signals:

@@ -79,7 +79,7 @@ void TournamentSelectorView::deleteModel()
         return;
     QString string = treeWidget->currentItem()->text(5);
     QUuid id = QUuid::fromString(string), caller = this->classId();
-    ui->DeleteButton->setDisabled(true);
+    disableAllButtons();
     emit requestDeleteModel(id,caller);
 }
 

@@ -67,8 +67,11 @@ void DataModelManager::remoteAppendPoint(const QUuid &round, const QUuid &userId
 
 void DataModelManager::ConvertreplyFromRemote(const bool &status, const QByteArray &data)
 {
+    ModelContainer mContainer;
     if(data != QByteArray())
-        auto model = ConvertDataItem(data);
+        mContainer = ConvertDataItem(data);
+
+    emit parseReplyFromRemote(status,mContainer.model);
 }
 
 
