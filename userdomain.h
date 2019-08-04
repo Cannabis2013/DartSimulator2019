@@ -23,7 +23,6 @@ public slots:
     void setupTournamentView();
 
 private slots:
-    void notifyView();
     void requestAllTournaments();
     void showSystemTrayMessage(const QString &msg);
 

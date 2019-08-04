@@ -65,13 +65,14 @@ void DataModelManager::remoteAppendPoint(const QUuid &round, const QUuid &userId
     emit parsePointToRemote(QJsonDocument(obj).toJson(),round);
 }
 
-void DataModelManager::ConvertreplyFromRemote(const bool &status, const QByteArray &data)
+void DataModelManager::ConvertreplyFromRemote(const bool &status, const QString &msg,const QByteArray &data)
 {
     ModelContainer mContainer;
+
     if(data != QByteArray())
         mContainer = ConvertDataItem(data);
 
-    emit parseReplyFromRemote(status,mContainer.model);
+    emit parseReplyFromRemote(status,msg,mContainer.model);
 }
 
 

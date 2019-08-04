@@ -55,11 +55,13 @@ void TournamentSelectorView::updateState()
     emit requestModels();
 }
 
-void TournamentSelectorView::requestCompleted(const bool &status, const QTreeWidgetItem *model)
+void TournamentSelectorView::requestCompleted(const bool &status, const QString &msg, const QTreeWidgetItem *model)
 {
     enableAllButtons();
     if(status)
         updateState();
+    else
+        handleError(msg);
 }
 
 void TournamentSelectorView::show_Create_View()
@@ -124,5 +126,4 @@ void TournamentSelectorView::handleError(const QString &error)
     msg.setText(error);
 
     msg.exec();
-    ui->RefreshButton->setDisabled(false);
 }

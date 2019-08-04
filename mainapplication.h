@@ -5,6 +5,7 @@
 #include <remotemodelmanager.h>
 #include <datamodelmanager.h>
 #include <gamemanager.h>
+#include <remoteusermanager.h>
 
 #define USERCODE "wQ71HOHNXNaHkDxnnaZ7kj6ujWYW2xBsV1VXxRqp8C/83IgryF1ADA=="
 #define HOSTURL "https://dartservice.azurewebsites.net/api/"
@@ -18,6 +19,7 @@ public:
 private:
     DataModelManager* _dataModelMng;
     RemoteModelManager* _remoteMng;
+    RemoteUserManager* _remoteUserMng;
     GameManager* _gameMng;
 
 };

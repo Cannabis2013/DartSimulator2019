@@ -34,8 +34,7 @@ public:
     const IParserService* parserService();
 
 signals:
-    void sendNotification(const bool &success,const QByteArray &data = QByteArray());
-    void sendErrorString(const QString &err);
+    void notifyCallers(const bool &success,const QString &msg = QString(),const QByteArray &data = QByteArray());
     void sendSslErrorStrings(const QStringList &err);
 
 protected:

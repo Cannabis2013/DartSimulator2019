@@ -33,7 +33,7 @@ public slots:
     virtual void handleError(const QString &error);
     virtual void updateState();
 
-    virtual void requestCompleted(const bool &status,const QTreeWidgetItem* model = nullptr);
+    virtual void requestCompleted(const bool &status, const QString &msg = QString(),const QTreeWidgetItem* model = nullptr);
 
 signals:
     void requestModel(const QUuid &model);

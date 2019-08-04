@@ -11,25 +11,23 @@ public:
 
 public slots:
     // Requests models from remote
-    void remoteTournament(const QUuid &id);
-    void remoteTournaments();
-    void remoteRound(const QUuid &tournament);
-    void remoteRounds(const QUuid &tournament);
-    // Upload models to remote
-    void createRemoteTournament(const QByteArray &json);
-    void createRemoteRound(const QByteArray &json, const QUuid &tournament);
-    void submitRemotePoint(const QByteArray &json, const QUuid &round);
-    // Delete remote model
-    void remoteRemoveTournament(const QUuid &tournament);
+    void tournament(const QUuid &id);
+    void tournaments();
+    void round(const QUuid &tournament);
+    void rounds(const QUuid &tournament);
+    // Alter remote state
+    void addTournament(const QByteArray &json);
+    void removeTournament(const QUuid &tournament);
+    void addRound(const QByteArray &json, const QUuid &tournament);
+    void addPoint(const QByteArray &json, const QUuid &round);
 signals:
     void sendModelIdentity(const QByteArray &data, const QString &log);
-    void sendTournamentData(const QByteArray &data,const QString &log);
-    void sendAllTournamentsData(const QByteArray &data,const QString &log);
-    void sendRoundData(const QByteArray &data,const QString &log);
-    void sendRoundsData(const QByteArray &data,const QString &log);
-    void sendPointData(const QByteArray &data,const QString &log);
+    void sendTournament(const QByteArray &data,const QString &log);
+    void sendTournaments(const QByteArray &data,const QString &log);
+    void sendRound(const QByteArray &data,const QString &log);
+    void sendRounds(const QByteArray &data,const QString &log);
+    void sendPoint(const QByteArray &data,const QString &log);
 
-    void sendStatusMsg(const QString &title, const QString &msg);
     void operationFinished(const QUuid &classId);
 
 private slots:

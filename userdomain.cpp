@@ -29,6 +29,8 @@ void UserDomain::setupLoginView()
     lView->setResizeable(false);
     QPointer<CustomDialog> view = new CustomDialog(lView);
 
+    connect(_service,&IDartSimulator::externalNotifyResponse,lView,&LoginView::requestCompleted);
+
     view->show();
 }
 
@@ -40,19 +42,13 @@ void UserDomain::setupTournamentView()
 
     connect(tView,&TournamentSelectorView::requestModels,_service,&IDartSimulator::tournaments);
     connect(_service,&IDartSimulator::sendModels,tView,&TournamentSelectorView::setModels);
-    connect(_service,&IDartSimulator::externalRequestFailed,tView,&View::handleError);
-    connect(tView,&TournamentSelectorView::requestDeleteModel,_service,&IDartSimulator::deleteTournament);
+    connect(tView,&TournamentSelectorView::requestDeleteModel,_service,&IDartSimulator::removeTournament);
     connect(tView,&View::aboutToClose,this,&UserDomain::removeView);
-    connect(tView,&TournamentSelectorView::new_Tournament_Request,_service,&IDartSimulator::createTournament);
+    connect(tView,&TournamentSelectorView::new_Tournament_Request,_service,&IDartSimulator::parseTournament);
     connect(_service,&IDartSimulator::externalNotifyResponse,tView,&View::requestCompleted);
 
     view->show();
     tView->updateState();
-}
-
-void UserDomain::notifyView()
-{
-
 }
 
 void UserDomain::requestAllTournaments()

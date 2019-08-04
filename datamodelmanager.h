@@ -48,7 +48,7 @@ public slots:
 
     // Convert replies/updates from remote
 
-    void ConvertreplyFromRemote(const bool &status = true,const QByteArray &data = QByteArray());
+    void ConvertreplyFromRemote(const bool &status = true, const QString &msg = QString(), const QByteArray &data = QByteArray());
 
 signals:
     void parseTournamentToExternal(const QTreeWidgetItem* model,const QStringList &headers,const QString &log);
@@ -60,7 +60,7 @@ signals:
     void parseRoundToRemote(const QByteArray &json,const QUuid &tournament);
     void parsePointToRemote(const QByteArray &json,const QUuid &round);
 
-    void parseReplyFromRemote(const bool &status,const QTreeWidgetItem* model = nullptr);
+    void parseReplyFromRemote(const bool &status,const QString &msg = QString(),const QTreeWidgetItem* model = nullptr);
 
 private:
     QList<QTreeWidgetItem*> extractChildren(const QJsonArray &json);

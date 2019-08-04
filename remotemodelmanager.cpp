@@ -6,22 +6,22 @@ RemoteModelManager::RemoteModelManager(const QString &server, const QString &use
 
 }
 
-void RemoteModelManager::createRemoteTournament(const QByteArray &json)
+void RemoteModelManager::addTournament(const QByteArray &json)
 {
     sendPostRequest("CreateTournament",json,QString(),this,SLOT(handleReply()));
 }
 
-void RemoteModelManager::remoteTournament(const QUuid &id)
+void RemoteModelManager::tournament(const QUuid &id)
 {
     sendGetRequest("GetTournament",id.toString(QUuid::WithoutBraces),this,SLOT(handleRemoteTournament()));
 }
 
-void RemoteModelManager::remoteTournaments()
+void RemoteModelManager::tournaments()
 {
     sendGetRequest("GetTournaments",QString(),this,SLOT(handleRemoteTournaments()));
 }
 
-void RemoteModelManager::createRemoteRound(const QByteArray &json, const QUuid &tournament)
+void RemoteModelManager::addRound(const QByteArray &json, const QUuid &tournament)
 {
     sendPostRequest("CreateRound",
                     json,tournament.toString(QUuid::WithoutBraces),
@@ -29,7 +29,7 @@ void RemoteModelManager::createRemoteRound(const QByteArray &json, const QUuid &
                     SLOT(handleReply()));
 }
 
-void RemoteModelManager::remoteRound(const QUuid &tournament)
+void RemoteModelManager::round(const QUuid &tournament)
 {
     sendGetRequest("GetRound",
                    tournament.toString(QUuid::WithoutBraces),
@@ -37,7 +37,7 @@ void RemoteModelManager::remoteRound(const QUuid &tournament)
                    SLOT(handleRemoteRound()));
 }
 
-void RemoteModelManager::remoteRounds(const QUuid &tournament)
+void RemoteModelManager::rounds(const QUuid &tournament)
 {
     sendGetRequest("GetRounds",
                    tournament.toString(QUuid::WithoutBraces),
@@ -45,7 +45,7 @@ void RemoteModelManager::remoteRounds(const QUuid &tournament)
                    SLOT(handleRemoteRounds()));
 }
 
-void RemoteModelManager::remoteRemoveTournament(const QUuid &tournament)
+void RemoteModelManager::removeTournament(const QUuid &tournament)
 {
     sendDeleteRequest("DeleteTournament",
                       tournament.toString(QUuid::WithoutBraces),
@@ -53,7 +53,7 @@ void RemoteModelManager::remoteRemoveTournament(const QUuid &tournament)
                       SLOT(handleReply()));
 }
 
-void RemoteModelManager::submitRemotePoint(const QByteArray &json,const QUuid &round)
+void RemoteModelManager::addPoint(const QByteArray &json,const QUuid &round)
 {
     sendPostRequest("SubmitPoint",
                     json,
@@ -70,9 +70,8 @@ void RemoteModelManager::handleReply()
         if(err == "Operation canceled")
             err = "Operation was abortet probably due to server timeout. \n "
                   "Go out and buy some more beer or cigarettes. \n "
-                  "You probably already smoked 10 of those in the time you waited.";
-        emit sendStatusMsg("Error",err);
-        emit sendNotification(false);
+                  "You probably already smoked 10 cigarettes since the request.";
+        emit notifyCallers(false,err);
         return;
     }
 
@@ -83,77 +82,75 @@ void RemoteModelManager::handleReply()
     QUuid id = QUuid::fromRfc4122(data);
     QString msg = "Operation successed on model with identification: %1";
     msg = msg.arg(id.toString(QUuid::WithoutBraces));
-    emit sendNotification(true);
-
-    emit sendStatusMsg("Success",msg);
+    emit notifyCallers(true);
 }
 
 void RemoteModelManager::handleRemoteTournament()
 {
     if(errorOccured())
     {
-        emit sendErrorString(errorString());
+        emit notifyCallers(false,errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
     const QByteArray data = extractData();
-    emit sendTournamentData(data,logMessage);
+    emit sendTournament(data,logMessage);
 }
 
 void RemoteModelManager::handleRemoteTournaments()
 {
     if(errorOccured())
     {
-        emit sendErrorString(errorString());
+        emit notifyCallers(false,errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
     const QByteArray data = extractData();
-    emit sendAllTournamentsData(data,logMessage);
+    emit sendTournaments(data,logMessage);
 }
 
 void RemoteModelManager::handleRemoteRound()
 {
     if(errorOccured())
     {
-        emit sendErrorString(errorString());
+        emit notifyCallers(false,errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
     const QByteArray data = extractData();
-    emit sendRoundData(data,logMessage);
+    emit sendRound(data,logMessage);
 }
 
 void RemoteModelManager::handleRemoteRounds()
 {
     if(errorOccured())
     {
-        emit sendErrorString(errorString());
+        emit notifyCallers(false,errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
     const QByteArray data = extractData();
-    emit sendRoundsData(data,logMessage);
+    emit sendRounds(data,logMessage);
 }
 
 void RemoteModelManager::handleSubmitPoint()
 {
     if(errorOccured())
     {
-        emit sendErrorString(errorString());
+        emit notifyCallers(false,errorString());
         return;
     }
 
     QString logMessage = "%1 ms";
     logMessage = logMessage.arg(QString::number(timeElapsed()));
     const QByteArray data = extractData();
-    emit sendPointData(data,logMessage);
+    emit sendPoint(data,logMessage);
 }

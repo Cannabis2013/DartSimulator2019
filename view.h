@@ -22,7 +22,7 @@ public slots:
     // Pure virtual methods
     virtual void handleError(const QString &error)=0;
     virtual void updateState()=0;
-    virtual void requestCompleted(const bool &status, const QTreeWidgetItem*model = nullptr)=0;
+    virtual void requestCompleted(const bool &status, const QString &msg = QString(),const QTreeWidgetItem*model = nullptr)=0;
 signals:
 
     void aboutToClose(const QUuid &id);

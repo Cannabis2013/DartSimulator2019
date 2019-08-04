@@ -21,13 +21,36 @@ void LoginView::handleError(const QString &error)
 }
 
 
-void LoginView::requestCompleted(const bool &status, const QTreeWidgetItem *model)
+void LoginView::requestCompleted(const bool &status, const QString &msg, const QTreeWidgetItem *model)
 {
-    Q_UNUSED(status);
+    if(!status)
+    {
+        clearCredentials();
+        handleError("Username or password incorrect. Grap another beer and try again.");
+    }
+    else
+    {
+        // TODO: Do something for a succesfull login
+
+    }
     Q_UNUSED(model);
 }
 
 
 void LoginView::updateState()
 {
+}
+
+void LoginView::sendCredentials()
+{
+    QString userName = ui->userNameSelector->text(),
+            password = ui->passwordSelector->text();
+
+    emit verify(userName,password);
+}
+
+void LoginView::clearCredentials()
+{
+    ui->userNameSelector->clear();
+    ui->passwordSelector->clear();
 }
