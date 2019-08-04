@@ -6,20 +6,10 @@ View::View(QWidget* parent):
 
 }
 
-void View::updateState()
-{
-
-}
-
-void View::requestCompleted()
-{
-
-}
-
 
 void View::resizeEvent(QSize newSize)
 {
-}
+    Q_UNUSED(newSize)};
 
 void View::closeEvent(QCloseEvent *e)
 {
@@ -79,14 +69,10 @@ void View::formatDate(const QStringList &header,QList<QTreeWidgetItem *> &models
                 if(columnText == "Not defined")
                     continue;
                 QDateTime dt = QDateTime::fromString(columnText,Qt::DateFormat::ISODate);
-                QString newColumnText = dt.toString("dd.MM.yyyy");
+                QString newColumnText = dt.toString(dateFormat);
                 model->setText(i,newColumnText);
             }
         }
     }
 }
 
-void View::setModels(QList<QTreeWidgetItem *> models, const QStringList &headers, const QString &msg)
-{
-
-}

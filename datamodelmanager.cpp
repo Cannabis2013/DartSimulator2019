@@ -65,6 +65,13 @@ void DataModelManager::remoteAppendPoint(const QUuid &round, const QUuid &userId
     emit parsePointToRemote(QJsonDocument(obj).toJson(),round);
 }
 
+void DataModelManager::ConvertreplyFromRemote(const bool &status, const QByteArray &data)
+{
+    if(data != QByteArray())
+        auto model = ConvertDataItem(data);
+}
+
+
 QList<QTreeWidgetItem *> DataModelManager::extractChildren(const QJsonArray &json)
 {
     auto result = QList<QTreeWidgetItem*>();

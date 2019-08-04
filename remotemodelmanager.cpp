@@ -72,7 +72,7 @@ void RemoteModelManager::handleReply()
                   "Go out and buy some more beer or cigarettes. \n "
                   "You probably already smoked 10 of those in the time you waited.";
         emit sendStatusMsg("Error",err);
-        emit sendNotification();
+        emit sendNotification(false);
         return;
     }
 
@@ -83,7 +83,7 @@ void RemoteModelManager::handleReply()
     QUuid id = QUuid::fromRfc4122(data);
     QString msg = "Operation successed on model with identification: %1";
     msg = msg.arg(id.toString(QUuid::WithoutBraces));
-    emit sendNotification();
+    emit sendNotification(true);
 
     emit sendStatusMsg("Success",msg);
 }

@@ -16,9 +16,9 @@ public:
     MainApplication();
 
 private:
-    DataModelManager* _dataModel;
-    RemoteModelManager* _remote;
-    GameManager* _game;
+    DataModelManager* _dataModelMng;
+    RemoteModelManager* _remoteMng;
+    GameManager* _gameMng;
 
 };
 

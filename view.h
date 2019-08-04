@@ -18,22 +18,14 @@ public:
     static void orderModels(QStringList &stringList, QList<QTreeWidgetItem*> &models,std::initializer_list<QString> list = std::initializer_list<QString>());
     static void formatDate(const QStringList &header,QList<QTreeWidgetItem*> &models, const std::initializer_list<QString> &keys, const QString &dateFormat);
 public slots:
-    virtual void setModels(QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &msg);
+
+    // Pure virtual methods
     virtual void handleError(const QString &error)=0;
-
-    virtual void updateState();
-
-    virtual void requestCompleted()=0;
+    virtual void updateState()=0;
+    virtual void requestCompleted(const bool &status, const QTreeWidgetItem*model = nullptr)=0;
 signals:
-    void requestModel(const QUuid &model);
-    void requestModels(const QUuid &parent = QUuid());
-
-    void requestDeleteModel(const QUuid &model, const QUuid &caller);
 
     void aboutToClose(const QUuid &id);
-
-    void new_Tournament_Request(const QString &name,const QString &startDate, const QString &endDate);
-
 
 protected:
     void resizeEvent(QSize newSize);

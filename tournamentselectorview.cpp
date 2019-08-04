@@ -7,6 +7,8 @@ TournamentSelectorView::TournamentSelectorView(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWidgetTitle("Select tournaments");
+
     treeWidget = ui->treeWidget;
     sWidget = ui->stackedWidget;
 
@@ -40,7 +42,6 @@ void TournamentSelectorView::setModels(const QList<QTreeWidgetItem *> models, co
     View::formatDate(headerLabels,items,{"StartDateTime","EndDateTime"},LOCALDATEFORMAT);
 
     treeWidget->clear();
-    int columns = header.count();
     treeWidget->setHeaderLabels(headerLabels);
     treeWidget->setColumnCount(3);
     treeWidget->addTopLevelItems(items);
@@ -54,10 +55,11 @@ void TournamentSelectorView::updateState()
     emit requestModels();
 }
 
-void TournamentSelectorView::requestCompleted()
+void TournamentSelectorView::requestCompleted(const bool &status, const QTreeWidgetItem *model)
 {
     enableAllButtons();
-    updateState();
+    if(status)
+        updateState();
 }
 
 void TournamentSelectorView::show_Create_View()

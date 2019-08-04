@@ -6,6 +6,8 @@ LoginView::LoginView(QWidget *parent) :
     ui(new Ui::LoginView)
 {
     ui->setupUi(this);
+
+    setWidgetTitle("Login");
 }
 
 LoginView::~LoginView()
@@ -15,10 +17,17 @@ LoginView::~LoginView()
 
 void LoginView::handleError(const QString &error)
 {
-
+    Q_UNUSED(error);
 }
 
 
-void LoginView::requestCompleted()
+void LoginView::requestCompleted(const bool &status, const QTreeWidgetItem *model)
+{
+    Q_UNUSED(status);
+    Q_UNUSED(model);
+}
+
+
+void LoginView::updateState()
 {
 }

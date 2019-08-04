@@ -18,10 +18,13 @@ public:
 
 public slots:
     void handleError(const QString &error);
-    void requestCompleted();
+    void requestCompleted(const bool &status, const QTreeWidgetItem*model = nullptr);
+
+    void updateState();
 
 private:
     Ui::LoginView *ui;
+
 };
 
 #endif // LOGINVIEW_H

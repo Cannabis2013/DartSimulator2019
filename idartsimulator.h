@@ -43,7 +43,7 @@ signals:
     void sendModels(const QList<QTreeWidgetItem*> models,const QStringList &headers,const QString &log);
 
     void externalPopupMessage(const QString &title,const QString &msg);
-    void externalNotifyResponse();
+    void externalNotifyResponse(const bool &status, const QTreeWidgetItem* model = nullptr);
     void externalRequestFailed(const QString &error);
     void externalGameResponse(const QString &msg);
 };

@@ -7,6 +7,9 @@ class RemoteUserManager : public NetworkManager
 {
 public:
     RemoteUserManager(const QString &hostUrl,const QString &apiAccessCode);
+
+public slots:
+
 };
 
 #endif // REMOTEUSERMANAGER_H

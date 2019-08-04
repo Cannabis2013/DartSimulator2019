@@ -6,10 +6,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    IGraphicalUserInterface<IDartSimulator,View*>* ui = new UserDomain();
+    IGraphicalUserInterface<IDartSimulator>* ui = new UserDomain();
     ui->setService(new MainApplication());
 
-    ui->setupLoginView(new LoginView,"Login");
+    ui->setupTournamentView();
 
 
     return a.exec();

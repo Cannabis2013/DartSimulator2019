@@ -16,7 +16,6 @@ void UserDomain::setService(IDartSimulator *service)
     _service = service;
 
     connect(_service,&IDartSimulator::externalPopupMessage,this,&UserDomain::showSystemTrayMessage);
-    connect(_service,&IDartSimulator::externalNotifyResponse,this,&UserDomain::notifyView);
 }
 
 IDartSimulator *UserDomain::service()
@@ -24,40 +23,36 @@ IDartSimulator *UserDomain::service()
     return _service;
 }
 
-void UserDomain::setupLoginView(View *v,const QString &frameTitle)
+void UserDomain::setupLoginView()
 {
-    _views.append(v);
-    v->setResizeable(false);
-    QPointer<CustomDialog> view = new CustomDialog(v);
-    view->setFrameTitle(frameTitle);
+    LoginView* lView =new LoginView;
+    lView->setResizeable(false);
+    QPointer<CustomDialog> view = new CustomDialog(lView);
 
     view->show();
 }
 
-void UserDomain::setupTournamentView(View *v,const QString &frameTitle)
+void UserDomain::setupTournamentView()
 {
-    _views.append(v);
-    v->setResizeable(false);
-    QPointer<CustomDialog> view = new CustomDialog(v);
-    view->setFrameTitle(frameTitle);
+    TournamentSelectorView *tView = new TournamentSelectorView();
+    tView->setResizeable(false);
+    QPointer<CustomDialog> view = new CustomDialog(tView);
 
-    connect(v,&View::requestModels,_service,&IDartSimulator::tournaments);
-    connect(_service,&IDartSimulator::sendModels,v,&View::setModels);
-    connect(_service,&IDartSimulator::externalRequestFailed,v,&View::handleError);
-    connect(v,&View::requestDeleteModel,_service,&IDartSimulator::deleteTournament);
-    connect(v,&View::aboutToClose,this,&UserDomain::removeView);
-    connect(v,&View::new_Tournament_Request,_service,&IDartSimulator::createTournament);
+    connect(tView,&TournamentSelectorView::requestModels,_service,&IDartSimulator::tournaments);
+    connect(_service,&IDartSimulator::sendModels,tView,&TournamentSelectorView::setModels);
+    connect(_service,&IDartSimulator::externalRequestFailed,tView,&View::handleError);
+    connect(tView,&TournamentSelectorView::requestDeleteModel,_service,&IDartSimulator::deleteTournament);
+    connect(tView,&View::aboutToClose,this,&UserDomain::removeView);
+    connect(tView,&TournamentSelectorView::new_Tournament_Request,_service,&IDartSimulator::createTournament);
+    connect(_service,&IDartSimulator::externalNotifyResponse,tView,&View::requestCompleted);
 
     view->show();
-    v->updateState();
+    tView->updateState();
 }
 
 void UserDomain::notifyView()
 {
-    for (View* v : _views)
-    {
-        v->requestCompleted();
-    }
+
 }
 
 void UserDomain::requestAllTournaments()

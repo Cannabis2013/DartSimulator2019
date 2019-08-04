@@ -34,7 +34,7 @@ public:
     const IParserService* parserService();
 
 signals:
-    void sendNotification();
+    void sendNotification(const bool &success,const QByteArray &data = QByteArray());
     void sendErrorString(const QString &err);
     void sendSslErrorStrings(const QStringList &err);
 
@@ -61,6 +61,7 @@ protected:
 
 private slots:
     void handleSslErrors(QNetworkReply *reply,const QList<QSslError>&errors);
+
     virtual void handleReply();
 
 private:

@@ -28,11 +28,18 @@ public:
     ~TournamentSelectorView();
 
 public slots:
-    virtual void setModels(const QList<QTreeWidgetItem *> models, const QStringList &header, const QString &msg);
+    void setModels(const QList<QTreeWidgetItem *> models, const QStringList &header, const QString &msg);
+
     virtual void handleError(const QString &error);
     virtual void updateState();
-    virtual void requestCompleted();
 
+    virtual void requestCompleted(const bool &status,const QTreeWidgetItem* model = nullptr);
+
+signals:
+    void requestModel(const QUuid &model);
+    void requestModels(const QUuid &parent = QUuid());
+    void new_Tournament_Request(const QString &name,const QString &startDate, const QString &endDate);
+    void requestDeleteModel(const QUuid &model, const QUuid &caller);
 private slots:
     void show_Create_View();
     void show_Overview_View();
