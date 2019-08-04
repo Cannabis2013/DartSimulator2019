@@ -3,11 +3,13 @@
 UserDomain::UserDomain()
 {
     systemTray = new QSystemTrayIcon();
+    systemTray->setIcon(QIcon(":/new/prefix1/Ressources/dart-board.png"));
+    systemTray->show();
 }
 
 UserDomain::~UserDomain()
 {
-
+    systemTray->deleteLater();
 }
 
 
@@ -27,10 +29,13 @@ void UserDomain::setupLoginView()
 {
     LoginView* lView =new LoginView;
     lView->setResizeable(false);
+
+    connect(_service,&IDartSimulator::externalNotifyResponse,lView,&LoginView::handleReply);
+    connect(lView,&LoginView::success,this,&UserDomain::setupTournamentView);
+    connect(lView,&View::popupMessage,this,&UserDomain::showSystemTrayMessage);
+    connect(lView,&LoginView::destroyed,this,&UserDomain::close);
+
     QPointer<CustomDialog> view = new CustomDialog(lView);
-
-    connect(_service,&IDartSimulator::externalNotifyResponse,lView,&LoginView::requestCompleted);
-
     view->show();
 }
 
@@ -43,9 +48,9 @@ void UserDomain::setupTournamentView()
     connect(tView,&TournamentSelectorView::requestModels,_service,&IDartSimulator::tournaments);
     connect(_service,&IDartSimulator::sendModels,tView,&TournamentSelectorView::setModels);
     connect(tView,&TournamentSelectorView::requestDeleteModel,_service,&IDartSimulator::removeTournament);
-    connect(tView,&View::aboutToClose,this,&UserDomain::removeView);
+    connect(tView,&View::destroyed,this,&UserDomain::close);
     connect(tView,&TournamentSelectorView::new_Tournament_Request,_service,&IDartSimulator::parseTournament);
-    connect(_service,&IDartSimulator::externalNotifyResponse,tView,&View::requestCompleted);
+    connect(_service,&IDartSimulator::externalNotifyResponse,tView,&View::handleReply);
 
     view->show();
     tView->updateState();
@@ -64,13 +69,7 @@ void UserDomain::showSystemTrayMessage(const QString &msg)
     systemTray->showMessage("Message",msg);
 }
 
-void UserDomain::removeView(const QUuid &id)
+void UserDomain::close()
 {
-    for (View* v : _views)
-    {
-        if(v != nullptr && v->classId() == id)
-        {
-            _views.removeOne(v);
-        }
-    }
+    delete this;
 }

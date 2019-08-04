@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     IGraphicalUserInterface<IDartSimulator>* ui = new UserDomain();
     ui->setService(new MainApplication());
 
-    ui->setupTournamentView();
+    ui->setupLoginView();
 
     return a.exec();
 }

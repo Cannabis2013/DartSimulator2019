@@ -55,8 +55,9 @@ void TournamentSelectorView::updateState()
     emit requestModels();
 }
 
-void TournamentSelectorView::requestCompleted(const bool &status, const QString &msg, const QTreeWidgetItem *model)
+void TournamentSelectorView::handleReply(const bool &status, const QString &msg, const QTreeWidgetItem *model)
 {
+    Q_UNUSED(model);
     enableAllButtons();
     if(status)
         updateState();

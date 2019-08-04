@@ -17,11 +17,11 @@ LoginView::~LoginView()
 
 void LoginView::handleError(const QString &error)
 {
-    Q_UNUSED(error);
+    emit popupMessage(error);
 }
 
 
-void LoginView::requestCompleted(const bool &status, const QString &msg, const QTreeWidgetItem *model)
+void LoginView::handleReply(const bool &status, const QString &msg, const QTreeWidgetItem *model)
 {
     if(!status)
     {
@@ -31,6 +31,8 @@ void LoginView::requestCompleted(const bool &status, const QString &msg, const Q
     else
     {
         // TODO: Do something for a succesfull login
+        emit success();
+        close();
 
     }
     Q_UNUSED(model);
@@ -46,7 +48,15 @@ void LoginView::sendCredentials()
     QString userName = ui->userNameSelector->text(),
             password = ui->passwordSelector->text();
 
+
+#ifdef TEST_MODE
+    if(userName == "Peter_Alkometer" && password == "prince")
+        handleReply(true);
+    else
+        handleReply(false);
+#else
     emit verify(userName,password);
+#endif
 }
 
 void LoginView::clearCredentials()

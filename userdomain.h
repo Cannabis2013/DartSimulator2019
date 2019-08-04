@@ -8,6 +8,7 @@
 #include <QSystemTrayIcon>
 #include <loginview.h>
 
+
 class UserDomain : public QObject,public IGraphicalUserInterface<IDartSimulator>
 {
     Q_OBJECT
@@ -25,10 +26,10 @@ public slots:
 private slots:
     void requestAllTournaments();
     void showSystemTrayMessage(const QString &msg);
+    void close();
 
-    void removeView(const QUuid &id);
 private:
-    QSystemTrayIcon*systemTray;
+    QSystemTrayIcon* systemTray;
     IDartSimulator* _service;
 
     QList<View*> _views;
