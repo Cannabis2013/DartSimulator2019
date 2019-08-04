@@ -28,7 +28,7 @@
   <property name="styleSheet">
    <string notr="true">QWidget#CustomDialog
 {
-	background-color:white;
+	background-color:black;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
@@ -94,16 +94,16 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <property name="leftMargin">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="bottomMargin">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="spacing">
        <number>0</number>
